@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <string.h>
 #include "console_config.h"
 
 #ifdef _WIN32

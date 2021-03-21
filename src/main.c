@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <io.h>
-#include <fcntl.h>
 #include <string.h>
 #include "console/console_config.h"
 
