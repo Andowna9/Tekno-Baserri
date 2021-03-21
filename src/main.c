@@ -1,5 +1,8 @@
 #include <stdio.h>
+#include <io.h>
+#include <fcntl.h>
 #include <string.h>
+#include "console/console_config.h"
 
 #define MAX_BUFFER_SIZE 10
 
@@ -15,6 +18,10 @@ void clean_buffer(char* buffer);
 
 int main() {
 
+    // Configuración de consola con colores + UTF-8
+
+    setup_console();
+
     // Buffer de lectura por defecto
 
      char input_buffer [MAX_BUFFER_SIZE];
@@ -23,11 +30,15 @@ int main() {
 
     while(1) {
 
-        printf("-------Tekno Baserri-------\n");
+        printf_c(DARK_CYAN_TXT, "-------Tekno Baserri-------\n"); // Ejemplo de salida de texto con color
 
         printf("1. Gestionar granja\n");
 
         printf("2. Acceder a parking\n");
+
+        printf("Presiona 'q' para salir\n");
+
+        printf("Input: ");
 
         // Lectura de stdin y limpieza de input_buffer (Posible modularización (1 función vs 2 funciones) si se repiten mucho!)
 
@@ -76,6 +87,11 @@ int main() {
     }
 
     // TODO - Desalojar memoria dinámica si la hay
+
+
+    // Restauración de configuración de consola (se revocan los cambios)
+
+    restore_console();
 
     return 0;
 }
