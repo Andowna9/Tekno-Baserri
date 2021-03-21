@@ -74,7 +74,7 @@
 
 
  #else // En sistemas operativos Unix-like (Linux y MacOS) no es necearia una configuración previa
-    void setup_color_console() {}
+    void setup_console() {}
     void restore_console() {}
  #endif
 
