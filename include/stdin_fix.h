@@ -6,5 +6,6 @@
 void clear_stdin();
 void clean_buffer(char* buffer);
 void scan_str(char* buffer);
+char* read_str();
 
 #endif

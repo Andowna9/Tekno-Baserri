@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "stdin_fix.h"
 
 void clear_stdin(); // Llamar cuando estemos seguros de que una limpieza de stdin es necesaria (si no puede pausar la ejecución esperando input)
@@ -28,4 +29,19 @@ void scan_str(char* buffer) { // Forma segura de leer strings del teclado
 
     fgets(buffer, MAX_BUFFER_SIZE, stdin);
     clean_buffer(buffer);
+}
+
+char* read_str() {
+
+    // Internal buffer scanning
+
+    char buff [MAX_BUFFER_SIZE];
+
+    scan_str(buff);
+
+    char* str = (char*) malloc(sizeof(char) * (strlen(buff) + 1));
+
+    strcpy(str, buff);
+
+    return str;
 }
