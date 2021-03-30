@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include <string.h>
-#include "console/console_config.h"
+#include <console_config.h>
+#include <stdin_fix.h>
 #include "granja/granja.h"
-#include "fixStdin.h"
-
-#define MAX_BUFFER_SIZE 10
-
-
+#include "parking/parking_menu.h"
 
 int main() {
     setup_console(); // Configuración de consola con colores + UTF-8
@@ -20,22 +17,22 @@ int main() {
         printf("Presiona 'q' para salir\n");
         printf("Input: ");
 
-        fgets(input_buffer, MAX_BUFFER_SIZE, stdin);
-        clean_buffer(input_buffer);
+        scan_str(input_buffer);
 
-        if (!strcmp(input_buffer, "q")) {
+        if (strcmp(input_buffer, "q") == 0) {
             printf("Finalizando programa...\n");
             break;
         }
-        else if (!strcmp(input_buffer, "1")) {
+        else if (strcmp(input_buffer, "1") == 0) {
             // Menú granja
             // TODO - Implementar Granja
-            menuGranja();
+            //menuGranja(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
 
-        } else if (!strcmp(input_buffer, "2")) {
+        } else if (strcmp(input_buffer, "2") == 0) {
             // Menú parking
             // TODO - Implementar Parking
             printf("[ PARKING ]\n");
+            //parking_menu();
 
         }
 

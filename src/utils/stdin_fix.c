@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "stdin_fix.h"
 
 void clear_stdin(); // Llamar cuando estemos seguros de que una limpieza de stdin es necesaria (si no puede pausar la ejecución esperando input)
 void clean_buffer(char* buffer); // Elimina el caracter de nueva línea de un buffer de caracteres (string)
@@ -21,4 +22,10 @@ void clean_buffer(char* buffer) {
     else {
         clear_stdin(); // Ha habido un overflow, ya que no se ha incluido el salto de línea y es necesaria una limpieza
     }
+}
+
+void scan_str(char* buffer) { // Forma segura de leer strings del teclado
+
+    fgets(buffer, MAX_BUFFER_SIZE, stdin);
+    clean_buffer(buffer);
 }
