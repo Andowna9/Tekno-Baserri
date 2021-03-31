@@ -23,6 +23,8 @@ void create_parking(int rows, int cols);
 void free_parking_memory();
 void add_columns(int n);
 void add_rows(int n);
+void save_parking();
+int load_parking();
 void insert_vehicle(char* key, int row, int col);
 void remove_vehicle(int row, int col);
 void print_parking();

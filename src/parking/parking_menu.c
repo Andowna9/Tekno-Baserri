@@ -19,55 +19,63 @@ void scan_p_plot(int* row_ptr, int* col_ptr) {
 
 void init_parking() {
 
-    char buff[MAX_BUFFER_SIZE];
+    if (load_parking() != -1) {
 
-    // Si no hay una configuarción de parking registrada
+        printf("Configuración encontrada!\n");
+    }
 
-    printf("No hay ningún parking registrado\n");
+    else {
 
-    int w, h;
+        char buff[MAX_BUFFER_SIZE];
 
-    int ret;
+        // Si no hay una configuarción de parking registrada
 
-    while(1) {
+        printf("No hay ningún parking registrado\n");
 
-        do {
-            printf("Tamaño (filas columnas): ");
-            ret = scanf("%2d %2d", &h, &w);
-            clear_stdin();
+        int w, h;
 
-            if (h > MAX_ROWS || w > MAX_COLS) {
+        int ret;
 
-                printf("Máximo número de filas/columnas superado!\n");
+        while(1) {
 
-                ret = 0;
+            do {
+                printf("Tamaño (filas columnas): ");
+                ret = scanf("%2d %2d", &h, &w);
+                clear_stdin();
+
+                if (h > MAX_ROWS || w > MAX_COLS) {
+
+                    printf("Máximo número de filas/columnas superado!\n");
+
+                    ret = 0;
+                }
+
+                if (h < 0 || w < 0) {
+
+                    printf("No se aceptan números negativos!\n");
+
+                    ret = 0;
+                }
+
+            } while(ret != 2);
+
+
+            printf("Número de aparcamientos posibles: %d\n", w * h);
+            printf("Desea continuar?(s/n) ");
+
+            scan_str(buff);
+
+            if (strcmp(buff, "s") == 0) {
+
+                create_parking(h, w); // Creación de parking en memoria
+
+                break;
+
             }
-
-            if (h < 0 || w < 0) {
-
-                printf("No se aceptan números negativos!\n");
-
-                ret = 0;
-            }
-
-        } while(ret != 2);
-
-
-        printf("Número de aparcamientos posibles: %d\n", w * h);
-        printf("Desea continuar?(s/n) ");
-
-        scan_str(buff);
-
-        if (strcmp(buff, "s") == 0) {
-
-            create_parking(h, w); // Creación de parking en memoria
-
-            break;
 
         }
 
     }
-
 
 }
 
@@ -94,9 +102,16 @@ void parking_menu() {
         printf("\nInput: ");
         scan_str(i_buffer);
 
+        if (strcmp(i_buffer, "v") == 0) {
+
+            save_parking();
+
+            break;
+        }
+
         // Introducir vehículo en plaza
 
-        if (strcmp(i_buffer,"1") == 0) {
+        else if (strcmp(i_buffer,"1") == 0) {
 
            int r;
            int c;

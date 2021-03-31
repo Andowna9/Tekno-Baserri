@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <console_config.h>
 #include "parking.h"
 
@@ -17,15 +18,22 @@ void create_parking(int rows, int cols) {
 
     // Reserva de momoria
 
-    parking =  (p_lot**) malloc(sizeof(p_lot*) * num_rows);
+    parking = (p_lot**) malloc(sizeof(p_lot*) * num_rows);
 
     int i;
 
     for (i = 0; i < num_rows; i++) {
 
-        parking[i] = (p_lot*) calloc(num_cols, sizeof(p_lot));
+        parking[i] = (p_lot*) calloc(num_cols, sizeof(p_lot)); // Utilizamos calloc() para inicializar la memoria reservada a 0
     }
 
+}
+
+// Función para comprobar si una plaza está ocupada
+
+int vehicle_inside(int row, int col) {
+
+    return parking[row][col].l_plate != NULL;
 }
 
 // MANTENIMIENTO
@@ -47,7 +55,7 @@ void add_columns(int n) {
 
         int j;
 
-        // Inicialización de nuevas matrículas a NULL
+        // Inicialización de nuevas matrículas a NULL, ya que realloc() no se comporta como calloc()
 
         for (j = num_cols; j < num_cols + n; j++) {
 
@@ -74,7 +82,7 @@ void add_rows(int n) {
 
     for (i = num_rows; i < num_rows + n; i++) {
 
-         parking[i] = (p_lot*) calloc(num_cols, sizeof(p_lot));
+         parking[i] = (p_lot*) calloc(num_cols, sizeof(p_lot)); // Usamos calloc() para las columnas de la fila
     }
 
     num_rows += n;
@@ -92,7 +100,7 @@ void insert_vehicle(char* key, int row, int col) {
 
     }
 
-    if (parking[row][col].l_plate != NULL) {
+    if (vehicle_inside(row, col)) {
 
         printf("La plaza está ocupada!\n");
 
@@ -123,7 +131,7 @@ void clear_p_lot(int row, int col) {
 
 void remove_vehicle(int row, int col) {
 
-    if (parking[row][col].l_plate == NULL) {
+    if (!vehicle_inside(row, col)) {
 
         printf("No hay ningún vehículo que sacar!\n");
 
@@ -171,11 +179,9 @@ void print_parking() {
 
         for (j = 0; j < num_cols; j++) {
 
-            char* str = parking[i][j].l_plate;
-
             printf("[");
 
-            if (str == NULL) {
+            if (!vehicle_inside(i, j)) {
 
                 printf_c(LIGHT_GREEN_TXT, "-");
 
@@ -208,7 +214,7 @@ void free_parking_memory() {
 
         for (j = 0; j < num_cols; j++) {
 
-            if (parking[i][j].l_plate != NULL) {
+            if (vehicle_inside(i, j)) {
 
                 clear_p_lot(i, j);
             }
@@ -220,4 +226,83 @@ void free_parking_memory() {
 
     free(parking);
 
+}
+
+// Formatos que se utilizan en lectura y escritura
+
+static char size_format [] = "%d x %d";
+
+static char vehicle_format [] = "(%d, %d) -> %s";
+
+// Guarda los datos del parking en un fichero de texto
+
+void save_parking() {
+
+    FILE* fp = fopen("parking.txt", "w");
+
+    fprintf(fp, size_format, num_rows, num_cols);
+
+    int i;
+
+    int j;
+
+    for (i = 0; i < num_rows; i++) {
+
+        for (j = 0; j < num_cols; j++) {
+
+            if (vehicle_inside(i, j)) {
+
+                fprintf(fp, vehicle_format, i, j, parking[i][j].l_plate);
+            }
+        }
+    }
+
+    fclose(fp);
+}
+
+// Carga los datos del parking
+
+int load_parking() {
+
+    FILE* fp = fopen("parking.txt", "r");
+
+    if (fp == NULL) {
+
+        return -1;
+    }
+
+    fscanf(fp, size_format, &num_cols, &num_rows);
+
+    create_parking(num_rows, num_cols);
+
+    // Quitamos el '\n' restante
+
+    fgetc(fp);
+
+    // Rellenar el parking
+
+    int i;
+
+    int j;
+
+    char buffer [50];
+
+    while(fgets(buffer,50,fp) != NULL) {
+
+       char str [25];
+
+       sscanf(buffer, vehicle_format, &i, &j, str);
+
+       char* l_plate = (char*) malloc(sizeof(char) * (strlen(str) + 1));
+
+       strcpy(l_plate, str);
+
+       parking[i][j].l_plate = l_plate;
+
+       num_vehicles++;
+    }
+
+    fclose(fp);
+
+    return 0;
 }
