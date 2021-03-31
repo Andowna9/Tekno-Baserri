@@ -149,6 +149,12 @@ void parking_menu() {
             printf_c(UNDERLINE, "Datos de plaza\n");
 
             printf("Vehículo con matrícula: %s\n", parking[r][c].l_plate);
+
+            char* ptr = get_time_passed(parking[r][c].t_stamp);
+
+            printf("Tiempo en parking: %s\n", ptr);
+
+            free(ptr);
         }
 
         else if (strcmp(i_buffer, "4") == 0) {

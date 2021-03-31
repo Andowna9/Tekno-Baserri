@@ -1,6 +1,8 @@
 #ifndef PARKING_H
 #define PARKING_H
 
+#include <time.h>
+
 #define MAX_ROWS 26
 #define MAX_COLS 26
 
@@ -9,6 +11,7 @@
 typedef struct {
 
     char* l_plate; // Matrícula
+    time_t t_stamp; // Tiempo de entrada
 
 }p_lot; // Parking Lot
 
@@ -28,5 +31,6 @@ int load_parking();
 void insert_vehicle(char* key, int row, int col);
 void remove_vehicle(int row, int col);
 void print_parking();
+char* get_time_passed(time_t time_stamp);
 
 #endif // PARKING_H

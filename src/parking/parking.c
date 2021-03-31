@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <console_config.h>
 #include "parking.h"
 
@@ -108,6 +109,14 @@ void insert_vehicle(char* key, int row, int col) {
     }
 
     parking[row][col].l_plate = key;
+
+    time_t t_stamp = time(NULL);
+
+    if (t_stamp != -1) {
+
+        parking[row][col].t_stamp = t_stamp;
+
+    }
 
     num_vehicles++;
 
@@ -232,7 +241,7 @@ void free_parking_memory() {
 
 static char size_format [] = "%d x %d";
 
-static char vehicle_format [] = "(%d, %d) -> %s";
+static char vehicle_format [] = "(%d, %d) -> %s | %lld";
 
 // Guarda los datos del parking en un fichero de texto
 
@@ -252,7 +261,11 @@ void save_parking() {
 
             if (vehicle_inside(i, j)) {
 
-                fprintf(fp, vehicle_format, i, j, parking[i][j].l_plate);
+                p_lot pl = parking[i][j];
+
+                fputc('\n', fp);
+
+                fprintf(fp, vehicle_format, i, j, pl.l_plate, pl.t_stamp);
             }
         }
     }
@@ -291,13 +304,15 @@ int load_parking() {
 
        char str [25];
 
-       sscanf(buffer, vehicle_format, &i, &j, str);
+       time_t t_stamp;
+
+       sscanf(buffer, vehicle_format, &i, &j, str, &t_stamp);
 
        char* l_plate = (char*) malloc(sizeof(char) * (strlen(str) + 1));
 
        strcpy(l_plate, str);
 
-       parking[i][j].l_plate = l_plate;
+       parking[i][j] = (p_lot) {l_plate, t_stamp};
 
        num_vehicles++;
     }
@@ -305,4 +320,22 @@ int load_parking() {
     fclose(fp);
 
     return 0;
+}
+
+char* get_time_passed(time_t time_stamp) {
+
+    time_t current_stamp = time(NULL);
+
+    time_t elapsed = current_stamp - time_stamp;
+
+    struct tm *info;
+
+    info = gmtime(&elapsed);
+
+    char* str = (char*) malloc(sizeof (char) * 50);
+
+    sprintf_s(str, 50, "%d h %d min %d s", info->tm_hour,info->tm_min, info->tm_sec);
+
+    return str;
+
 }
