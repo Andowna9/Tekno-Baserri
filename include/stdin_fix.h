@@ -6,6 +6,9 @@
 void clear_stdin();
 void clean_buffer(char* buffer);
 void scan_str(char* buffer);
+
+// Lectura de datos concretos
 char* read_str();
+int read_int(const char* message);
 
 #endif

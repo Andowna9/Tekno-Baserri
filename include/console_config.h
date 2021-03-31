@@ -9,6 +9,8 @@
         // Color por defecto
 
         RESET_COLOR, // 0
+        UNDERLINE = 4,
+        UNDERLINE_OFF = 24,
 
         // Colores de texto
 

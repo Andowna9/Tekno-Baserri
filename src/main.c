@@ -13,8 +13,7 @@ int main() {
 
     while(1) {
 
-        printf_c(DARK_CYAN_TXT, "-------Tekno Baserri-------"); // Ejemplo de salida de texto con color
-        printf(" %s\n", __DATE__);
+        printf_c(DARK_CYAN_TXT, "-------Tekno Baserri-------\n"); // Ejemplo de salida de texto con color
         printf("1. Gestionar granja\n");
         printf("2. Acceder a parking\n");
         printf("Presiona 'q' para salir\n");

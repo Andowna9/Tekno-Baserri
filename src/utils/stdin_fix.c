@@ -45,3 +45,20 @@ char* read_str() {
 
     return str;
 }
+
+int read_int(const char* message) {
+
+    int ret;
+
+    int n;
+
+    do {
+
+        printf("%s", message);
+        ret = scanf("%2d", &n);
+        clear_stdin();
+
+    } while(ret != 1);
+
+    return n;
+}
