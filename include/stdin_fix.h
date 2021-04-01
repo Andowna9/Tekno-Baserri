@@ -10,5 +10,6 @@ void scan_str(char* buffer);
 // Lectura de datos concretos
 char* read_str();
 int read_int(const char* message);
+int confirm_action(const char* message);
 
 #endif

@@ -71,7 +71,7 @@ void add_rows(int n) {
 
     if (num_rows + n > MAX_ROWS) {
 
-        printf("Límite de filas excedido\n");
+        printf_c(LIGHT_RED_TXT, "Límite de filas excedido\n");
 
         return;
 
@@ -95,7 +95,7 @@ void insert_vehicle(char* key, int row, int col) {
 
     if (row < 0 || row >= num_rows || col < 0 || col >= num_cols) { // Out of bounds
 
-        printf("La plaza no existe!\n");
+        printf_c(LIGHT_RED_TXT, "La plaza no existe!\n");
 
         return;
 
@@ -103,7 +103,7 @@ void insert_vehicle(char* key, int row, int col) {
 
     if (vehicle_inside(row, col)) {
 
-        printf("La plaza está ocupada!\n");
+        printf_c(LIGHT_RED_TXT, "La plaza está ocupada!\n");
 
         return;
     }
@@ -120,7 +120,7 @@ void insert_vehicle(char* key, int row, int col) {
 
     num_vehicles++;
 
-    printf("Vehículo registrado correctamente\n");
+    printf_c(LIGHT_GREEN_TXT, "Vehículo registrado correctamente\n");
 
 }
 
@@ -142,7 +142,7 @@ void remove_vehicle(int row, int col) {
 
     if (!vehicle_inside(row, col)) {
 
-        printf("No hay ningún vehículo que sacar!\n");
+        printf_c(LIGHT_RED_TXT, "No hay ningún vehículo que sacar!\n");
 
         return;
     }
@@ -151,7 +151,7 @@ void remove_vehicle(int row, int col) {
 
     num_vehicles--;
 
-    printf("Vehículo retirado con éxito\n");
+    printf_c(LIGHT_GREEN_TXT, "Vehículo retirado con éxito\n");
 
 }
 
@@ -159,6 +159,21 @@ void remove_vehicle(int row, int col) {
 // Representación matricial del parking en consola
 
 void print_parking() {
+
+    // Variables locales - Configuración visual en consola
+
+    ANSI_COLOR free_color = LIGHT_CYAN_TXT;
+    ANSI_COLOR occupied_color = LIGHT_YELLOW_TXT;
+
+    char free_symbol [] = "•";
+    char occupied_symbol [] = "-";
+
+    // Leyenda
+
+    putchar('\n');
+
+    printf_c(occupied_color, "Ocupado %s\n", occupied_symbol);
+    printf_c(free_color," Libre  %s\n", free_symbol);
 
     // Visualización de las columnas (numéricas)
 
@@ -192,13 +207,13 @@ void print_parking() {
 
             if (!vehicle_inside(i, j)) {
 
-                printf_c(LIGHT_GREEN_TXT, "-");
+                printf_c(free_color, "-");
 
             }
 
             else {
 
-                printf_c(LIGHT_RED_TXT, "•");
+                printf_c(occupied_color, "•");
 
             }
 

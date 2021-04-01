@@ -62,3 +62,37 @@ int read_int(const char* message) {
 
     return n;
 }
+
+// Crea un menú de confirmación en consola
+// Devuelve 1 o 0 (true o false) de acuerdo con la elección
+
+int confirm_action(const char* message) {
+
+    char buff [3]; // Con tres caracteres es necesario para saber si se ha introducido únicamente 's/n' y '\0'
+
+    while(1) {
+
+        printf("%s (s/n): ", message);
+
+        scan_str(buff);
+
+        // Sí
+
+        if (strcmp(buff, "s") == 0) {
+
+            return 1;
+        }
+
+        // No
+
+        else if (strcmp(buff, "n") == 0) {
+
+            return 0;
+
+        }
+
+        printf("Opción no disponible!\n");
+
+    }
+
+}

@@ -13,17 +13,19 @@ int main() {
 
     while(1) {
 
-        printf_c(DARK_CYAN_TXT, "-------Tekno Baserri-------\n"); // Ejemplo de salida de texto con color
-        printf("1. Gestionar granja\n");
-        printf("2. Acceder a parking\n");
-        printf("Presiona 'q' para salir\n");
+        printf_c(DARK_CYAN_TXT, "\n------- TEKNO BASERRI -------\n\n"); // Ejemplo de salida de texto con color
+        printf("1. Gestionar granja.\n");
+        printf("2. Acceder a parking.\n");
+        printf("\nPresiona 'q' para salir.\n\n");
         printf("Input: ");
 
         scan_str(input_buffer);
 
+        putchar('\n');
+
         if (strcmp(input_buffer, "q") == 0) {
 
-            printf("Finalizando programa...\n");
+            printf("\nFinalizando programa...\n");
 
             break;
         }
@@ -31,12 +33,13 @@ int main() {
 
             // Menú granja
             // TODO - Implementar Granja
+            printf("Sorry! Not implemented yet!\n");
             //menuGranja(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
 
         } else if (strcmp(input_buffer, "2") == 0) {
 
             // Menú parking
-            // TODO - Implementar Parking
+
             parking_menu();
 
         }

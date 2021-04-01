@@ -5,23 +5,35 @@
 #include <stdlib.h>
 #include "parking.h"
 
+// Función para pedir por teclado la plaza
+
 void scan_p_plot(int* row_ptr, int* col_ptr) {
 
-    printf("Plaza: ");
+    int ret;
+
     char row;
-    int column ;
-    scanf("%c%2d",&row, &column);
+    int column;
+
+    do {
+
+        printf("Plaza: ");
+        ret = scanf("%c%2d",&row, &column);
+        clear_stdin();
+
+    } while(ret != 2);
+
+    // A partir de los datos del usuario se obtienen la fila y columna como enteros
+
     *row_ptr = row - 'A';
     *col_ptr = column - 1;
 
-    clear_stdin();
 }
 
 void init_parking() {
 
     if (load_parking() != -1) {
 
-        printf("Configuración encontrada!\n");
+        printf_c(LIGHT_MAGENTA_TXT, "Configuración encontrada!\n\n");
     }
 
     else {
@@ -30,7 +42,7 @@ void init_parking() {
 
         // Si no hay una configuarción de parking registrada
 
-        printf("No hay ningún parking registrado\n");
+        printf_c(LIGHT_MAGENTA_TXT, "No hay ningún parking registrado.\n\n");
 
         int w, h;
 
@@ -39,20 +51,20 @@ void init_parking() {
         while(1) {
 
             do {
-                printf("Tamaño (filas columnas): ");
-                ret = scanf("%2d %2d", &h, &w);
+                printf("Tamaño (filas, columnas): ");
+                ret = scanf("%2d, %2d", &h, &w);
                 clear_stdin();
 
                 if (h > MAX_ROWS || w > MAX_COLS) {
 
-                    printf("Máximo número de filas/columnas superado!\n");
+                    printf_c(LIGHT_RED_TXT, "Máximo número de filas/columnas superado!\n");
 
                     ret = 0;
                 }
 
                 if (h < 0 || w < 0) {
 
-                    printf("No se aceptan números negativos!\n");
+                    printf_c(LIGHT_RED_TXT, "No se aceptan números negativos!\n");
 
                     ret = 0;
                 }
@@ -61,11 +73,8 @@ void init_parking() {
 
 
             printf("Número de aparcamientos posibles: %d\n", w * h);
-            printf("Desea continuar?(s/n) ");
 
-            scan_str(buff);
-
-            if (strcmp(buff, "s") == 0) {
+            if (confirm_action("Desea continuar?")) {
 
                 create_parking(h, w); // Creación de parking en memoria
 
@@ -87,20 +96,35 @@ void parking_menu() {
 
     while(1) {
 
+        printf_c(LIGHT_MAGENTA_TXT,"------- PARKING -------\n");
+
         // Imprimir representación del parking
 
         print_parking();
+
+        // Imprimir opciones disponibles por categorías
+
+        printf("Gestión:");
+        printf("\n\n");
 
         printf("1. Introducir vehículo.\n");
         printf("2. Sacar vehículo.\n");
         printf("3. Consultar información de plaza.\n");
         printf("4. Obtener estadísticas generales.\n");
+        putchar('\n');
+
+        printf("Mantenimiento:\n\n");
+
         printf("5. Añadir filas.\n");
         printf("6. Añadir columnas.\n");
+        putchar('\n');
+
         printf("Introduce 'v' para volver.\n");
 
         printf("\nInput: ");
         scan_str(i_buffer);
+
+        putchar('\n'); // Nueva línea para separar input del resultado
 
         if (strcmp(i_buffer, "v") == 0) {
 
@@ -120,6 +144,9 @@ void parking_menu() {
 
            printf("Matrícula: ");
            char* l_plate = read_str();
+
+           putchar('\n');
+
            insert_vehicle(l_plate, r, c);
         }
 
@@ -131,6 +158,9 @@ void parking_menu() {
             int c;
 
             scan_p_plot(&r, &c);
+
+            putchar('\n');
+
             remove_vehicle(r, c);
 
         }
@@ -146,7 +176,8 @@ void parking_menu() {
 
             // Datos de la plaza
 
-            printf_c(UNDERLINE, "Datos de plaza\n");
+            printf_c(UNDERLINE, "Datos de plaza");
+            printf(":\n\n"); // Necesario caracter adicional para que el subrayado no se extienda
 
             printf("Vehículo con matrícula: %s\n", parking[r][c].l_plate);
 
@@ -157,16 +188,24 @@ void parking_menu() {
             free(ptr);
         }
 
+        // Consultar estadísticas generales
+
         else if (strcmp(i_buffer, "4") == 0) {
 
-            int total = num_rows * num_cols;
+            printf_c(UNDERLINE, "Datos estadísticos");
+            printf(":\n\n");
 
+            // Cálculo de total de plazas, num disponibles y ocupadas
+
+            int total = num_rows * num_cols;
 
             printf("Plazas ocupadas: %d\n", num_vehicles);
             printf("Plazas libres: %d\n", total - num_vehicles);
             printf("-------------------\n");
             printf("Total de plazas: %d\n", total);
         }
+
+        // Cambiar número de filas
 
         else if (strcmp(i_buffer, "5") == 0) {
 
@@ -175,6 +214,8 @@ void parking_menu() {
             add_rows(n);
         }
 
+        // Cambiar número de columnas
+
         else if (strcmp(i_buffer, "6") == 0) {
 
            int n = read_int("Incremento: ");
@@ -182,7 +223,11 @@ void parking_menu() {
            add_columns(n);
         }
 
+        // Opción incorrecta
+
         else { printf("Opción no válida!\n"); }
+
+        putchar('\n'); // Nueva línea
 
     }
 }
