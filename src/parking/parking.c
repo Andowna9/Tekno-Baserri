@@ -299,7 +299,7 @@ int load_parking() {
         return -1;
     }
 
-    fscanf(fp, size_format, &num_cols, &num_rows);
+    fscanf(fp, size_format, &num_rows, &num_cols);
 
     create_parking(num_rows, num_cols);
 
