@@ -204,7 +204,12 @@ void parking_menu() {
             printf_c(UNDERLINE, "Datos de plaza");
             printf(":\n\n"); // Necesario caracter adicional para que el subrayado no se extienda
 
-            printf("Vehículo con matrícula: %s\n", parking[r][c].l_plate);
+            char* plate = parking[r][c].l_plate;
+            if (plate == NULL) {
+                plate = "vacía";
+            }
+
+            printf("Vehículo con matrícula: %s\n", plate);
 
             char* ptr = get_time_passed(parking[r][c].t_stamp);
 
