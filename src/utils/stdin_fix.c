@@ -25,19 +25,20 @@ void clean_buffer(char* buffer) {
     }
 }
 
-void scan_str(char* buffer) { // Forma segura de leer strings del teclado
+void scan_str(char* buffer, int buffer_size) { // Forma segura de leer strings del teclado
 
-    fgets(buffer, MAX_BUFFER_SIZE, stdin);
+    fgets(buffer, buffer_size, stdin);
     clean_buffer(buffer);
 }
+
 
 char* read_str() {
 
     // Internal buffer scanning
 
-    char buff [MAX_BUFFER_SIZE];
+    char buff [DEFAULT_BUFFER_SIZE];
 
-    scan_str(buff);
+    scan_str(buff, sizeof(buff));
 
     char* str = (char*) malloc(sizeof(char) * (strlen(buff) + 1));
 
@@ -74,7 +75,7 @@ int confirm_action(const char* message) {
 
         printf("%s (s/n): ", message);
 
-        scan_str(buff);
+        scan_str(buff, sizeof(buff));
 
         // Sí
 

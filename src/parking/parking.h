@@ -24,8 +24,8 @@ p_lot** parking; // Parking - Matriz de 2 dimensiones
 
 void create_parking(int rows, int cols);
 void free_parking_memory();
-void add_columns(int n);
-void add_rows(int n);
+void modify_columns(int dn);
+void modify_rows(int dn);
 void save_parking();
 int load_parking();
 void insert_vehicle(char* key, int row, int col);

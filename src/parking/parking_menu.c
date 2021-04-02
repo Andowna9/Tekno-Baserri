@@ -38,8 +38,6 @@ void init_parking() {
 
     else {
 
-        char buff[MAX_BUFFER_SIZE];
-
         // Si no hay una configuarción de parking registrada
 
         printf_c(LIGHT_MAGENTA_TXT, "No hay ningún parking registrado.\n\n");
@@ -88,11 +86,37 @@ void init_parking() {
 
 }
 
+// Función que modifica filas o columnas dependiendo del puntero a una función que se pase
+
+void modify_parking(void(*modify)(int)) {
+
+    int dn = read_int("Incremento: ");
+
+    putchar('\n');
+
+    if (dn == 0) {
+
+        printf_c(LIGHT_MAGENTA_TXT, "Incremento nulo!\n");
+    }
+
+    else if (dn < 0) {
+
+        printf_c(LIGHT_MAGENTA_TXT, "No se admiten decrementos!\n");
+    }
+
+    else {
+
+        modify(dn);
+
+    }
+
+}
+
 void parking_menu() {
 
     init_parking();
 
-    char i_buffer [MAX_BUFFER_SIZE];
+    char i_buffer [DEFAULT_BUFFER_SIZE];
 
     while(1) {
 
@@ -122,7 +146,7 @@ void parking_menu() {
         printf("Introduce 'v' para volver.\n");
 
         printf("\nInput: ");
-        scan_str(i_buffer);
+        scan_str(i_buffer, sizeof(i_buffer));
 
         putchar('\n'); // Nueva línea para separar input del resultado
 
@@ -209,18 +233,14 @@ void parking_menu() {
 
         else if (strcmp(i_buffer, "5") == 0) {
 
-            int n = read_int("Incremento: ");
-
-            add_rows(n);
+            modify_parking(modify_rows);
         }
 
         // Cambiar número de columnas
 
         else if (strcmp(i_buffer, "6") == 0) {
 
-           int n = read_int("Incremento: ");
-
-           add_columns(n);
+           modify_parking(modify_columns);
         }
 
         // Opción incorrecta

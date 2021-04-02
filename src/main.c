@@ -9,7 +9,7 @@ int main() {
 
     setup_console(); // Configuración de consola con colores + UTF-8
 
-    char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
+    char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
     while(1) {
 
@@ -19,7 +19,7 @@ int main() {
         printf("\nPresiona 'q' para salir.\n\n");
         printf("Input: ");
 
-        scan_str(input_buffer);
+        scan_str(input_buffer, sizeof(input_buffer));
 
         putchar('\n');
 

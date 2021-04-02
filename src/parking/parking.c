@@ -39,11 +39,11 @@ int vehicle_inside(int row, int col) {
 
 // MANTENIMIENTO
 
-void add_columns(int n) {
+void modify_columns(int dn) {
 
-    if (num_cols + n > MAX_COLS) {
+    if (num_cols + dn > MAX_COLS) {
 
-        printf("Límite de columnas excedido\n");
+        printf_c(LIGHT_MAGENTA_TXT, "No es posible tener más de %d columnas!\n", MAX_COLS);
 
         return;
     }
@@ -52,41 +52,41 @@ void add_columns(int n) {
 
     for (i = 0; i < num_rows; i++) {
 
-        parking[i] = (p_lot*) realloc(parking[i], sizeof(p_lot) * (num_cols + n));
+        parking[i] = (p_lot*) realloc(parking[i], sizeof(p_lot) * (num_cols + dn));
 
         int j;
 
         // Inicialización de nuevas matrículas a NULL, ya que realloc() no se comporta como calloc()
 
-        for (j = num_cols; j < num_cols + n; j++) {
+        for (j = num_cols; j < num_cols + dn; j++) {
 
             parking[i][j].l_plate = NULL;
         }
     }
 
-    num_cols += n;
+    num_cols += dn;
 }
 
-void add_rows(int n) {
+void modify_rows(int dn) {
 
-    if (num_rows + n > MAX_ROWS) {
+    if (num_rows + dn > MAX_ROWS) {
 
-        printf_c(LIGHT_RED_TXT, "Límite de filas excedido\n");
+        printf_c(LIGHT_MAGENTA_TXT, "No es posible tener más de %d filas!\n", MAX_ROWS);
 
         return;
 
     }
 
-    parking = (p_lot**) realloc(parking, sizeof(p_lot*) * (num_rows + n));
+    parking = (p_lot**) realloc(parking, sizeof(p_lot*) * (num_rows + dn));
 
     int i;
 
-    for (i = num_rows; i < num_rows + n; i++) {
+    for (i = num_rows; i < num_rows + dn; i++) {
 
          parking[i] = (p_lot*) calloc(num_cols, sizeof(p_lot)); // Usamos calloc() para las columnas de la fila
     }
 
-    num_rows += n;
+    num_rows += dn;
 }
 
 // Inserta un vehículo en el parking
@@ -165,8 +165,8 @@ void print_parking() {
     ANSI_COLOR free_color = LIGHT_CYAN_TXT;
     ANSI_COLOR occupied_color = LIGHT_YELLOW_TXT;
 
-    char free_symbol [] = "•";
-    char occupied_symbol [] = "-";
+    char free_symbol [] = "-";
+    char occupied_symbol [] = "•";
 
     // Leyenda
 
