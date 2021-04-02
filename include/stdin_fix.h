@@ -12,4 +12,7 @@ char* read_str();
 int read_int(const char* message);
 int confirm_action(const char* message);
 
+// Esperar hasta entrada de usuario
+void press_to_continue();
+
 #endif

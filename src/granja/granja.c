@@ -16,17 +16,16 @@ void menuGranja() {
   char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while (1) {
-    printf_c(DARK_CYAN_TXT, "\n------- GRANJA -------\n"); // Ejemplo de salida de texto con color
+    printf_c(LIGHT_CYAN_TXT, "\n------- GRANJA -------\n\n"); // Ejemplo de salida de texto con color
     printf("1. Animales\n");
     printf("2. Cultivos\n");
     printf("3. Terrenos\n");
     printf("4. Gestión económica \n");
     
-    printf("\nv. volver\n");
+    printf_c(LIGHT_CYAN_TXT, "\nv. volver\n");
 
     printf("Input: ");
-    fgets(input_buffer, MAX_BUFFER_SIZE, stdin);
-    clean_buffer(input_buffer);
+    scan_str(input_buffer, sizeof(input_buffer));
 
   if (!strcmp(input_buffer, "1")){
     menuAnimales(); // animales.h

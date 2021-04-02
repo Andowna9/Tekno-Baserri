@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stdin_fix.h"
+#include <console_config.h>
 
 void clear_stdin(); // Llamar cuando estemos seguros de que una limpieza de stdin es necesaria (si no puede pausar la ejecución esperando input)
 void clean_buffer(char* buffer); // Elimina el caracter de nueva línea de un buffer de caracteres (string)
@@ -96,4 +97,9 @@ int confirm_action(const char* message) {
 
     }
 
+}
+
+void press_to_continue() {
+    printf_c(LIGHT_YELLOW_TXT, "Pulsa cualquier tecla para continuar...");
+    getchar();
 }

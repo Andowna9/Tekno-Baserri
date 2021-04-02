@@ -9,11 +9,15 @@ int main() {
 
     setup_console(); // Configuración de consola con colores + UTF-8
 
-    char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
+    char input_buffer[DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
+
+    //test_each_printf_c();
+    //test_nums_printf_c();
+
 
     while(1) {
 
-        printf_c(DARK_CYAN_TXT, "\n------- TEKNO BASERRI -------\n\n"); // Ejemplo de salida de texto con color
+        printf_c(DARK_GRAY_TXT, "\n------- TEKNO BASERRI -------\n\n"); // Ejemplo de salida de texto con color
         printf("1. Gestionar granja.\n");
         printf("2. Acceder a parking.\n");
         printf("\nPresiona 'q' para salir.\n\n");

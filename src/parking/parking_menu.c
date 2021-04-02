@@ -148,12 +148,12 @@ void parking_menu() {
         printf("\nInput: ");
         scan_str(i_buffer, sizeof(i_buffer));
 
-        putchar('\n'); // Nueva línea para separar input del resultado
+
+        printf("\n----------------------\n\n"); // Separador
 
         if (strcmp(i_buffer, "v") == 0) {
 
             save_parking();
-
             break;
         }
 
@@ -200,6 +200,7 @@ void parking_menu() {
 
             // Datos de la plaza
 
+            putchar('\n');
             printf_c(UNDERLINE, "Datos de plaza");
             printf(":\n\n"); // Necesario caracter adicional para que el subrayado no se extienda
 
@@ -249,5 +250,7 @@ void parking_menu() {
 
         putchar('\n'); // Nueva línea
 
+
+        press_to_continue();
     }
 }

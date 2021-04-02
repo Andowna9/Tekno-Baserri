@@ -10,7 +10,7 @@ void menuAlimentos() {
   char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while (1) {
-    printf_c(DARK_CYAN_TXT, "------- ALIMENTOS -------\n");
+    printf_c(DARK_CYAN_TXT, "\n------- ALIMENTOS -------\n\n");
     printf("1. Consultar alimentos\n");
     printf("2. Añadir alimentos \n");
     

@@ -92,3 +92,33 @@
      printf("\x1b[%dm", RESET_COLOR);
 
  }
+
+ void test_nums_printf_c() {
+
+     int i;
+     for (i = 30; i < 38; i++) {
+         printf_c(i, "Color: %i\n", i);
+     }
+     for (i = 90; i < 98; i++) {
+         printf_c(i, "Color: %i\n", i);
+     }
+
+ }
+
+ void test_each_printf_c() {
+     printf_c(DARK_BLACK_TXT, "Dark Black\n");
+     printf_c(DARK_RED_TXT, "Dark Red\n");
+     printf_c(DARK_GREEN_TXT, "Dark Green\n");
+     printf_c(DARK_YELLOW_TXT, "Dark Yellow\n");
+     printf_c(DARK_BLUE_TXT, "Dark Blue\n");
+     printf_c(DARK_MAGENTA_TXT, "Dark Magenta\n");
+     printf_c(DARK_CYAN_TXT, "Dark Cyan\n");
+     printf_c(WHITE_TXT, "White\n");
+     printf_c(DARK_GRAY_TXT, "Dark Gray\n");
+     printf_c(LIGHT_RED_TXT, "Light Red\n");
+     printf_c(LIGHT_GREEN_TXT, "Light Green\n");
+     printf_c(LIGHT_YELLOW_TXT, "Light Yellow\n");
+     printf_c(LIGHT_BLUE_TXT, "Light Blue\n");
+     printf_c(LIGHT_MAGENTA_TXT, "Light Magenta\n");
+     printf_c(LIGHT_CYAN_TXT, "Light Cyan\n");
+ }

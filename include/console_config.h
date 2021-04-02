@@ -44,4 +44,7 @@
 
     void printf_c(ANSI_COLOR color, const char* format, ...);
 
+     void test_nums_printf_c();
+     void test_each_printf_c();
+
 #endif // CONSOLE_CONFIG_H
