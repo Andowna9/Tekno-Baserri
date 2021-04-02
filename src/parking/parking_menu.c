@@ -120,6 +120,9 @@ void parking_menu() {
 
     while(1) {
 
+
+        clear_screen();
+
         printf_c(LIGHT_MAGENTA_TXT,"------- PARKING -------\n");
 
         // Imprimir representación del parking
@@ -128,22 +131,22 @@ void parking_menu() {
 
         // Imprimir opciones disponibles por categorías
 
-        printf("Gestión:");
+        printf("--- Gestión");
         printf("\n\n");
 
-        printf("1. Introducir vehículo.\n");
-        printf("2. Sacar vehículo.\n");
-        printf("3. Consultar información de plaza.\n");
-        printf("4. Obtener estadísticas generales.\n");
+        printf(" 1. Introducir vehículo.\n");
+        printf(" 2. Sacar vehículo.\n");
+        printf(" 3. Consultar información de plaza.\n");
+        printf(" 4. Obtener estadísticas generales.\n");
         putchar('\n');
 
-        printf("Mantenimiento:\n\n");
+        printf("--- Mantenimiento\n\n");
 
-        printf("5. Añadir filas.\n");
-        printf("6. Añadir columnas.\n");
+        printf(" 5. Añadir filas.\n");
+        printf(" 6. Añadir columnas.\n");
         putchar('\n');
 
-        printf("Introduce 'v' para volver.\n");
+        printf("\nIntroduce 'v' para volver.\n");
 
         printf("\nInput: ");
         scan_str(i_buffer, sizeof(i_buffer));
@@ -151,7 +154,7 @@ void parking_menu() {
 
         printf("\n----------------------\n\n"); // Separador
 
-        if (strcmp(i_buffer, "v") == 0) {
+        if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) {
 
             save_parking();
             break;

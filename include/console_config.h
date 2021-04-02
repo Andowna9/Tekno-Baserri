@@ -41,10 +41,13 @@
     void restore_console();
 
     // Imprime el texto con un color dado
-
     void printf_c(ANSI_COLOR color, const char* format, ...);
 
-     void test_nums_printf_c();
-     void test_each_printf_c();
+    // Limpia la pantalla (funciona en Linux y Windows (32 y 64), en otros OS la funcionalidad es nula)
+    void clear_screen();
+
+    // Imprime por pantalla todos los colores de consola posibles
+    void test_nums_printf_c(); // con sus respectivos números
+    void test_each_printf_c(); // con sus respectivos nombres
 
 #endif // CONSOLE_CONFIG_H

@@ -6,6 +6,27 @@
 #include <stdarg.h>
 #include "console_config.h"
 
+#if __gnu_linux__
+void clear_screen() {
+    printf_c(LIGHT_GREEN_TXT, "\n\nLinux OS detected!\n\n");
+    system("clear");
+}
+
+#elif _WIN64 || _WIN32
+void clear_screen() {
+    printf_c(LIGHT_GREEN_TXT, "\n\nWindows OS detected!\n\n");
+    system("cls");
+}
+
+#else
+void clear_screen() {
+    printf_c(LIGHT_RED_TXT, "\n\nNon compatible OS\n\n");
+    return;
+}
+
+#endif
+
+
 #ifdef _WIN32
 
     // Algunas distribuciones de MinGW no lo definen

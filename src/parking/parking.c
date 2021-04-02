@@ -172,7 +172,7 @@ void print_parking() {
 
     putchar('\n');
 
-    printf_c(occupied_color, "Ocupado %s\n", occupied_symbol);
+    printf_c(occupied_color, " Ocupado %s\n", occupied_symbol);
     printf_c(free_color," Libre  %s\n", free_symbol);
 
     // Visualización de las columnas (numéricas)
