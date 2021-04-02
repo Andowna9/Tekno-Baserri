@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../fixStdin.h"
-#include "../console/console_config.h"
+#include <stdin_fix.h>
+#include <console_config.h>
 #include "gestion.h"
 
 #define MAX_BUFFER_SIZE 10
@@ -60,20 +60,23 @@ void menuGestion(){
 
 int consultarIngresos() {
   int* valores = leerFicheroDinero();
+  int valor = valores[0];
   free(valores);
-  return valores[0];
+  return valor;
 }
 
 int consultarGastos() {
   int* valores = leerFicheroDinero();
+  int valor = valores[2];
   free(valores);
-  return valores[2];
+  return valor;
 }
 
 int consultarBeneficios() {
   int* valores = leerFicheroDinero();
+  int valor = valores[1];
   free(valores);
-  return valores[1];
+  return valor;
 }
 
 void inicializarValores() {
@@ -88,7 +91,7 @@ void inicializarValores() {
   int valores[3];
 
 
-  scanf(" %i", valores); 
+  scanf(" %i", valores);
   scanf(" %i", valores + 1);
   scanf(" %i", valores + 2);
   clear_stdin();

@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-#include "../fixStdin.h"
-#include "../console/console_config.h"
+#include <stdin_fix.h>
+#include <console_config.h>
 #include "animales.h"
 #include "alimentos.h"
 #include "cultivos.h"
 #include "terrenos.h"
-#include "../gestion/gestion.h"
+#include "gestion/gestion.h"
 
 #define MAX_BUFFER_SIZE 10
 

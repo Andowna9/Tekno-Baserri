@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
-#include "../fixStdin.h"
+#include <stdin_fix.h>
 #include "alimentos.h"
 #include "animales.h"
-#include "../console/console_config.h"
+#include <console_config.h>
 
 
 #define MAX_BUFFER_SIZE 10

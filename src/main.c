@@ -33,8 +33,7 @@ int main() {
 
             // Menú granja
             // TODO - Implementar Granja
-            printf("Sorry! Not implemented yet!\n");
-            //menuGranja(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
+            menuGranja(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
 
         } else if (strcmp(input_buffer, "2") == 0) {
 

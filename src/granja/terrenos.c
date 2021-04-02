@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "../console/console_config.h"
-#include "../fixStdin.h"
+#include <console_config.h>
+#include <stdin_fix.h>
 #include "terrenos.h"
 
 #define MAX_BUFFER_SIZE 10
