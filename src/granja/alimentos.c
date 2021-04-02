@@ -6,11 +6,13 @@
 
 #define MAX_BUFFER_SIZE 10
 
-void menuAlimentos() {
+void animal_food_menu() {
   char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while (1) {
-    printf_c(DARK_CYAN_TXT, "\n------- ALIMENTOS -------\n\n");
+    clear_screen();
+
+    printf_c(LIGHT_CYAN_TXT, "\n------- ALIMENTOS -------\n\n");
     printf("1. Consultar alimentos\n");
     printf("2. Añadir alimentos \n");
     
@@ -21,11 +23,11 @@ void menuAlimentos() {
     clean_buffer(input_buffer);
 
     if (!strcmp(input_buffer, "1")){
-      consultarAlimentos();
+      check_animal_food();
       
     }
     else if (!strcmp(input_buffer, "2")){
-      comprarAlimentos();
+      buy_animal_food();
 
     }
     else if (!strcmp(input_buffer, "v")) {
@@ -35,10 +37,10 @@ void menuAlimentos() {
   }
 }
 
-void consultarAlimentos(){
+void check_animal_food(){
   // TODO
 }
 
-void comprarAlimentos(){
+void buy_animal_food(){
   // TODO
 }

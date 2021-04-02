@@ -8,13 +8,11 @@
 
 #if __gnu_linux__
 void clear_screen() {
-    printf_c(LIGHT_GREEN_TXT, "\n\nLinux OS detected!\n\n");
     system("clear");
 }
 
 #elif _WIN64 || _WIN32
 void clear_screen() {
-    printf_c(LIGHT_GREEN_TXT, "\n\nWindows OS detected!\n\n");
     system("cls");
 }
 

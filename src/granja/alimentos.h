@@ -2,10 +2,10 @@
 #define ALIMENTOS_H
 
 // menús
-void menuAlimentos();
+void animal_food_menu();
 
 // consultas alimentos
-void consultarAlimentos();
-void comprarAlimentos();
+void check_animal_food();
+void buy_animal_food();
 
 #endif

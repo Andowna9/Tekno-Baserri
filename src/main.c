@@ -17,6 +17,8 @@ int main() {
 
     while(1) {
 
+        clear_screen();
+
         printf_c(DARK_GRAY_TXT, "\n------- TEKNO BASERRI -------\n\n"); // Ejemplo de salida de texto con color
         printf("1. Gestionar granja.\n");
         printf("2. Acceder a parking.\n");
@@ -37,7 +39,7 @@ int main() {
 
             // Menú granja
             // TODO - Implementar Granja
-            menuGranja(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
+            farm_menu(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
 
         } else if (strcmp(input_buffer, "2") == 0) {
 

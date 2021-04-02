@@ -6,17 +6,18 @@
 
 #define MAX_BUFFER_SIZE 10
 
-void menuCultivos() {
+void crops_menu() {
   char input_buffer [MAX_BUFFER_SIZE];
   
   while (1) {
-    printf_c(DARK_CYAN_TXT, "\n------- CULTIVOS -------\n");
-    printf("1. Consultar cultivos\n");
-    printf("2. Consultar terreno (localización)\n");
-    printf("3. Cambiar cultivos\n");
-    printf("4. Cultivar terreno\n");
-    printf("5. Retirar terreno\n");
-    printf("6. Vender cosecha\n");
+    clear_screen();
+
+    printf_c(LIGHT_CYAN_TXT, "\n------- CULTIVOS -------\n\n");
+    printf("1. Consultar terreno\n");
+    printf("2. Cambiar cultivos\n");
+    printf("3. Cultivar terreno\n");
+    printf("4. Retirar terreno\n");
+    printf("5. Vender cosecha\n");
     
     printf("\nv. volver\n");
     printf("Input: ");
@@ -25,22 +26,19 @@ void menuCultivos() {
   
   
     if (!strcmp(input_buffer, "1")){
-      consultarCultivos();
+      check_crops();
     }
     else if (!strcmp(input_buffer, "2")){
-      consultarTerreno();
-    }
-    else if (!strcmp(input_buffer, "3")){
-      cambiarCultivos();
+      change_crop();
     }    
+    else if (!strcmp(input_buffer, "3")){
+      seed_lands();
+    }
     else if (!strcmp(input_buffer, "4")){
-      cultivarTerreno();
+      remove_lands();
     }
     else if (!strcmp(input_buffer, "5")){
-      retirarTerreno();
-    }
-    else if (!strcmp(input_buffer, "6")){
-      venderCosecha();
+      harvest_and_sell();
     }    
     else if (!strcmp(input_buffer, "v")) {
       return;
@@ -49,32 +47,32 @@ void menuCultivos() {
 
 }
 
-void consultarCultivos(){
-  // TODO
-  
+
+void check_crops(){
+    // comprueba qué hay en un terreno en concreto (maíz, trigo, fresas...)
+
+    /*
+     * Terreno: x, y
+     * Contenido: %tipo de cultivo%
+     *
+    */
 }
 
-void consultarTerreno(){
-  // TODO
-
+void change_crop(){
+    // Cambia el cultivo de un terreno (maíz a trigo, por ejemplo)
 }
 
-void cambiarCultivos(){
-  // TODO
-  
+void seed_lands(){
+    // Plantar en un terreno vacío
 }
 
-void cultivarTerreno(){
-  // TODO
-  
+void remove_lands(){
+    // Desregistra un terreno de nuestra propiedad (retirado por el gobierno, vendido...)
 }
 
-void retirarTerreno(){
-  // TODO
-  
-}
-
-void venderCosecha(){
-  // TODO
+void harvest_and_sell(){
+    // Recoge la cosecha y la vende
+    // Registra un terreno como vacío
+    // Registra el beneficio de la venta (gestion.c)
   
 }

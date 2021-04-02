@@ -2,7 +2,7 @@
 #define GRANJA_H
 
 // menús
-void menuGranja();
+void farm_menu();
 
 // consultas granja
 

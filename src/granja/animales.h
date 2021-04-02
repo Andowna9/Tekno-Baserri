@@ -2,14 +2,14 @@
 #define ANIMALES_H
 
 // menús
-void menuAnimales();
-void menuGestionAnimales();
+void animals_menu();
+void animals_management_menu();
 
 // consultas animales
-void consultarAnimales();
-void retirarAnimales();
-void agregarAnimales();
-void venderAnimales();
-void comprarAnimales();
+void check_animals();
+void remove_animals();
+void add_animals();
+void sell_animals();
+void buy_animals();
 
 #endif

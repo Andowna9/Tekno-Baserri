@@ -2,14 +2,13 @@
 #define CULTIVOS_H
 
 // menús
-void menuCultivos();
+void crops_menu();
 
 // consultas cultivos
-void consultarCultivos();
-void consultarTerreno();
-void cambiarCultivos();
-void cultivarTerreno();
-void retirarTerreno();
-void venderCosecha();
+void check_crops();
+void change_crop();
+void seed_lands();
+void remove_lands();
+void harvest_and_sell();
 
 #endif

@@ -6,12 +6,14 @@
 
 #define MAX_BUFFER_SIZE 10
 
-void menuTerrenos() {
+void lands_menu() {
 
   char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while(1){
-    printf_c(DARK_CYAN_TXT, "\n------- TERRENOS -------\n");
+    clear_screen();
+
+    printf_c(LIGHT_CYAN_TXT, "\n------- TERRENOS -------\n\n");
     printf("1. Comprar terrerno\n");
     printf("2. Vender terreno\n");
     
@@ -22,11 +24,11 @@ void menuTerrenos() {
     clean_buffer(input_buffer);
 
     if (!strcmp(input_buffer, "1")) {
-    comprarTerreno();  
+    buy_lands();
     }
 
     else if(!strcmp(input_buffer, "2")) {
-      venderTerreno();
+      sell_lands();
     }
 
     else if(!strcmp(input_buffer, "v")) {
@@ -35,12 +37,17 @@ void menuTerrenos() {
   }
 }
 
-void comprarTerreno(){
-  //TODO
+void check_lands() {
+    // Comprueba el estado de un terreno en concreto
+}
+
+void buy_lands(){
+    // Registra un nuevo terreno como nuestro
+    // Agrega al archivo de balance.dat el coste (gestion.c)
 
 }
 
-void venderTerreno(){
-  //TODO
-
+void sell_lands(){
+    // Desregistra un terreno como nuestro
+    // Agrega al archivo de balance.dat el beneficio (gestion.c)
 }

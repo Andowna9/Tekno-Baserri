@@ -120,7 +120,6 @@ void parking_menu() {
 
     while(1) {
 
-
         clear_screen();
 
         printf_c(LIGHT_MAGENTA_TXT,"------- PARKING -------\n");

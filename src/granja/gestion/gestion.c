@@ -8,14 +8,16 @@
 #define MAX_BUFFER_SIZE 10
 
 float dinero = 0;
-void inicializarValores();
+void initializate_values();
 
-void menuGestion(){
+void management_menu(){
     char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
 
 
     while (1) {
-    printf_c(DARK_CYAN_TXT, "\n------- GESTION -------\n");
+    clear_screen();
+
+    printf_c(LIGHT_CYAN_TXT, "\n------- GESTION -------\n\n");
     printf("1. Consultar ingresos\n");
     printf("2. Consultar gastos\n");
     printf("3. Consultar beneficios \n");
@@ -28,21 +30,21 @@ void menuGestion(){
     clean_buffer(input_buffer);
 
     if (!strcmp(input_buffer, "1")){
-      printf("[ Neto: %i ]\n", consultarIngresos());
+      printf("[ Neto: %i ]\n", check_income());
       
     }
     else if (!strcmp(input_buffer, "2")){
-      printf("[ Gastos: %i ]\n", consultarGastos());
+      printf("[ Gastos: %i ]\n", check_expenses());
 
     }
     else if (!strcmp(input_buffer, "3")){
-      printf("[ Beneficios: %i ]\n", consultarBeneficios());
+      printf("[ Beneficios: %i ]\n", check_benefits());
 
     }
     else if (!strcmp(input_buffer, "4")){
-      printf("[ Neto: %i ]\n", consultarIngresos());
-      printf("[ Gastos: %i ]\n", consultarGastos());
-      printf("[ Beneficios: %i ]\n", consultarBeneficios());
+      printf("[ Neto: %i ]\n", check_income());
+      printf("[ Gastos: %i ]\n", check_expenses());
+      printf("[ Beneficios: %i ]\n", check_benefits());
       
     }    
     else if (!strcmp(input_buffer, "v")) {
@@ -50,7 +52,7 @@ void menuGestion(){
     }
 
     else if(!strcmp(input_buffer, "i")) {
-      inicializarValores();
+      initializate_values();
     }
 
   }
@@ -58,28 +60,28 @@ void menuGestion(){
 
 }
 
-int consultarIngresos() {
-  int* valores = leerFicheroDinero();
+int check_income() {
+  int* valores = read_from_ledger();
   int valor = valores[0];
   free(valores);
   return valor;
 }
 
-int consultarGastos() {
-  int* valores = leerFicheroDinero();
+int check_expenses() {
+  int* valores = read_from_ledger();
   int valor = valores[2];
   free(valores);
   return valor;
 }
 
-int consultarBeneficios() {
-  int* valores = leerFicheroDinero();
+int check_benefits() {
+  int* valores = read_from_ledger();
   int valor = valores[1];
   free(valores);
   return valor;
 }
 
-void inicializarValores() {
+void initializate_values() {
   FILE* file = fopen("balance.dat", "wb");
 
   if (file == NULL) {
@@ -100,11 +102,11 @@ void inicializarValores() {
 }
 
 
-void escribirFicheroDinero(int neto, int beneficio, int gasto){
+void write_to_ledger(int neto, int beneficio, int gasto){
   FILE* file = fopen("balance.dat", "wb");
   
   if (file == NULL){
-    printf("No se pudo abrir balance.dat\n");
+    printf_c(LIGHT_RED_TXT, "No se pudo abrir balance.dat\n");
     return;
   }
 
@@ -114,7 +116,7 @@ void escribirFicheroDinero(int neto, int beneficio, int gasto){
   
 }
 
-int* leerFicheroDinero() {
+int* read_from_ledger() {
   FILE* file = fopen("balance.dat", "rb");
 
   if (file == NULL){

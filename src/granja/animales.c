@@ -8,11 +8,13 @@
 
 #define MAX_BUFFER_SIZE 10
 
-void menuAnimales() {
+void animals_menu() {
   char input_buffer [MAX_BUFFER_SIZE];
 
   while (1) {
-    printf_c(DARK_CYAN_TXT, "\n------- ANIMALES -------\n");     
+    clear_screen();
+
+    printf_c(LIGHT_CYAN_TXT, "\n------- ANIMALES -------\n\n");
     printf("1. Gestionar comida\n");
     printf("2. Gestionar animales\n");
     
@@ -23,11 +25,11 @@ void menuAnimales() {
     clean_buffer(input_buffer);
 
     if (!strcmp(input_buffer, "1")) {
-      menuAlimentos(); // alimentos.h
+      animal_food_menu(); // alimentos.h
     } 
 
     else if(!strcmp(input_buffer, "2")) {
-      menuGestionAnimales();
+      animals_management_menu();
     }
     
     else if (!strcmp(input_buffer, "v")) {
@@ -38,11 +40,13 @@ void menuAnimales() {
 
 }
 
-void menuGestionAnimales(){
+void animals_management_menu(){
   char input_buffer [MAX_BUFFER_SIZE];
 
   while (1) {
-    printf_c(DARK_CYAN_TXT, "\n------- GESTION ANIMALES -------\n");     
+    clear_screen();
+
+    printf_c(LIGHT_CYAN_TXT, "\n------- GESTION ANIMALES -------\n\n");
     printf("1. Consultar animales\n");
     printf("2. Retirar animales\n");
     printf("3. Agregar animales\n");
@@ -56,20 +60,20 @@ void menuGestionAnimales(){
     clean_buffer(input_buffer);
 
     if (!strcmp(input_buffer, "1")) {
-      consultarAnimales();
+      check_animals();
     } 
 
     else if(!strcmp(input_buffer, "2")) {
-      retirarAnimales();
+      remove_animals();
     }
     else if(!strcmp(input_buffer, "3")) {
-      agregarAnimales();
+      add_animals();
     }
     else if(!strcmp(input_buffer, "4")) {
-      venderAnimales();
+      sell_animals();
     } 
     else if(!strcmp(input_buffer, "5")) {
-      comprarAnimales();
+      buy_animals();
     }       
     else if (!strcmp(input_buffer, "v")) {
       return;
@@ -77,27 +81,27 @@ void menuGestionAnimales(){
   }
 }
 
-void consultarAnimales(){
+void check_animals(){
   //TODO
 
 }
 
-void retirarAnimales(){
+void remove_animals(){
   //TODO
 
 }
 
-void agregarAnimales(){
+void add_animals(){
   //TODO
 
 }
 
-void venderAnimales(){
+void sell_animals(){
   //TODO
 
 }
 
-void comprarAnimales(){
+void buy_animals(){
   //TODO
 
 }

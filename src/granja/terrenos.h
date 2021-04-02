@@ -2,10 +2,11 @@
 #define TERRENOS_H
 
 // menús
-void menuTerrenos();
+void lands_menu();
 
 // consultas terrenos
-void comprarTerreno();
-void venderTerreno();
+void buy_lands();
+void sell_lands();
+void check_lands();
 
 #endif
