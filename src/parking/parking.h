@@ -33,4 +33,16 @@ void remove_vehicle(int row, int col);
 void print_parking();
 char* get_time_passed(time_t time_stamp);
 
+
+// Punto destacado de la matriz
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+Point highlighted_point;
+void set_highlighted_point(int x, int y);
+void reset_highlighted_point();
+
+
 #endif // PARKING_H

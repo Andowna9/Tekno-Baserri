@@ -5,6 +5,7 @@
 #include <console_config.h>
 #include "parking.h"
 
+
 // Creación dinámica del parking
 
 void create_parking(int rows, int cols) {
@@ -80,7 +81,6 @@ void modify_rows(int dn) {
     parking = (p_lot**) realloc(parking, sizeof(p_lot*) * (num_rows + dn));
 
     int i;
-
     for (i = num_rows; i < num_rows + dn; i++) {
 
          parking[i] = (p_lot*) calloc(num_cols, sizeof(p_lot)); // Usamos calloc() para las columnas de la fila
@@ -96,7 +96,6 @@ void insert_vehicle(char* key, int row, int col) {
     if (row < 0 || row >= num_rows || col < 0 || col >= num_cols) { // Out of bounds
 
         printf_c(LIGHT_RED_TXT, "La plaza no existe!\n");
-
         return;
 
     }
@@ -104,12 +103,11 @@ void insert_vehicle(char* key, int row, int col) {
     if (vehicle_inside(row, col)) {
 
         printf_c(LIGHT_RED_TXT, "La plaza está ocupada!\n");
-
         return;
     }
 
-    parking[row][col].l_plate = key;
 
+    parking[row][col].l_plate = key;
     time_t t_stamp = time(NULL);
 
     if (t_stamp != -1) {
@@ -158,12 +156,23 @@ void remove_vehicle(int row, int col) {
 
 // Representación matricial del parking en consola
 
+void set_highlighted_point(int x, int y) {
+    highlighted_point.x = x;
+    highlighted_point.y = y;
+}
+
+void reset_highlighted_point() {
+    highlighted_point.x = -1;
+    highlighted_point.y = -1;
+}
+
 void print_parking() {
 
     // Variables locales - Configuración visual en consola
 
     ANSI_COLOR free_color = LIGHT_CYAN_TXT;
     ANSI_COLOR occupied_color = LIGHT_YELLOW_TXT;
+    ANSI_COLOR highlight_color = LIGHT_RED_TXT;
 
     char free_symbol [] = "-";
     char occupied_symbol [] = "•";
@@ -171,6 +180,10 @@ void print_parking() {
     // Leyenda
 
     putchar('\n');
+
+    if (highlighted_point.x >= 0 && highlighted_point.y >= 0) {
+        printf_c(highlight_color, " Seleccionado %s / %s\n", occupied_symbol, free_symbol);
+    }
 
     printf_c(occupied_color, " Ocupado %s\n", occupied_symbol);
     printf_c(free_color," Libre  %s\n", free_symbol);
@@ -207,13 +220,22 @@ void print_parking() {
 
             if (!vehicle_inside(i, j)) {
 
-                printf_c(free_color, "-");
+                if (i == highlighted_point.x && j == highlighted_point.y) { // La plaza que queremos destacar
+                    printf_c(highlight_color, "-");
+                } else {
+                    printf_c(free_color, "-");
+                }
+
 
             }
 
             else {
 
-                printf_c(occupied_color, "•");
+                if (i == highlighted_point.x && j == highlighted_point.y) { // La plaza que queremos destacar
+                    printf_c(highlight_color, "•");
+                } else {
+                    printf_c(occupied_color, "•"); // No es una plaza que queramos destacar
+                }
 
             }
 
