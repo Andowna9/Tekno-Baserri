@@ -1,1 +1,0 @@
-// TODO Clase cultivo (segunda parte de la asignatura)
