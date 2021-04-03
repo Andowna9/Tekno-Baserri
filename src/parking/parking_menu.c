@@ -30,6 +30,57 @@ void scan_p_plot(int* row_ptr, int* col_ptr) {
 
 }
 
+// Pide al usuario datos para determinar la configuración del parking
+
+void scan_parking() {
+
+    int w, h; // Altura y anchura (filas y columnas)
+
+    int ret;
+
+    while(1) {
+
+        do {
+            printf("Tamaño (filas, columnas): ");
+            ret = scanf("%2d, %2d", &h, &w);
+            clear_stdin();
+
+            // Comprobación de que el tamaño no se sale de los límites establecidos
+
+            if (h > MAX_ROWS || w > MAX_COLS) {
+
+                printf_c(LIGHT_RED_TXT, "Máximo número de filas/columnas superado!\n");
+
+                ret = 0;
+            }
+
+            if (h < 0 || w < 0) {
+
+                printf_c(LIGHT_RED_TXT, "No se aceptan números negativos!\n");
+
+                ret = 0;
+            }
+
+        } while(ret != 2);
+
+
+        printf("Número de aparcamientos posibles: %d\n", w * h);
+
+        if (confirm_action("Desea continuar?")) {
+
+            create_parking(h, w); // Creación de parking en memoria
+
+            break;
+
+        }
+
+    }
+
+
+}
+
+// Inicializa el parking a partir de fichero de texto si existe
+
 void init_parking() {
 
     if (load_parking() != -1) {
@@ -43,45 +94,7 @@ void init_parking() {
 
         printf_c(LIGHT_MAGENTA_TXT, "No hay ningún parking registrado.\n\n");
 
-        int w, h;
-
-        int ret;
-
-        while(1) {
-
-            do {
-                printf("Tamaño (filas, columnas): ");
-                ret = scanf("%2d, %2d", &h, &w);
-                clear_stdin();
-
-                if (h > MAX_ROWS || w > MAX_COLS) {
-
-                    printf_c(LIGHT_RED_TXT, "Máximo número de filas/columnas superado!\n");
-
-                    ret = 0;
-                }
-
-                if (h < 0 || w < 0) {
-
-                    printf_c(LIGHT_RED_TXT, "No se aceptan números negativos!\n");
-
-                    ret = 0;
-                }
-
-            } while(ret != 2);
-
-
-            printf("Número de aparcamientos posibles: %d\n", w * h);
-
-            if (confirm_action("Desea continuar?")) {
-
-                create_parking(h, w); // Creación de parking en memoria
-
-                break;
-
-            }
-
-        }
+        scan_parking();
 
     }
 
@@ -107,8 +120,12 @@ void modify_parking(void(*modify)(int)) {
 
     else {
 
-        modify(dn);
-        printf_c(LIGHT_GREEN_TXT, "Añadida(s) con éxito.\n");
+        if (confirm_action("Está seguro/a?")) {
+
+            modify(dn);
+            printf_c(LIGHT_GREEN_TXT, "Añadida(s) con éxito.\n");
+        }
+
     }
 
 }
@@ -328,7 +345,7 @@ void parking_menu() {
         else if (strcmp(i_buffer, "5") == 0) {
 
             modify_parking(modify_rows);
-            // TODO confirmar añadir columnas
+
             save_needed = true;
         }
 
@@ -336,14 +353,18 @@ void parking_menu() {
         else if (strcmp(i_buffer, "6") == 0) {
 
            modify_parking(modify_columns);
-           // TODO confirmar añadir columnas
+
            save_needed = true;
         }
 
         //Crear nueva configuración
         else if (strcmp(i_buffer, "7") == 0) {
 
-            // TODO Borrar configuración del fichero y crear un parking desde 0
+            scan_parking();
+
+            save_needed = true;
+
+
         }
 
         // Opción incorrecta

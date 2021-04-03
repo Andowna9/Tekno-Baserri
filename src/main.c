@@ -38,8 +38,8 @@ int main() {
         else if (strcmp(input_buffer, "1") == 0) {
 
             // Menú granja
-            // TODO - Implementar Granja
-            farm_menu(); // Temporalmente inhabilitada -> CAMBIAR Includes que ya no funcionen
+
+            farm_menu();
 
         } else if (strcmp(input_buffer, "2") == 0) {
 
