@@ -74,21 +74,16 @@ int confirm_action(const char* message) {
 
     while(1) {
 
-        printf("%s (s/n): ", message);
-
+        printf_c(LIGHT_YELLOW_TXT, "%s (s/n): ", message);
         scan_str(buff, sizeof(buff));
 
         // Sí
-
         if (strcmp(buff, "s") == 0) {
-
             return 1;
         }
 
         // No
-
         else if (strcmp(buff, "n") == 0) {
-
             return 0;
 
         }
