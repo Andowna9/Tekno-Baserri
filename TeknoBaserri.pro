@@ -5,9 +5,14 @@ CONFIG -= qt
 
 SOURCES += src/main.c \
            src/console/console_config.c \
+           src/granja/animal_food.c \
+           src/granja/animals.c \
+           src/granja/crops.c \
+           src/granja/farm.c \
+           src/granja/management/management.c \
+           src/granja/lands.c \
            src/parking/parking.c \
            src/parking/parking_menu.c \
-           src/granja/granja.c src/granja/alimentos.c src/granja/cultivos.c src/granja/terrenos.c src/granja/animales.c src/granja/gestion/gestion.c\
            src/utils/stdin_fix.c
 
 HEADERS += src/console/console_config.h \
