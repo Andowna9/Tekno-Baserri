@@ -12,10 +12,10 @@ void lands_menu() {
     clear_screen();
 
     printf_c(LIGHT_CYAN_TXT, "------- TERRENOS -------\n\n");
-    printf("1. Comprar terrerno\n");
-    printf("2. Vender terreno\n");
+    printf("1. Comprar terrerno.\n");
+    printf("2. Vender terreno.\n");
     
-    printf("\nv. volver\n");
+    printf("\nIntroduce 'v' para volver.\n\n");
 
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));

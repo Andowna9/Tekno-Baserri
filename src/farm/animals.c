@@ -9,13 +9,14 @@ void animals_menu() {
   char input_buffer [DEFAULT_BUFFER_SIZE];
 
   while (1) {
+
     clear_screen();
 
     printf_c(LIGHT_CYAN_TXT, "------- ANIMALES -------\n\n");
-    printf("1. Gestionar comida\n");
-    printf("2. Gestionar animales\n");
+    printf("1. Gestionar comida.\n");
+    printf("2. Gestionar animales.\n");
     
-    printf("\nv. Volver\n");
+    printf("\nIntroduce 'v' para volver.\n\n");
 
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));

@@ -5,29 +5,27 @@
 #include <console_config.h>
 #include "management.h"
 
-#define MAX_BUFFER_SIZE 10
-
 float dinero = 0;
 void initializate_values();
 
 void management_menu(){
-    char input_buffer [MAX_BUFFER_SIZE]; // Buffer de lectura por defecto
+    char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
 
     while (1) {
     clear_screen();
 
-    printf_c(LIGHT_CYAN_TXT, "------- GESTION -------\n\n");
-    printf("1. Consultar ingresos\n");
-    printf("2. Consultar beneficios \n");
-    printf("3. Consultar gastos\n");
-    printf("4. Consultar balance general \n");
+    printf_c(LIGHT_CYAN_TXT, "------- GESTIÓN -------\n\n");
+    printf("1. Consultar ingresos.\n");
+    printf("2. Consultar beneficios.\n");
+    printf("3. Consultar gastos.\n");
+    printf("4. Consultar balance general.\n");
     
-    printf("\nv. volver\n");
+    printf("\nIntroduce 'v' para volver.\n\n");
 
     printf("Input: ");
-    fgets(input_buffer, MAX_BUFFER_SIZE, stdin);
-    clean_buffer(input_buffer);
+
+    scan_str(input_buffer, sizeof(input_buffer));
     putchar('\n');
 
     if (!strcmp(input_buffer, "1")){
@@ -115,6 +113,7 @@ void initializate_values() {
 
 
 void write_to_ledger(int neto, int beneficio, int gasto) {
+
   FILE* file = fopen("balance.dat", "wb");
   
   if (file == NULL){
@@ -131,6 +130,7 @@ void write_to_ledger(int neto, int beneficio, int gasto) {
 }
 
 int* read_from_ledger() {
+
   FILE* file = fopen("balance.dat", "rb");
 
   if (file == NULL){

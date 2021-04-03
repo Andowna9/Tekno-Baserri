@@ -6,19 +6,20 @@
 
 
 void crops_menu() {
+
   char input_buffer [DEFAULT_BUFFER_SIZE];
   
   while (1) {
     clear_screen();
 
     printf_c(LIGHT_CYAN_TXT, "------- CULTIVOS -------\n\n");
-    printf("1. Consultar terreno\n");
-    printf("2. Cambiar cultivos\n");
-    printf("3. Cultivar terreno\n");
-    printf("4. Retirar terreno\n");
-    printf("5. Vender cosecha\n");
+    printf("1. Consultar terreno.\n");
+    printf("2. Cambiar cultivos.\n");
+    printf("3. Cultivar terreno.\n");
+    printf("4. Retirar terreno.\n");
+    printf("5. Vender cosecha.\n");
     
-    printf("\nv. volver\n");
+    printf("\nIntroduce 'v' para volver.\n\n");
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));
   

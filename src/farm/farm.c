@@ -9,7 +9,6 @@
 #include "management/management.h"
 
 void farm_menu() {
-  setup_console();
   
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
@@ -17,12 +16,12 @@ void farm_menu() {
     clear_screen();
 
     printf_c(LIGHT_CYAN_TXT, "------- GRANJA -------\n\n"); // Ejemplo de salida de texto con color
-    printf("1. Animales\n");
-    printf("2. Cultivos\n");
-    printf("3. Terrenos\n");
-    printf("4. Gestión económica \n");
+    printf("1. Animales.\n");
+    printf("2. Cultivos.\n");
+    printf("3. Terrenos.\n");
+    printf("4. Gestión económica.\n");
     
-    printf("\nv. volver\n");
+    printf("\nIntroduce 'v' para volver.\n\n");
 
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));

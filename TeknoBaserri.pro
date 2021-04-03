@@ -5,12 +5,12 @@ CONFIG -= qt
 
 SOURCES += src/main.c \
            src/console/console_config.c \
-           src/granja/animal_food.c \
-           src/granja/animals.c \
-           src/granja/crops.c \
-           src/granja/farm.c \
-           src/granja/management/management.c \
-           src/granja/lands.c \
+           src/farm/animal_food.c \
+           src/farm/animals.c \
+           src/farm/crops.c \
+           src/farm/farm.c \
+           src/farm/management/management.c \
+           src/farm/lands.c \
            src/parking/parking.c \
            src/parking/parking_menu.c \
            src/utils/stdin_fix.c
@@ -18,7 +18,7 @@ SOURCES += src/main.c \
 HEADERS += src/console/console_config.h \
     src/parking/parking.h \
     src/parking/parking_menu.h \
-    src/granja/*.h \
+    src/farm/*.h \
     include/*.h
 
 INCLUDEPATH += include/

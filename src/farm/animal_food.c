@@ -12,10 +12,10 @@ void animal_food_menu() {
     clear_screen();
 
     printf_c(LIGHT_CYAN_TXT, "------- ALIMENTOS -------\n\n");
-    printf("1. Consultar alimentos\n");
-    printf("2. Añadir alimentos \n");
+    printf("1. Consultar alimentos.\n");
+    printf("2. Añadir alimentos.\n");
     
-    printf("\nv. volver\n");
+    printf("\nIntroduce 'v' para volver.\n\n");
 
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));
