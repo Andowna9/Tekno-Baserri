@@ -378,10 +378,16 @@ char* get_time_passed(time_t time_stamp) {
 
     info = gmtime(&elapsed);
 
-    char* str = (char*) malloc(sizeof (char) * 50);
+    const char* str = "%d h %d min %d s";
 
-    sprintf_s(str, 50, "%d h %d min %d s", info->tm_hour,info->tm_min, info->tm_sec);
+    // Formateamos y obtenemos el número de caracteres necesarios (sin contar '\0')
 
-    return str;
+    int num_c = snprintf(NULL, 0, str, info->tm_hour,info->tm_min, info->tm_sec);
+
+    char* str_f = (char*) malloc(sizeof(char) * (num_c + 1));
+
+    snprintf(str_f, num_c + 1, str, info->tm_hour,info->tm_min, info->tm_sec);
+
+    return str_f;
 
 }

@@ -6,6 +6,7 @@
 #include <console_config.h>
 
 void animals_menu() {
+
   char input_buffer [DEFAULT_BUFFER_SIZE];
 
   while (1) {
