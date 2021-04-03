@@ -89,16 +89,24 @@ void modify_rows(int dn) {
     num_rows += dn;
 }
 
-// Inserta un vehículo en el parking
+// Comprueba si una posición dada está fuera de rango
 
-void insert_vehicle(char* key, int row, int col) {
+int out_of_bounds(int row, int col) {
 
     if (row < 0 || row >= num_rows || col < 0 || col >= num_cols) { // Out of bounds
 
         printf_c(LIGHT_RED_TXT, "La plaza no existe!\n");
-        return;
+        return 1;
 
     }
+
+    return 0;
+
+}
+
+// Inserta un vehículo en el parking
+
+void insert_vehicle(char* key, int row, int col) {
 
     if (vehicle_inside(row, col)) {
 
@@ -132,6 +140,8 @@ void clear_p_lot(int row, int col) {
 
     parking[row][col].l_plate = NULL;
 
+    parking[row][col].t_stamp = 0;
+
 }
 
 // Elimina un vehículo del parking
@@ -141,7 +151,6 @@ void remove_vehicle(int row, int col) {
     if (!vehicle_inside(row, col)) {
 
         printf_c(LIGHT_RED_TXT, "No hay ningún vehículo que sacar!\n");
-
         return;
     }
 
