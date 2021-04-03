@@ -18,8 +18,7 @@ void clear_screen() {
 
 #else
 void clear_screen() {
-    printf_c(LIGHT_RED_TXT, "\n\nNon compatible OS\n\n");
-    return;
+    putchar('\n');
 }
 
 #endif
