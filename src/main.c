@@ -4,6 +4,7 @@
 #include <stdin_fix.h>
 #include "farm/farm.h"
 #include "parking/parking_menu.h"
+#include "parking/parking.h"
 
 int main() {
 
@@ -31,7 +32,7 @@ int main() {
 
         if (strcmp(input_buffer, "q") == 0 || strcmp(input_buffer, "Q") == 0) {
 
-            printf("\nFinalizando programa...\n");
+            printf("Finalizando programa...\n");
 
             break;
         }
@@ -51,10 +52,16 @@ int main() {
 
         else { printf("Opción no reconocida!\n"); }
 
+        putchar('\n');
+
+        press_to_continue();
+
 
     }
 
-    // TODO - Desalojar memoria dinámica si la hay
+    // Liberación de memoria dinámica sobrante
+
+    free_parking_memory();
 
     restore_console(); // Restauración de configuración de consola (se revocan los cambios)
 

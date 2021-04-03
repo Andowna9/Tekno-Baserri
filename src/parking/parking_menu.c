@@ -66,7 +66,7 @@ void scan_parking() {
 
         printf("Número de aparcamientos posibles: %d\n", w * h);
 
-        if (confirm_action("Desea continuar?")) {
+        if (confirm_action("¿Desea continuar?")) {
 
             create_parking(h, w); // Creación de parking en memoria
 
@@ -120,7 +120,7 @@ void modify_parking(void(*modify)(int)) {
 
     else {
 
-        if (confirm_action("Está seguro/a?")) {
+        if (confirm_action("¿Está seguro/a?")) {
 
             modify(dn);
             printf_c(LIGHT_GREEN_TXT, "Añadida(s) con éxito.\n");
@@ -193,7 +193,7 @@ void parking_menu() {
         if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) {
 
             if (save_needed) {
-                int dont_save = confirm_action("Existen cambios sin guardar, ¿salir?");
+                int dont_save = confirm_action("Existen cambios sin guardar. ¿Salir?");
 
                 if (dont_save) {
                     printf_c(LIGHT_RED_TXT, "No se han guardado los cambios.\n");
@@ -360,9 +360,15 @@ void parking_menu() {
         //Crear nueva configuración
         else if (strcmp(i_buffer, "7") == 0) {
 
-            scan_parking();
+            if (confirm_action("Se perderá la configuración actual. ¿Confirmar?")) {
 
-            save_needed = true;
+                free_parking_memory(); // Desalojamos la memoria dinámica actual del parking
+
+                scan_parking(); // Pedimos nueva configuración y alojamos la cantidad memoria necesaria
+
+                save_parking(); // Realizamos el cambio también en disco
+
+            }
 
 
         }
