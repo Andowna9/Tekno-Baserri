@@ -2,7 +2,7 @@
 #include <string.h>
 #include <console_config.h>
 #include <stdin_fix.h>
-#include "granja/granja.h"
+#include "granja/farm.h"
 #include "parking/parking_menu.h"
 
 int main() {
@@ -19,7 +19,7 @@ int main() {
 
         clear_screen();
 
-        printf_c(DARK_GRAY_TXT, "\n------- TEKNO BASERRI -------\n\n"); // Ejemplo de salida de texto con color
+        printf_c(DARK_GRAY_TXT, "------- TEKNO BASERRI -------\n\n"); // Ejemplo de salida de texto con color
         printf("1. Gestionar granja.\n");
         printf("2. Acceder a parking.\n");
         printf("\nPresiona 'q' para salir.\n\n");
@@ -29,7 +29,7 @@ int main() {
 
         putchar('\n');
 
-        if (strcmp(input_buffer, "q") == 0) {
+        if (strcmp(input_buffer, "q") == 0 || strcmp(input_buffer, "Q") == 0) {
 
             printf("\nFinalizando programa...\n");
 
