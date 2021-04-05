@@ -29,10 +29,11 @@ void modify_rows(int dn);
 int out_of_bounds(int row, int col);
 void save_parking();
 int load_parking();
-void insert_vehicle(char* key, int row, int col);
-void remove_vehicle(int row, int col);
+int insert_vehicle(char* key, int row, int col);
+int remove_vehicle(int row, int col);
 void print_parking();
 char* get_time_passed(time_t time_stamp);
+int vehicle_inside(int row, int col);
 
 
 // Punto destacado de la matriz
