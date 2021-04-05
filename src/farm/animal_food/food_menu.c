@@ -31,6 +31,8 @@ void animal_food_menu() {
 
     if (strcmp(input_buffer, "v") == 0) {
 
+      free_animal_food_memory();
+
       break;
 
     }

@@ -21,4 +21,6 @@ int buy_animal_food(int id, float amount);
 int space_available();
 int read_food_types();
 
+void free_animal_food_memory();
+
 #endif

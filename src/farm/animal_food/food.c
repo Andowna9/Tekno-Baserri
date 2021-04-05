@@ -258,3 +258,15 @@ int read_food_types() {
     return 0;
 }
 
+// Libera la memoria asociada a punteros dinámicos: Nombre
+
+void free_animal_food_memory() {
+
+    int i;
+
+    for (i = 0; i < size; i++) {
+
+        free(arr[i].name);
+    }
+}
+
