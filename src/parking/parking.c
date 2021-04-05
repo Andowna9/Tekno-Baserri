@@ -5,7 +5,6 @@
 #include <console_config.h>
 #include "parking.h"
 
-
 // Creación dinámica del parking
 
 void create_parking(int rows, int cols) {
@@ -106,12 +105,12 @@ int out_of_bounds(int row, int col) {
 
 // Inserta un vehículo en el parking
 
-void insert_vehicle(char* key, int row, int col) {
+int insert_vehicle(char* key, int row, int col) {
 
     if (vehicle_inside(row, col)) {
 
         printf_c(LIGHT_RED_TXT, "La plaza está ocupada!\n");
-        return;
+        return 0;
     }
 
 
@@ -127,6 +126,8 @@ void insert_vehicle(char* key, int row, int col) {
     num_vehicles++;
 
     printf_c(LIGHT_GREEN_TXT, "Vehículo registrado correctamente\n");
+
+    return 1;
 
 }
 
@@ -146,12 +147,12 @@ void clear_p_lot(int row, int col) {
 
 // Elimina un vehículo del parking
 
-void remove_vehicle(int row, int col) {
+int remove_vehicle(int row, int col) {
 
     if (!vehicle_inside(row, col)) {
 
         printf_c(LIGHT_RED_TXT, "No hay ningún vehículo que sacar!\n");
-        return;
+        return 0;
     }
 
     clear_p_lot(row, col);
@@ -159,6 +160,7 @@ void remove_vehicle(int row, int col) {
     num_vehicles--;
 
     printf_c(LIGHT_GREEN_TXT, "Vehículo retirado con éxito\n");
+    return 1;
 
 }
 
