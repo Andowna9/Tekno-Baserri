@@ -6,6 +6,9 @@
 #include "parking.h"
 #include <stdbool.h>
 
+// Variables del file
+bool save_needed;
+
 // Función para pedir por teclado la plaza
 
 void scan_p_plot(int* row_ptr, int* col_ptr) {
@@ -100,9 +103,159 @@ void init_parking() {
 
 }
 
-// Función que modifica filas o columnas dependiendo del puntero a una función que se pase
+// Métodos para dibujar el parking de cero
+void clear_and_redraw() {
+    clear_screen(); // Limpiamos pantalla
+    printf_c(LIGHT_MAGENTA_TXT,"------- PARKING -------\n\n");
+    print_parking(); // Redibujamos el parking
+}
 
-void modify_parking(void(*modify)(int)) {
+void clear_redraw_and_highlight(int r, int c) {
+    set_highlighted_point(r, c); // Destacamos el punto
+    clear_and_redraw();
+    reset_highlighted_point(); // Dejamos de destacar
+}
+// endof
+
+
+// MENÚS (MODULARIZADOS)
+// Menú 1. Introducir vehículo.
+void insert_vehicle_op() {
+    int r, c;
+    scan_p_plot(&r, &c);
+
+    if (!out_of_bounds(r, c)) {
+
+        // Limpiamos y redibujamos para destacar el punto
+        clear_redraw_and_highlight(r, c);
+
+        if (vehicle_inside(r, c)) {
+            printf_c(LIGHT_RED_TXT, "La plaza ya está ocupada.\n");
+
+        } else {
+            printf("Matrícula: ");
+            char* l_plate = read_str();
+
+            // Confirmamos que quiera guardar
+            int save = confirm_action("Aparcar coche?");
+
+            if (save) {
+                int parked = insert_vehicle(l_plate, r, c);
+                if (parked) {
+                    save_needed = true;
+                }
+
+
+            } else {
+                printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no agregado\n");
+            }
+        }
+
+    }
+
+    putchar('\n');
+}
+
+
+// Menú 2. Sacar vehículo
+void remove_vehicle_op() {
+    int r, c;
+    scan_p_plot(&r, &c);
+
+    if (!out_of_bounds(r, c)) {
+
+        // Limpiamos y redibujamos para destacar el punto
+        clear_redraw_and_highlight(r, c);
+
+        if (!vehicle_inside(r, c)) {
+            printf_c(LIGHT_RED_TXT, "Plaza de parking vacía.");
+
+
+        } else {
+            // Confirmamos que quiera guardar
+            int save = confirm_action("Retirar coche?");
+
+            if (save) { // Caso afirmativo
+                int unparked = remove_vehicle(r, c); // Aquí se incluye el aviso de que el coche se ha retirado con éxito (o lo contrario)
+                if (unparked) {
+                    save_needed = true;
+                }
+
+
+
+            } else { // Caso negativo
+                printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no retirado\n");
+            }
+        }
+
+
+
+    }
+
+
+    putchar('\n');
+}
+
+
+// Menú 3. Consultar información de plaza
+void check_parking_lot() {
+    int r;
+    int c;
+    scan_p_plot(&r, &c);
+
+    if(!out_of_bounds(r, c)) {
+
+        // Limpiamos y redibujamos para destacar el punto
+        clear_redraw_and_highlight(r, c);
+
+        // Datos de la plaza
+        putchar('\n');
+        printf_c(UNDERLINE, "Datos de plaza");
+        printf(":\n\n"); // Necesario caracter adicional para que el subrayado no se extienda
+
+
+        // Comprueba si la plaza está vacía para que no imprima "null" por pantalla
+        char* plate = parking[r][c].l_plate;
+
+        if (plate == NULL) {
+            printf_c(LIGHT_CYAN_TXT, "Plaza libre\n");
+            printf("Tiempo en parking: -\n");
+
+        } else {
+            // Matrícula
+            printf("Vehículo con matrícula: ");
+            printf_c(LIGHT_YELLOW_TXT, "%s\n", plate);
+
+            // Tiempo en el parking
+            char* ptr = get_time_passed(parking[r][c].t_stamp);
+            printf("Tiempo en parking: %s\n", ptr);
+            free(ptr);
+        }
+
+    }
+
+    putchar('\n');
+}
+
+//Menú 4. Obtener estadísticas generales
+void check_statistics() {
+    printf_c(UNDERLINE, "Datos estadísticos");
+    printf(":\n\n");
+
+    // Cálculo de total de plazas, num disponibles y ocupadas
+
+    int total = num_rows * num_cols;
+
+    printf("Plazas ocupadas: %d\n", num_vehicles);
+    printf("Plazas libres: %d\n", total - num_vehicles);
+    printf("-------------------\n");
+    printf("Total de plazas: %d\n", total);
+}
+
+
+
+// Menús 5 & 6
+void modify_parking(void(*modify)(int)) { // Función que modifica filas o columnas dependiendo del puntero a una función que se pase
 
     int dn = read_int("Incremento: ");
 
@@ -123,35 +276,34 @@ void modify_parking(void(*modify)(int)) {
         if (confirm_action("¿Está seguro/a?")) {
 
             modify(dn);
-            printf_c(LIGHT_GREEN_TXT, "Añadida(s) con éxito.\n");
+            printf_c(LIGHT_GREEN_TXT, "\nAñadida(s) con éxito.\n");
+            save_needed = true;
         }
 
     }
 
 }
 
-void clear_and_redraw() {
-    clear_screen(); // Limpiamos pantalla
-    printf_c(LIGHT_MAGENTA_TXT,"------- PARKING -------\n\n");
-    print_parking(); // Redibujamos el parking
-}
+// Menú 7. Crear nueva configuración.
+void confirm_new_config() {
+    if (confirm_action("Se perderá la configuración actual. ¿Confirmar?")) {
+        free_parking_memory(); // Desalojamos la memoria dinámica actual del parking
+        scan_parking(); // Pedimos nueva configuración y alojamos la cantidad memoria necesaria
+        save_parking(); // Realizamos el cambio también en disco
 
-void clear_redraw_and_highlight(int r, int c) {
-    set_highlighted_point(r, c); // Destacamos el punto
-    clear_and_redraw();
-    reset_highlighted_point(); // Dejamos de destacar
+    }
 }
-
-bool save_needed = false;
 
 void parking_menu() {
 
+    // Inicialización
     init_parking();
-
     char i_buffer [DEFAULT_BUFFER_SIZE];
-
     reset_highlighted_point();
+    save_needed = false;
 
+
+    // Programa
     while(1) {
 
         clear_screen();
@@ -208,174 +360,34 @@ void parking_menu() {
 
         }
 
-        else if (strcmp(i_buffer, "s") == 0) {
-            save_parking();
-            save_needed = false;
-            printf_c(LIGHT_GREEN_TXT, "Guardado con éxito\n");
-        }
+        else if (strcmp(i_buffer, "s") == 0 || strcmp(i_buffer, "s") == 0) {
 
-        // Introducir vehículo en plaza
+            if (save_needed) {
+                save_parking();
+                save_needed = false;
+                printf_c(LIGHT_GREEN_TXT, "Guardado con éxito\n");
 
-        else if (strcmp(i_buffer,"1") == 0) {
-
-           int r, c;
-           scan_p_plot(&r, &c);
-
-           if (!out_of_bounds(r, c)) {
-
-               printf("Matrícula: ");
-               char* l_plate = read_str();
-
-               // Limpiamos y redibujamos para destacar el punto
-               clear_redraw_and_highlight(r, c);
-
-               // Confirmamos que quiera guardar
-               printf("\nMatrícula: %s\n\n", l_plate);
-               int save = confirm_action("Aparcar coche?");
-
-               if (save) {
-                   insert_vehicle(l_plate, r, c);
-                   save_needed = true;
-
-               } else {
-                   printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no agregado\n");
-               }
-
-           }
-
-           putchar('\n');
-
-
-        }
-
-
-        // Quitar vehículo de la plaza
-
-        else if (strcmp(i_buffer, "2") == 0) {
-
-            int r, c;
-            scan_p_plot(&r, &c);
-
-            if (!out_of_bounds(r, c)) {
-
-                // Limpiamos y redibujamos para destacar el punto
-                clear_redraw_and_highlight(r, c);
-
-                // Confirmamos que quiera guardar
-                int save = confirm_action("Retirar coche?");
-
-                if (save) { // Caso afirmativo
-                    remove_vehicle(r, c); // Aquí se incluye el aviso de que el coche se ha retirado con éxito
-                    save_needed = true;
-
-
-                } else { // Caso negativo
-                    printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no retirado\n");
-                }
-
+            } else {
+                printf_c(LIGHT_MAGENTA_TXT, "Nada que guardar.");
             }
 
-
-            putchar('\n');
-
-
         }
 
-        // Consultar información de plaza
+        else if (strcmp(i_buffer,"1") == 0) { insert_vehicle_op(); } // Introducir vehículo en plaza
 
-        else if (strcmp(i_buffer, "3") == 0) {
+        else if (strcmp(i_buffer, "2") == 0) { remove_vehicle_op(); } // Quitar vehículo de la plaza
 
-            int r;
-            int c;
-            scan_p_plot(&r, &c);
+        else if (strcmp(i_buffer, "3") == 0) { check_parking_lot(); } // Consultar información de plaza
 
-            if(!out_of_bounds(r, c)) {
+        else if (strcmp(i_buffer, "4") == 0) { check_statistics(); }// Consultar estadísticas generales
 
-                // Limpiamos y redibujamos para destacar el punto
-                clear_redraw_and_highlight(r, c);
+        else if (strcmp(i_buffer, "5") == 0) { modify_parking(modify_rows); } // Cambiar número de filas
 
-                // Datos de la plaza
-                putchar('\n');
-                printf_c(UNDERLINE, "Datos de plaza");
-                printf(":\n\n"); // Necesario caracter adicional para que el subrayado no se extienda
+        else if (strcmp(i_buffer, "6") == 0) { modify_parking(modify_columns); } // Cambiar número de columnas
 
+        else if (strcmp(i_buffer, "7") == 0) { confirm_new_config(); } //Crear nueva configuración
 
-                // Comprueba si la plaza está vacía para que no imprima "null" por pantalla
-                char* plate = parking[r][c].l_plate;
-
-                if (plate == NULL) {
-                    printf_c(LIGHT_CYAN_TXT, "Plaza libre\n");
-                    printf("Tiempo en parking: -\n");
-
-                } else {
-                    // Matrícula
-                    printf("Vehículo con matrícula: ");
-                    printf_c(LIGHT_YELLOW_TXT, "%s\n", plate);
-
-                    // Tiempo en el parking
-                    char* ptr = get_time_passed(parking[r][c].t_stamp);
-                    printf("Tiempo en parking: %s\n", ptr);
-                    free(ptr);
-                }
-
-            }
-
-            putchar('\n');
-
-        }
-
-        // Consultar estadísticas generales
-
-        else if (strcmp(i_buffer, "4") == 0) {
-
-            printf_c(UNDERLINE, "Datos estadísticos");
-            printf(":\n\n");
-
-            // Cálculo de total de plazas, num disponibles y ocupadas
-
-            int total = num_rows * num_cols;
-
-            printf("Plazas ocupadas: %d\n", num_vehicles);
-            printf("Plazas libres: %d\n", total - num_vehicles);
-            printf("-------------------\n");
-            printf("Total de plazas: %d\n", total);
-        }
-
-        // Cambiar número de filas
-        else if (strcmp(i_buffer, "5") == 0) {
-
-            modify_parking(modify_rows);
-
-            save_needed = true;
-        }
-
-        // Cambiar número de columnas
-        else if (strcmp(i_buffer, "6") == 0) {
-
-           modify_parking(modify_columns);
-
-           save_needed = true;
-        }
-
-        //Crear nueva configuración
-        else if (strcmp(i_buffer, "7") == 0) {
-
-            if (confirm_action("Se perderá la configuración actual. ¿Confirmar?")) {
-
-                free_parking_memory(); // Desalojamos la memoria dinámica actual del parking
-
-                scan_parking(); // Pedimos nueva configuración y alojamos la cantidad memoria necesaria
-
-                save_parking(); // Realizamos el cambio también en disco
-
-            }
-
-
-        }
-
-        // Opción incorrecta
-
-        else { printf("Opción no válida!\n"); }
+        else { printf("Opción no válida!\n"); } // Opción incorrecta
 
         putchar('\n'); // Nueva línea
 
