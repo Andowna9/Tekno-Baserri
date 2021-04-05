@@ -3,7 +3,6 @@
 #include <stdin_fix.h>
 #include <console_config.h>
 #include "animals.h"
-#include "animal_food.h"
 #include "crops.h"
 #include "lands.h"
 #include "management/management.h"

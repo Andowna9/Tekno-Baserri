@@ -33,11 +33,13 @@ void scan_str(char* buffer, int buffer_size) { // Forma segura de leer strings d
 }
 
 
-char* read_str() {
+char* read_str(const char* message) {
 
     // Internal buffer scanning
 
     char buff [DEFAULT_BUFFER_SIZE];
+
+    printf("%s", message);
 
     scan_str(buff, sizeof(buff));
 
@@ -64,6 +66,24 @@ int read_int(const char* message) {
 
     return n;
 }
+
+float read_float(const char* message) {
+
+    int ret;
+
+    float f;
+
+    do {
+
+        printf("%s", message);
+        ret = scanf("%f", &f);
+        clear_stdin();
+
+    } while(ret != 1);
+
+    return f;
+}
+
 
 // Crea un menú de confirmación en consola
 // Devuelve 1 o 0 (true o false) de acuerdo con la elección

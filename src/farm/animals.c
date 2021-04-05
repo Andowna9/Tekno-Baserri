@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdin_fix.h>
-#include "animal_food.h"
+#include "animal_food/food_menu.h"
 #include "animals.h"
 #include <console_config.h>
 
