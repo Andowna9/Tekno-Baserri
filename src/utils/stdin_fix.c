@@ -78,12 +78,12 @@ int confirm_action(const char* message) {
         scan_str(buff, sizeof(buff));
 
         // Sí
-        if (strcmp(buff, "s") == 0) {
+        if (strcmp(buff, "s") == 0 || strcmp(buff, "S") == 0) {
             return 1;
         }
 
         // No
-        else if (strcmp(buff, "n") == 0) {
+        else if (strcmp(buff, "n") == 0 || strcmp(buff, "N") == 0) {
             return 0;
 
         }
