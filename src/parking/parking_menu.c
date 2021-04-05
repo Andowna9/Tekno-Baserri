@@ -5,12 +5,48 @@
 #include <stdlib.h>
 #include "parking.h"
 #include <stdbool.h>
+#include <stdarg.h>
+#include <ctype.h>
 
 // Variables del file
 bool save_needed;
+const char* log_file_txt = "parking_saves.log";
+
+// LOGGER
+void add_to_parking_log(char* message, ...) {
+    FILE* log_file = fopen(log_file_txt, "a");
+
+    // Formateamos el string
+    va_list arg;
+    va_start (arg, message);
+    vfprintf(log_file, message, arg);
+    va_end (arg);
+
+    // Escribimos en el fichero
+    fputc('\n', log_file);
+    fclose(log_file);
+}
+
+void read_parking_log() {
+    FILE* log_file = fopen(log_file_txt, "r");
+
+    printf_c(LIGHT_MAGENTA_TXT, "------ CAMBIOS ENCONTRADOS ------\n\n");
+    char c;
+    do {
+        c = fgetc(log_file);
+        printf_c(LIGHT_MAGENTA_TXT, "%c", c);
+    } while (c != EOF);
+    printf_c(LIGHT_MAGENTA_TXT, "---------------------------------\n\n");
+
+    fclose(log_file);
+}
+
+void clear_parking_log() {
+    FILE* log_file = fopen(log_file_txt, "w");
+    fclose(log_file);
+}
 
 // Función para pedir por teclado la plaza
-
 void scan_p_plot(int* row_ptr, int* col_ptr) {
 
     int ret;
@@ -21,20 +57,20 @@ void scan_p_plot(int* row_ptr, int* col_ptr) {
     do {
 
         printf("Plaza: ");
-        ret = scanf("%c%2d",&row, &column);
+        ret = scanf("%c%2d", &row, &column);
         clear_stdin();
 
     } while(ret != 2);
 
     // A partir de los datos del usuario se obtienen la fila y columna como enteros
 
-    *row_ptr = row - 'A';
+    *row_ptr = toupper(row) - 'A';
     *col_ptr = column - 1;
 
 }
 
-// Pide al usuario datos para determinar la configuración del parking
 
+// Pide al usuario datos para determinar la configuración del parking
 void scan_parking() {
 
     int w, h; // Altura y anchura (filas y columnas)
@@ -135,7 +171,6 @@ void insert_vehicle_op() {
             printf_c(LIGHT_RED_TXT, "La plaza ya está ocupada.\n");
 
         } else {
-
             char* l_plate = read_str("Matrícula: ");
 
             // Confirmamos que quiera guardar
@@ -145,6 +180,7 @@ void insert_vehicle_op() {
                 int parked = insert_vehicle(l_plate, r, c);
                 if (parked) {
                     save_needed = true;
+                    add_to_parking_log("Vehículo encontrado: %s en %c%i", l_plate, r + 'A', c + 1);
                 }
 
 
@@ -180,6 +216,7 @@ void remove_vehicle_op() {
             if (save) { // Caso afirmativo
                 int unparked = remove_vehicle(r, c); // Aquí se incluye el aviso de que el coche se ha retirado con éxito (o lo contrario)
                 if (unparked) {
+                    add_to_parking_log("Vehículo retirado: %c%i", r + 'A', c + 1);
                     save_needed = true;
                 }
 
@@ -279,6 +316,7 @@ void modify_parking(void(*modify)(int)) { // Función que modifica filas o colum
 
             modify(dn);
             printf_c(LIGHT_GREEN_TXT, "\nAñadida(s) con éxito.\n");
+            add_to_parking_log("Changed parking size.");
             save_needed = true;
         }
 
@@ -292,6 +330,7 @@ void confirm_new_config() {
         free_parking_memory(); // Desalojamos la memoria dinámica actual del parking
         scan_parking(); // Pedimos nueva configuración y alojamos la cantidad memoria necesaria
         save_parking(); // Realizamos el cambio también en disco
+        clear_parking_log(); // Limpiamos el log de los últimos cambios
 
     }
 }
@@ -347,12 +386,14 @@ void parking_menu() {
         if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) {
 
             if (save_needed) {
+                read_parking_log();
                 int dont_save = confirm_action("Existen cambios sin guardar. ¿Salir?");
 
                 if (dont_save) {
                     printf_c(LIGHT_RED_TXT, "No se han guardado los cambios.\n");
                     save_needed = false;
                     free_parking_memory();
+                    clear_parking_log();
                     break;
                 }
             } else {
@@ -364,11 +405,12 @@ void parking_menu() {
 
         }
 
-        else if (strcmp(i_buffer, "s") == 0 || strcmp(i_buffer, "s") == 0) {
+        else if (strcmp(i_buffer, "s") == 0 || strcmp(i_buffer, "S") == 0) {
 
             if (save_needed) {
                 save_parking();
                 save_needed = false;
+                clear_parking_log();
                 printf_c(LIGHT_GREEN_TXT, "Guardado con éxito\n");
 
             } else {

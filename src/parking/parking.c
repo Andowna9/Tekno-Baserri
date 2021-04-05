@@ -125,7 +125,7 @@ int insert_vehicle(char* key, int row, int col) {
 
     num_vehicles++;
 
-    printf_c(LIGHT_GREEN_TXT, "Vehículo registrado correctamente\n");
+    printf_c(LIGHT_GREEN_TXT, "\nVehículo registrado correctamente");
 
     return 1;
 
@@ -159,7 +159,7 @@ int remove_vehicle(int row, int col) {
 
     num_vehicles--;
 
-    printf_c(LIGHT_GREEN_TXT, "Vehículo retirado con éxito\n");
+    printf_c(LIGHT_GREEN_TXT, "\nVehículo retirado con éxito");
     return 1;
 
 }
