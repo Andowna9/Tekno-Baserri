@@ -133,8 +133,8 @@ void insert_vehicle_op() {
             printf_c(LIGHT_RED_TXT, "La plaza ya está ocupada.\n");
 
         } else {
-            printf("Matrícula: ");
-            char* l_plate = read_str();
+
+            char* l_plate = read_str("Matrícula: ");
 
             // Confirmamos que quiera guardar
             int save = confirm_action("Aparcar coche?");
