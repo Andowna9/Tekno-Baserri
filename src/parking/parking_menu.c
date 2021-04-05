@@ -101,6 +101,8 @@ void init_parking() {
 
     }
 
+    press_to_continue();
+
 }
 
 // Métodos para dibujar el parking de cero
@@ -350,9 +352,11 @@ void parking_menu() {
                 if (dont_save) {
                     printf_c(LIGHT_RED_TXT, "No se han guardado los cambios.\n");
                     save_needed = false;
+                    free_parking_memory();
                     break;
                 }
             } else {
+                free_parking_memory();
                 break;
             }
 

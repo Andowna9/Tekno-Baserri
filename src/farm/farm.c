@@ -5,13 +5,14 @@
 #include "animals.h"
 #include "crops.h"
 #include "lands.h"
-#include "management/management.h"
+#include "management/management_menu.h"
 
 void farm_menu() {
   
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while (1) {
+
     clear_screen();
 
     printf_c(LIGHT_CYAN_TXT, "------- GRANJA -------\n\n"); // Ejemplo de salida de texto con color

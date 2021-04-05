@@ -6,7 +6,7 @@
 
 void animal_food_menu() {
 
-  read_food_types();
+  read_food_types(); // Solo leemos si el tamaño es 0
 
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 

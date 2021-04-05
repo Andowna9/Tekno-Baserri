@@ -3,143 +3,71 @@
 #include <string.h>
 #include <stdin_fix.h>
 #include <console_config.h>
-#include "management.h"
 
-float dinero = 0;
-void initializate_values();
+static float values[2]; // array común a los dos métodos (y a todo el file, así ahorramos memoria)
 
-void management_menu(){
-    char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
+void read_from_ledger() {
 
+  FILE* fp = fopen("balance.dat", "rb");
 
-    while (1) {
-    clear_screen();
+  if (fp == NULL){
 
-    printf_c(LIGHT_CYAN_TXT, "------- GESTIÓN -------\n\n");
-    printf("1. Consultar ingresos.\n");
-    printf("2. Consultar beneficios.\n");
-    printf("3. Consultar gastos.\n");
-    printf("4. Consultar balance general.\n");
-    
-    printf("\nIntroduce 'v' para volver.\n\n");
-
-    printf("Input: ");
-
-    scan_str(input_buffer, sizeof(input_buffer));
-    putchar('\n');
-
-    if (!strcmp(input_buffer, "1")){
-      printf("[ Neto: %i ]\n", check_income());
-      
-
-    } else if (!strcmp(input_buffer, "2")){
-     printf("[ Beneficios: %i ]\n", check_benefits());
-
-
-    } else if (!strcmp(input_buffer, "3")){
-       printf("[ Gastos: %i ]\n", check_expenses());
-
-
-    } else if (!strcmp(input_buffer, "4")){
-      printf("[ Neto: %i ]\n", check_income());
-      printf("[ Beneficios: %i ]\n", check_benefits());
-      printf("[ Gastos: %i ]\n", check_expenses());
-
-      
-
-    } else if (!strcmp(input_buffer, "v")) {
-      break;
-
-
-    } else if(!strcmp(input_buffer, "i")) { // funcionalidad oculta
-      initializate_values();
-
-    } else { printf("Opción no válida!\n"); }
-
-    putchar('\n');
-    press_to_continue();
+    return;
 
   }
 
+  fread(values, sizeof(float), 2, fp);
+  fclose(fp);
 
 }
 
-static int valores[3]; // array común a los dos métodos (y a todo el file, así ahorramos memoria)
-// Funciones recomendadas
-int check_income() {
-  read_from_ledger(); // actualizamos el contenido del array valores. Como es común al file no hace falta recoger el puntero de retorno. Si fuera externo sí.
-  int valor = valores[0];
-  return valor;
-}
+void write_to_ledger() {
 
-int check_benefits() {
-  read_from_ledger(); // actualizamos el contenido del array valores
-  int valor = valores[1];
-  return valor;
-}
+  FILE* fp = fopen("balance.dat", "wb");
 
-int check_expenses() {
-  read_from_ledger(); // actualizamos el contenido del array valores
-  int valor = valores[2];
-  return valor;
-}
+  if (fp == NULL){
 
-void register_expense(int expense) {
-    read_from_ledger();
-    valores[2] += expense;
-    write_to_ledger(valores[0], valores[1], valores[2]);
-}
-
-void register_profit(int profit) {
-    read_from_ledger();
-    valores[1] += profit;
-    write_to_ledger(valores[0], valores[1], valores[2]);
-}
-
-// endof funciones recomendadas
-
-void initializate_values() {
-
-    printf("Primer valor: ");
-    scanf(" %10i", valores);
-    printf("Segundo valor: ");
-    scanf(" %10i", valores + 1);
-    printf("Tercer valor:");
-    scanf(" %10i", valores + 2);
-    clear_stdin();
-
-    write_to_ledger(valores[0], valores[1], valores[2]);
-}
-
-
-void write_to_ledger(int neto, int beneficio, int gasto) {
-
-  FILE* file = fopen("balance.dat", "wb");
-  
-  if (file == NULL){
-    printf_c(LIGHT_RED_TXT, "No se pudo abrir balance.dat\n");
     return;
   }
 
-  valores[0] = neto;
-  valores[1] = beneficio;
-  valores[2] = gasto;
-  fwrite(valores, sizeof(int), 3, file);
-  fclose(file);
-  
+  fwrite(values, sizeof(float), 2, fp);
+  fclose(fp);
+
 }
 
-int* read_from_ledger() {
+// Registra los beneficios
 
-  FILE* file = fopen("balance.dat", "rb");
+void register_profit(float profit) {
+    read_from_ledger();
+    values[0] += profit;
+    write_to_ledger();
+}
 
-  if (file == NULL){
-    printf("No se pudo abrir balance.dat\n");
-    return NULL;
-  }
 
-  fread(valores, sizeof(int), 3, file);
-  fclose(file);
+// Registra los gastos
 
-  return valores;
+void register_expense(float expense) {
+    read_from_ledger();
+    values[1] += expense;
+    write_to_ledger();
+}
+
+// Comprueba beneficios
+
+float check_profit() {
+
+  read_from_ledger();
+  int value = values[0];
+  return value;
+
+}
+
+// Comprueba gastos
+
+float check_expenses() {
+
+  read_from_ledger();
+  int value = values[1];
+  return value;
+
 }

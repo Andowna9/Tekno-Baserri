@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdin_fix.h>
+#include <management.h>
 #include "food.h"
 
 #define MAX_SIZE 25
@@ -164,7 +165,9 @@ int buy_animal_food(int id, float amount) {
 
    ptr->amount += amount;
 
-   // TODO Registrar gasto
+   // Registrar gasto
+
+   register_expense(amount * ptr->price);
 
    return 0;
 
@@ -184,6 +187,8 @@ int read_food_types() {
     }
 
     char buffer[1024];
+
+    size = 0;  // Tamaño a 0 para que cada vez que se llame a la función se lea de nuevo
 
     int row = 0;
 
