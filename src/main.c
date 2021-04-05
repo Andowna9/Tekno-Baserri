@@ -54,8 +54,6 @@ int main() {
 
         putchar('\n');
 
-        press_to_continue();
-
 
     }
 
