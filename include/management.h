@@ -1,3 +1,12 @@
+/**
+ *  @file management.h
+ *  @brief Funciones para gestionar gastos y beneficios
+ *
+ *  @author Jon Andoni Castillo
+ *  @author León Abascal
+ *  @bug Desconocidos
+*/
+
 #ifndef MANAGEMENT_H
 #define MANAGEMENT_H
 

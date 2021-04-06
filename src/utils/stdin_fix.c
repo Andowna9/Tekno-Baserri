@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include "stdin_fix.h"
 #include <console_config.h>
@@ -32,6 +33,24 @@ void scan_str(char* buffer, int buffer_size) { // Forma segura de leer strings d
     clean_buffer(buffer);
 }
 
+int read_format(const char* format, ...) {
+
+    char buff [DEFAULT_BUFFER_SIZE];
+
+    scan_str(buff, sizeof(buff));
+
+    va_list args;
+
+    va_start(args, format);
+
+    int matches = vsscanf(buff, format, args);
+
+    va_end(args);
+
+    return matches;
+
+}
+
 
 char* read_str(const char* message) {
 
@@ -59,8 +78,7 @@ int read_int(const char* message) {
     do {
 
         printf("%s", message);
-        ret = scanf("%2d", &n);
-        clear_stdin();
+        ret = read_format("%2d", &n);
 
     } while(ret != 1);
 
@@ -76,8 +94,7 @@ float read_float(const char* message) {
     do {
 
         printf("%s", message);
-        ret = scanf("%f", &f);
-        clear_stdin();
+        ret = read_format("%f", &f);
 
     } while(ret != 1);
 
@@ -114,8 +131,50 @@ int confirm_action(const char* message) {
 
 }
 
+int choose_option(const char* message, int num_options, ...) {
+
+    char buff [DEFAULT_BUFFER_SIZE];
+
+    va_list args;
+
+    int selected;
+
+    int loop = 1;
+
+    while(loop) {
+
+        printf("%s", message);
+
+        scan_str(buff, sizeof(buff));
+
+        va_start(args, num_options);
+
+        int i;
+
+        for (i = 0; i < num_options; i++) {
+
+            const char* option = va_arg(args, const char*);
+
+            if (strcmp(buff, option)) {
+
+                selected = i + 1;
+
+                loop = 0;
+
+                break;
+            }
+        }
+
+        va_end(args);
+
+        putchar('\n');
+    }
+
+    return selected;
+
+}
+
 void press_to_continue() {
     printf_c(LIGHT_YELLOW_TXT, "Pulsa intro para continuar...");
-    getchar();
-    clear_stdin();
+    clear_stdin(); // Con hacer un clear es suficiente, ya que se encargará de pedir input y limpiar hasta encontrar el '\n'
 }
