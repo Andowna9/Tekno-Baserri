@@ -16,9 +16,11 @@ SOURCES += src/main.c \
            src/farm/management/management_menu.c \
            src/parking/parking.c \
            src/parking/parking_menu.c \
+           src/utils/logger.c \
            src/utils/stdin_fix.c
 
 HEADERS += src/console/console_config.h \
+    include/logger.h \
     src/farm/animal_food/food.h \
     src/farm/animal_food/food_menu.h \
     src/farm/lands/lands_menu.h \
