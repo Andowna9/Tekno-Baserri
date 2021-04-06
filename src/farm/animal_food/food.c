@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 #include <stdin_fix.h>
 #include <management.h>
 #include "food.h"
@@ -15,37 +16,73 @@ static Animal_Food arr [MAX_SIZE];
 
 static const char* file_name = "food.csv";
 
-// Guarda los tipos de comida en fichero csv con append - Más complicado y quizás no necesario
+static int order_type;
 
-/*
+// Callbacks para ordenar de acuerdo a diferentes criterios
 
-int save_food_type(Animal_Food food) {
+// Ordenar por precio
 
-    FILE* fp = fopen(file_name, "a");
+int order_by_price(const void* a, const void* b) {
 
-    if (fp == NULL) {
+    int ret = 0;
 
-        return -1;
+    if (((Animal_Food*)a)->price > ((Animal_Food*)b)->price) ret = 1;
+
+    else if (((Animal_Food*)a)->price < ((Animal_Food*)b)->price) ret = -1;
+
+    return ret * order_type;
+}
+
+// Ordenar por cantidad
+
+int order_by_amount(const void* a, const void* b) {
+
+    int ret = 0;
+
+    if (((Animal_Food*)a)->amount > ((Animal_Food*)b)->amount) ret = 1;
+
+    else if (((Animal_Food*)a)->amount < ((Animal_Food*)b)->amount) ret = -1;
+
+    return ret * order_type;
+}
+
+// Copia dinámica sobre la cual se harán reordenacions, utilizando quick sort
+
+Animal_Food* copy_arr() {
+
+    Animal_Food* copy = (Animal_Food*) malloc(sizeof(Animal_Food) * size);
+
+    int i;
+
+    for (i = 0; i < size; i++) {
+
+        copy[i] = arr[i];
     }
 
-    fseek(fp, 0, SEEK_END);
+    return copy;
+}
 
-    // Si se trata de la primera vez que se escribe, se añade el nombre de las columnas
+void print_food_array(Animal_Food* arr) {
 
-    if (ftell(fp) == 0) {
+    printf("Listado de alimentos:\n\n");
 
-        fprintf(fp, "ID, Name, Price, Amount\n");
+    int i;
+
+    for (i = 0; i < size; i++) {
+
+        Animal_Food food = arr[i];
+
+        printf("ID: %d | Nombre: %s | Precio: %.2f €/kg", food.id, food.name, food.price);
+
+        if (food.amount > 0) {
+
+            printf(" | Cantidad: %.2f", food.amount);
+        }
+
+        putchar('\n');
     }
 
-    // A continuación se guarda el tipo de comida
-
-    fprintf(fp, "%d, %s, %f, %f\n", food.id, food.name, food.price, food.amount);
-
-    fclose(fp);
-
-    return 0;
-
-} */
+}
 
 // Guarda los alimentos borrando el contenido anterior
 
@@ -138,21 +175,21 @@ void delete_animal_food(int id) {
 
 void check_animal_food() {
 
-    int i;
+    print_food_array(arr);
+}
 
-    for (i = 0; i < size; i++) {
+void check_ordered_food(int (*order_criterion)(const void* a, const void* b), bool ascending_order) {
 
-        Animal_Food food = arr[i];
+    order_type = ascending_order? -1: 1;
 
-        printf("ID: %d | Nombre: %s | Precio: %.2f €/kg", food.id, food.name, food.price);
+    Animal_Food* copy = copy_arr();
 
-        if (food.amount > 0) {
+    qsort(copy, size, sizeof(Animal_Food), order_criterion);
 
-            printf(" | Cantidad: %.2f", food.amount);
-        }
+    print_food_array(copy);
 
-        putchar('\n');
-    }
+    free(copy);
+
 }
 
 // Compra de comida, proporcionando cantidad en kg

@@ -57,8 +57,7 @@ void scan_p_plot(int* row_ptr, int* col_ptr) {
     do {
 
         printf("Plaza: ");
-        ret = scanf("%c%2d", &row, &column);
-        clear_stdin();
+        ret = read_format("%c%2d", &row, &column);
 
     } while(ret != 2);
 
@@ -81,8 +80,7 @@ void scan_parking() {
 
         do {
             printf("Tamaño (filas, columnas): ");
-            ret = scanf("%2d, %2d", &h, &w);
-            clear_stdin();
+            ret = read_format("%2d, %2d", &h, &w);
 
             // Comprobación de que el tamaño no se sale de los límites establecidos
 

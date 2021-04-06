@@ -4,7 +4,7 @@
 #include <console_config.h>
 #include "animals.h"
 #include "crops.h"
-#include "lands.h"
+#include "lands/lands_menu.h"
 #include "management/management_menu.h"
 
 void farm_menu() {
@@ -27,19 +27,19 @@ void farm_menu() {
     scan_str(input_buffer, sizeof(input_buffer));
 
   if (!strcmp(input_buffer, "1")){
-    animals_menu(); // animals.h
+    animals_menu();
     
 
   } else if (!strcmp(input_buffer, "2")){
-    crops_menu(); // crops.h
+    crops_menu();
 
 
   } else if (!strcmp(input_buffer, "3")){
-    lands_menu(); // lands.h
+    lands_menu();
 
 
   } else if (!strcmp(input_buffer, "4")){
-    management_menu(); // ../management/management.h
+    management_menu();
 
 
   } else if (!strcmp(input_buffer, "v")) {
