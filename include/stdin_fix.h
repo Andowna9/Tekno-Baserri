@@ -93,4 +93,6 @@ int choose_option(const char* message, int num_options, ...);
  */
 void press_to_continue();
 
+void align_title_to_center(char* title);
+
 #endif

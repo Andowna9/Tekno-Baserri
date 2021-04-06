@@ -178,3 +178,32 @@ void press_to_continue() {
     printf_c(LIGHT_YELLOW_TXT, "Pulsa intro para continuar...");
     clear_stdin(); // Con hacer un clear es suficiente, ya que se encargará de pedir input y limpiar hasta encontrar el '\n'
 }
+
+void align_title_to_center(char* title) {
+    // hay 33 guiones (-) en la barra de abajo
+    // en el nuestro 2 son espacios (=31),
+    // el centro es nuestro título (31 - len)
+    // le resto 1 porque se ve mejor así
+
+    int len = strlen(title);
+    if (strcmp(title, "") == 0) { // Si el título está vacío
+        printf_c(LIGHT_MAGENTA_TXT, "---------------------------------");
+
+
+    } else if (len >= 31) { // Si excede nuestro límite de la barra de abajo
+        printf_c(LIGHT_MAGENTA_TXT, "- %s -", title);
+
+
+    } else {
+        int i;
+        for (i = 0; i < ((31 - len)/2)-1; i++) {
+            printf_c(LIGHT_MAGENTA_TXT, "-");
+        }
+        printf_c(LIGHT_MAGENTA_TXT," %s ", title);
+        for (i = i + 0; i < 31 - len; i++) { // hasta el final (31 caracteres)
+            printf_c(LIGHT_MAGENTA_TXT, "-");
+        }
+        printf("\n\n");
+    }
+
+}
