@@ -26,7 +26,7 @@ void management_menu(){
 
     // Volver
 
-    if (strcmp(input_buffer, "v") == 0) {
+    if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0) {
 
         break;
     }
@@ -51,8 +51,13 @@ void management_menu(){
 
     else if (strcmp(input_buffer, "3") == 0) {
 
-      printf("[ Ingresos: %.2f ]\n", check_profit());
-      printf("[ Gastos: %.2f ]\n", check_expenses());
+      float expenses = check_expenses();
+      float profit = check_profit();
+      printf_c(LIGHT_MAGENTA_TXT, "- TOTAL ----------------------\n\n");
+      printf_c(LIGHT_GREEN_TXT,"Ingresos: %.2f \n", profit);
+      printf_c(LIGHT_RED_TXT, "Gastos: %.2f \n", expenses);
+      printf_c(LIGHT_CYAN_TXT, "\nTotal: %.2f \n", profit - expenses);
+      printf_c(LIGHT_MAGENTA_TXT, "\n-----------------------------\n");
 
     }
 
