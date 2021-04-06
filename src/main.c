@@ -5,16 +5,22 @@
 #include "farm/farm.h"
 #include "parking/parking_menu.h"
 #include "parking/parking.h"
+#include <logger.h>
+
+static void configure_logger() {
+    set_log_file("main.log");
+}
 
 int main() {
 
     setup_console(); // Configuración de consola con colores + UTF-8
-
+    configure_logger();
     char input_buffer[DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
     //test_each_printf_c();
     //test_nums_printf_c();
 
+    //logger_demo();
 
     while(1) {
 
@@ -50,9 +56,10 @@ int main() {
 
         }
 
-        else { printf("Opción no reconocida!\n"); }
+        else { printf("Opción no reconocida!\n"); press_to_continue();}
 
         putchar('\n');
+
 
 
     }

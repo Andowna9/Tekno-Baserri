@@ -7,44 +7,11 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <logger.h>
 
 // Variables del file
 bool save_needed;
-const char* log_file_txt = "parking_saves.log";
-
-// LOGGER
-void add_to_parking_log(char* message, ...) {
-    FILE* log_file = fopen(log_file_txt, "a");
-
-    // Formateamos el string
-    va_list arg;
-    va_start (arg, message);
-    vfprintf(log_file, message, arg);
-    va_end (arg);
-
-    // Escribimos en el fichero
-    fputc('\n', log_file);
-    fclose(log_file);
-}
-
-void read_parking_log() {
-    FILE* log_file = fopen(log_file_txt, "r");
-
-    printf_c(LIGHT_MAGENTA_TXT, "------ CAMBIOS ENCONTRADOS ------\n\n");
-    char c;
-    do {
-        c = fgetc(log_file);
-        printf_c(LIGHT_MAGENTA_TXT, "%c", c);
-    } while (c != EOF);
-    printf_c(LIGHT_MAGENTA_TXT, "---------------------------------\n\n");
-
-    fclose(log_file);
-}
-
-void clear_parking_log() {
-    FILE* log_file = fopen(log_file_txt, "w");
-    fclose(log_file);
-}
+static char* log_file_txt = "parking_saves.log";
 
 // Función para pedir por teclado la plaza
 void scan_p_plot(int* row_ptr, int* col_ptr) {
@@ -178,7 +145,7 @@ void insert_vehicle_op() {
                 int parked = insert_vehicle(l_plate, r, c);
                 if (parked) {
                     save_needed = true;
-                    add_to_parking_log("Vehículo encontrado: %s en %c%i", l_plate, r + 'A', c + 1);
+                    add_to_log("Vehículo encontrado: %s en %c%i", l_plate, r + 'A', c + 1);
                 }
 
 
@@ -214,7 +181,7 @@ void remove_vehicle_op() {
             if (save) { // Caso afirmativo
                 int unparked = remove_vehicle(r, c); // Aquí se incluye el aviso de que el coche se ha retirado con éxito (o lo contrario)
                 if (unparked) {
-                    add_to_parking_log("Vehículo retirado: %c%i", r + 'A', c + 1);
+                    add_to_log("Vehículo retirado en %c%i", r + 'A', c + 1);
                     save_needed = true;
                 }
 
@@ -236,8 +203,7 @@ void remove_vehicle_op() {
 
 // Menú 3. Consultar información de plaza
 void check_parking_lot() {
-    int r;
-    int c;
+    int r, c;
     scan_p_plot(&r, &c);
 
     if(!out_of_bounds(r, c)) {
@@ -314,7 +280,7 @@ void modify_parking(void(*modify)(int)) { // Función que modifica filas o colum
 
             modify(dn);
             printf_c(LIGHT_GREEN_TXT, "\nAñadida(s) con éxito.\n");
-            add_to_parking_log("Changed parking size.");
+            add_to_log("Changed parking size.");
             save_needed = true;
         }
 
@@ -328,9 +294,19 @@ void confirm_new_config() {
         free_parking_memory(); // Desalojamos la memoria dinámica actual del parking
         scan_parking(); // Pedimos nueva configuración y alojamos la cantidad memoria necesaria
         save_parking(); // Realizamos el cambio también en disco
-        clear_parking_log(); // Limpiamos el log de los últimos cambios
+        clear_log(); // Limpiamos el log de los últimos cambios
 
     }
+}
+
+static void configure_logger() {
+    push_filename();
+    set_log_file(log_file_txt);
+    clear_log(); // limpiamos cualquier contenido residual posible (crashes, etc.)
+}
+
+static inline void close_logger() {
+    pop_filename();
 }
 
 void parking_menu() {
@@ -340,7 +316,7 @@ void parking_menu() {
     char i_buffer [DEFAULT_BUFFER_SIZE];
     reset_highlighted_point();
     save_needed = false;
-
+    configure_logger();
 
     // Programa
     while(1) {
@@ -384,14 +360,14 @@ void parking_menu() {
         if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) {
 
             if (save_needed) {
-                read_parking_log();
+                read_log("PARKING");
                 int dont_save = confirm_action("Existen cambios sin guardar. ¿Salir?");
 
                 if (dont_save) {
-                    printf_c(LIGHT_RED_TXT, "No se han guardado los cambios.\n");
+                    printf_c(LIGHT_RED_TXT, "\nNo se han guardado los cambios.\n\n");
                     save_needed = false;
                     free_parking_memory();
-                    clear_parking_log();
+                    clear_log();
                     break;
                 }
             } else {
@@ -408,7 +384,7 @@ void parking_menu() {
             if (save_needed) {
                 save_parking();
                 save_needed = false;
-                clear_parking_log();
+                clear_log();
                 printf_c(LIGHT_GREEN_TXT, "Guardado con éxito\n");
 
             } else {
@@ -438,4 +414,7 @@ void parking_menu() {
 
         press_to_continue();
     }
+
+    press_to_continue();
+    close_logger();
 }
