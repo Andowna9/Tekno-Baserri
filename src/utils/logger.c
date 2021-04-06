@@ -23,7 +23,7 @@ void set_log_file(char* file_name) {
 
 }
 
-char* get_log_file() {
+char* get_log_file_name() {
     if (log_file_txt == NULL) {
         return "N/A";
     }

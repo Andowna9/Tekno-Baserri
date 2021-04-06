@@ -17,6 +17,7 @@ SOURCES += src/main.c \
            src/parking/parking.c \
            src/parking/parking_menu.c \
            src/utils/logger.c \
+           src/utils/dynamic_array.c \
            src/utils/stdin_fix.c
 
 HEADERS += src/console/console_config.h \

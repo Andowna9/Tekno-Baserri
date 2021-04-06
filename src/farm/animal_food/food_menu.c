@@ -19,8 +19,8 @@ void animal_food_menu() {
     printf("2. Eliminar alimentos.\n");
     printf("3. Consultar alimentos.\n");
     printf("4. Comprar alimentos.\n");
-    printf("5. Consultar alimentos ordenados por precio.\n");
-    printf("6. Consultar alimentos ordenados por cantidad.\n");
+    printf("5. Ordenar alimentos por precio.\n");
+    printf("6. Ordenar alimentos por cantidad.\n");
 
 
     printf("\nNúmero de alimentos registrados: %d\n", get_food_count());
@@ -46,26 +46,15 @@ void animal_food_menu() {
 
     else if (strcmp(input_buffer, "1") == 0) {
 
-        // Si hay espacio disponible, añadimos alimentos
+         Animal_Food food;
 
-        if (space_available()) {
+         food.name = read_str("Nombre: ");
 
-            Animal_Food food;
+         food.price = read_float("\nPrecio: ");
 
-            food.name = read_str("Nombre: ");
+         register_animal_food(food);
 
-            food.price = read_float("\nPrecio: ");
-
-            register_animal_food(food);
-
-            printf_c(LIGHT_GREEN_TXT, "Comida registrada correctamente\n");
-
-        }
-
-        else {
-
-            printf_c(LIGHT_RED_TXT, "Tamaño máximo alcanzado!\n");
-        }
+         printf_c(LIGHT_GREEN_TXT, "Comida registrada correctamente\n");
 
     }
 
@@ -135,6 +124,8 @@ void animal_food_menu() {
 
         check_ordered_food(order_by_price, opt == 1);
 
+        printf_c(LIGHT_GREEN_TXT, "Lista ordenada correctamente por precio");
+
     }
 
     // Listado ordenado por cantidad
@@ -144,6 +135,8 @@ void animal_food_menu() {
         int opt = choose_option("Elige Ascendente(A) o Descendente(D): ", 2, "A", "B");
 
         check_ordered_food(order_by_amount, opt == 1);
+
+        printf_c(LIGHT_GREEN_TXT, "Lista ordenada correctamente por cantidad");
     }
 
     else { printf("Opción incorrecta!\n"); }

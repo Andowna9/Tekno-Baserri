@@ -4,15 +4,12 @@
 #include <stdbool.h>
 #include <stdin_fix.h>
 #include <management.h>
+#include <dynamic_array.h>
 #include "food.h"
-
-#define MAX_SIZE 25
 
 // LÓGICA
 
-static int size = 0;
-
-static Animal_Food arr [MAX_SIZE];
+static dyn_array food_arr;
 
 static const char* file_name = "food.csv";
 
@@ -22,26 +19,34 @@ static int order_type;
 
 // Ordenar por precio
 
-int order_by_price(const void* a, const void* b) {
+int order_by_price(const void* pa, const void* pb) {
 
     int ret = 0;
 
-    if (((Animal_Food*)a)->price > ((Animal_Food*)b)->price) ret = 1;
+    Animal_Food a = *(Animal_Food*) (*(void**)pa);
 
-    else if (((Animal_Food*)a)->price < ((Animal_Food*)b)->price) ret = -1;
+    Animal_Food b = *(Animal_Food*) (*(void**)pb);
+
+    if (a.price > b.price) ret = 1;
+
+    else if (a.price < b.price) ret = -1;
 
     return ret * order_type;
 }
 
 // Ordenar por cantidad
 
-int order_by_amount(const void* a, const void* b) {
+int order_by_amount(const void* pa, const void* pb) {
 
     int ret = 0;
 
-    if (((Animal_Food*)a)->amount > ((Animal_Food*)b)->amount) ret = 1;
+    Animal_Food a = *(Animal_Food*) (*(void**)pa);
 
-    else if (((Animal_Food*)a)->amount < ((Animal_Food*)b)->amount) ret = -1;
+    Animal_Food b = *(Animal_Food*) (*(void**)pb);
+
+    if (a.amount > b.amount) ret = 1;
+
+    else if (a.amount < b.amount) ret = -1;
 
     return ret * order_type;
 }
@@ -50,39 +55,39 @@ int order_by_amount(const void* a, const void* b) {
 
 Animal_Food* copy_arr() {
 
-    Animal_Food* copy = (Animal_Food*) malloc(sizeof(Animal_Food) * size);
+    Animal_Food* copy = (Animal_Food*) malloc(sizeof(Animal_Food) * food_arr.size);
 
     int i;
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < food_arr.size; i++) {
 
-        copy[i] = arr[i];
+        copy[i] = *((Animal_Food*) get_elem(food_arr,i));
     }
 
     return copy;
 }
 
-void print_food_array(Animal_Food* arr) {
+void print_food(Animal_Food food, int index) {
 
-    printf("Listado de alimentos:\n\n");
 
-    int i;
+    printf("ID: %d | Nombre: %s, Precio: %.2f €/kg", index + 1, food.name, food.price);
 
-    for (i = 0; i < size; i++) {
+    if (food.amount > 0) {
 
-        Animal_Food food = arr[i];
-
-        printf("ID: %d | Nombre: %s | Precio: %.2f €/kg", food.id, food.name, food.price);
-
-        if (food.amount > 0) {
-
-            printf(" | Cantidad: %.2f", food.amount);
-        }
-
-        putchar('\n');
+        printf(" x%.2f KG", food.amount);
     }
 
+    putchar('\n');
+
 }
+
+// Se obtiene el alimento por id (identificación)
+
+Animal_Food* get_food(int index) {
+
+    return (Animal_Food*) get_elem(food_arr, index);
+}
+
 
 // Guarda los alimentos borrando el contenido anterior
 
@@ -94,11 +99,11 @@ void write_food_types() {
 
     int i;
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < food_arr.size; i++) {
 
-        Animal_Food food = arr[i];
+        Animal_Food food = *get_food(i);
 
-        fprintf(fp, "%d, %s, %f, %f\n", food.id, food.name, food.price, food.amount);
+        fprintf(fp, "%d, %s, %f, %f\n", i + 1, food.name, food.price, food.amount);
 
     }
 
@@ -106,64 +111,38 @@ void write_food_types() {
 
 }
 
-// Determina si el array está lleno (no hay más espacio)
-
-int space_available() {
-
-    return size < MAX_SIZE;
-}
 
 // Devuelve el número de alimentos registrados
 
 int get_food_count() {
 
-    return size;
+    return food_arr.size;
 }
 
 // Registra comida para animales
 
 void register_animal_food(Animal_Food food) {
 
-    food.id = size + 1;
-
     food.amount = 0;
+
+    Animal_Food* food_ptr = (Animal_Food*) malloc(sizeof(Animal_Food));
+
+    *food_ptr = food;
 
     // Guardado en memoria y fichero
 
-    arr[size++] = food;
+    add_elem(&food_arr, food_ptr);
 
     write_food_types();
 
 }
 
-// Se obtiene el alimento por id (identificación)
-
-Animal_Food* get_food_by_id(int id) {
-
-    if (id < 1 || id > size) {
-
-        return NULL;
-    }
-
-    return &arr[id - 1];
-}
 
 // Borra un alimento dado
 
 void delete_animal_food(int id) {
 
-    int i;
-
-    // Desplazamiento hacia la izquierda de todos las estructuras posteriores al índice para mantener el orden
-
-    for (i = id; i < size; i++) {
-
-        arr[i - 1] = arr[i];
-
-        arr[i -1].id--;
-    }
-
-    size--;
+    remove_elem(&food_arr, id - 1);
 
     // Guardado en fichero
 
@@ -171,25 +150,31 @@ void delete_animal_food(int id) {
 
 }
 
-// Imprime la comida y cantidad comprada si es superiora 0 kg
-
-void check_animal_food() {
-
-    print_food_array(arr);
-}
 
 void check_ordered_food(int (*order_criterion)(const void* a, const void* b), bool ascending_order) {
 
     order_type = ascending_order? -1: 1;
 
-    Animal_Food* copy = copy_arr();
+    //Animal_Food* copy = copy_arr();
 
-    qsort(copy, size, sizeof(Animal_Food), order_criterion);
+    //qsort(copy, food_arr.size, sizeof(Animal_Food), order_criterion);
 
-    print_food_array(copy);
+    qsort(food_arr.data, food_arr.size, sizeof(void*), order_criterion);
 
-    free(copy);
+   /*  int i;
 
+    for (i = 0; i < food_arr.size; i++) {
+
+        print_food(copy[i], i);
+    }
+
+    free(copy); */
+
+}
+
+Animal_Food* get_food_by_id(int id) {
+
+    return get_elem(food_arr, id - 1);
 }
 
 // Compra de comida, proporcionando cantidad en kg
@@ -204,10 +189,24 @@ int buy_animal_food(int id, float amount) {
 
    // Registrar gasto
 
+   write_food_types();
+
    register_expense(amount * ptr->price);
 
    return 0;
 
+}
+
+void check_animal_food() {
+
+    int i;
+
+    for (i = 0; i < food_arr.size; i++) {
+
+        Animal_Food food = *get_food(i);
+
+        print_food(food, i);
+    }
 }
 
 
@@ -225,7 +224,7 @@ int read_food_types() {
 
     char buffer[1024];
 
-    size = 0;  // Tamaño a 0 para que cada vez que se llame a la función se lea de nuevo
+    init_arr(&food_arr, 15);  // Inicialización de array dinámico
 
     int row = 0;
 
@@ -246,14 +245,6 @@ int read_food_types() {
         while (token != NULL) {
 
             switch (column) {
-
-                // ID
-
-                case 0:
-
-                    food.id = atoi(token);
-
-                    break;
 
                 // Nombre
 
@@ -287,7 +278,11 @@ int read_food_types() {
             column++;
         }
 
-        arr[size++] = food;
+        Animal_Food* ptr_food = malloc(sizeof(Animal_Food));
+
+        *ptr_food = food;
+
+        add_elem(&food_arr, ptr_food);
     }
 
     fclose(fp);
@@ -301,9 +296,15 @@ void free_animal_food_memory() {
 
     int i;
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < food_arr.size; i++) {
 
-        free(arr[i].name);
+        Animal_Food* ptr_food = get_food(i);
+
+        free(ptr_food->name);
+
+        free(ptr_food);
     }
+
+    free_mem(&food_arr);
 }
 
