@@ -115,6 +115,7 @@ int confirm_action(const char* message) {
 }
 
 void press_to_continue() {
-    printf_c(LIGHT_YELLOW_TXT, "Pulsa cualquier tecla para continuar...");
+    printf_c(LIGHT_YELLOW_TXT, "Pulsa intro para continuar...");
     getchar();
+    clear_stdin();
 }
