@@ -8,30 +8,29 @@ static float values[2]; // array común a los dos métodos (y a todo el file, as
 
 void read_from_ledger() {
 
-  FILE* fp = fopen("balance.dat", "rb");
+  FILE* balance_file = fopen("balance.dat", "rb");
 
-  if (fp == NULL){
-
-    return;
-
+  if (balance_file == NULL) {
+      printf_c(LIGHT_RED_TXT, "No se pudo escribir el fichero.\n");
+      return;
   }
 
-  fread(values, sizeof(float), 2, fp);
-  fclose(fp);
+  fread(values, sizeof(float), 2, balance_file);
+  fclose(balance_file);
 
 }
 
 void write_to_ledger() {
 
-  FILE* fp = fopen("balance.dat", "wb");
+  FILE* balance_file = fopen("balance.dat", "wb");
 
-  if (fp == NULL){
-
+  if (balance_file == NULL) {
+    printf_c(LIGHT_RED_TXT, "No se pudo escribir el fichero.\n");
     return;
   }
 
-  fwrite(values, sizeof(float), 2, fp);
-  fclose(fp);
+  fwrite(values, sizeof(float), 2, balance_file);
+  fclose(balance_file);
 
 }
 
@@ -57,8 +56,7 @@ void register_expense(float expense) {
 float check_profit() {
 
   read_from_ledger();
-  int value = values[0];
-  return value;
+  return values[0];
 
 }
 
@@ -67,7 +65,11 @@ float check_profit() {
 float check_expenses() {
 
   read_from_ledger();
-  int value = values[1];
-  return value;
+  return values[1];
 
+}
+
+float check_total() {
+    read_from_ledger();
+    return values[0] - values[1];
 }
