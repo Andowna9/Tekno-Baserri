@@ -207,3 +207,30 @@ void align_title_to_center(char* title) {
     }
 
 }
+
+char* format_str(const char* format, ...) {
+
+    va_list args;
+
+    // Obtenemos el número de caracteres que se necesitan para formatear
+
+    va_start(args, format);
+
+    int num_c = vsnprintf(NULL, 0, format, args);
+
+    va_end(args);
+
+    char* f_str = (char*) malloc((num_c + 1) * sizeof(char)); // +1 para '\0'
+
+    // Recorremos de nuevo la lista de argumentos, esta vez pasando el resultado a la zona dinámica reservada
+
+    va_start(args, format);
+
+    vsnprintf(f_str, num_c + 1, format, args);
+
+    va_end(args);
+
+    return f_str;
+
+
+}

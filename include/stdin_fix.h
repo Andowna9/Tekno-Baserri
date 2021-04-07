@@ -95,4 +95,6 @@ void press_to_continue();
 
 void align_title_to_center(char* title);
 
+char* format_str(const char* format, ...);
+
 #endif

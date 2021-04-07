@@ -4,6 +4,7 @@
 #include <stdin_fix.h>
 #include <console_config.h>
 #include <string.h>
+#include <time.h>
 #include <stdin_fix.h>
 
 #define STACK_SIZE 16
@@ -32,9 +33,21 @@ char* get_log_file_name() {
 }
 
 void add_to_log(char* message, ...) {
+
     FILE* log_file = fopen(log_file_txt, "a");
 
-    //fprintf(log_file, ""); // TODO aquí irá la hora del log
+    // Hora del log
+
+    time_t rawtime;
+    struct tm *info;
+    char time_buff [80];
+
+    time(&rawtime);
+    info = localtime(&rawtime);
+    strftime(time_buff, 80, "%X - %x", info); // Formateo de fecha y hora (%X para la hora y %x para la fecha)
+
+
+    fprintf(log_file, "| %s | ", time_buff);
     // Formateamos el string
     va_list arg;
     va_start (arg, message);

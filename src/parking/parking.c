@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdin_fix.h>
 #include <string.h>
 #include <time.h>
 #include <console_config.h>
@@ -380,16 +381,6 @@ char* get_time_passed(time_t time_stamp) {
 
     info = gmtime(&elapsed);
 
-    const char* str = "%d h %d min %d s";
-
-    // Formateamos y obtenemos el número de caracteres necesarios (sin contar '\0')
-
-    int num_c = snprintf(NULL, 0, str, info->tm_hour,info->tm_min, info->tm_sec);
-
-    char* str_f = (char*) malloc(sizeof(char) * (num_c + 1));
-
-    snprintf(str_f, num_c + 1, str, info->tm_hour,info->tm_min, info->tm_sec);
-
-    return str_f;
+    return format_str("%d h %d min %d s", info->tm_hour, info->tm_min, info->tm_sec);
 
 }
