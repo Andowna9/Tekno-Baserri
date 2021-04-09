@@ -12,7 +12,7 @@ void management_menu(){
 
     clear_screen();
 
-    printf_c(LIGHT_CYAN_TXT, "------- GESTIÓN -------\n\n");
+    printf_c(LIGHT_CYAN_TXT, "------- GESTIÓN ECONÓMICA -------\n\n");
     printf("1. Consultar ingresos.\n");
     printf("2. Consultar gastos.\n");
     printf("3. Consultar balance general.\n");
@@ -35,7 +35,7 @@ void management_menu(){
 
     else if (strcmp(input_buffer, "1") == 0) {
 
-      printf("[ Ingresos: %.2f ]\n", check_profit());
+      printf("Ingresos: %.2f €\n", check_profit());
 
     }
 
@@ -43,7 +43,7 @@ void management_menu(){
 
     else if (strcmp(input_buffer, "2") == 0) {
 
-       printf("[ Gastos: %.2f ]\n", check_expenses());
+       printf("Gastos: %.2f €\n", check_expenses());
 
     }
 
@@ -54,9 +54,9 @@ void management_menu(){
       float expenses = check_expenses();
       float profit = check_profit();
       printf_c(LIGHT_MAGENTA_TXT, "- TOTAL ----------------------\n\n");
-      printf_c(LIGHT_GREEN_TXT,"Ingresos: %.2f \n", profit);
-      printf_c(LIGHT_RED_TXT, "Gastos: %.2f \n", expenses);
-      printf_c(LIGHT_CYAN_TXT, "\nTotal: %.2f \n", profit - expenses);
+      printf_c(LIGHT_GREEN_TXT,"Ingresos: %.2f €\n", profit);
+      printf_c(LIGHT_RED_TXT, "Gastos: %.2f €\n", expenses);
+      printf_c(LIGHT_CYAN_TXT, "\nTotal: %.2f €\n", profit - expenses);
       printf_c(LIGHT_MAGENTA_TXT, "\n-----------------------------\n");
 
     }

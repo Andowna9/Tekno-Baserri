@@ -27,11 +27,17 @@ void farm_menu() {
     scan_str(input_buffer, sizeof(input_buffer));
 
   if (!strcmp(input_buffer, "1")){
-    animals_menu();
+
+    //animals_menu(); // TODO - CPP
+
+      printf("\nTO BE IMPLEMENTED IN CPP :)\n\n");
     
 
   } else if (!strcmp(input_buffer, "2")){
-    crops_menu();
+
+    //crops_menu(); // TODO - CPP
+
+    printf("\nTO BE IMPLEMENTED IN CPP :)\n\n");
 
 
   } else if (!strcmp(input_buffer, "3")){
@@ -45,6 +51,8 @@ void farm_menu() {
   } else if (!strcmp(input_buffer, "v")) {
       break;
   }
+
+  press_to_continue();
 
   }
 }

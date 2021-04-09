@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdin_fix.h>
 #include <management.h>
+#include <console_config.h>
 #include <dynamic_array.h>
 #include "food.h"
 
@@ -69,12 +70,13 @@ Animal_Food* copy_arr() {
 
 void print_food(Animal_Food food, int index) {
 
+    printf_c(BOLD,"[ID: %d - %s]\n", index + 1, food.name);
 
-    printf("ID: %d | Nombre: %s, Precio: %.2f €/kg", index + 1, food.name, food.price);
+    printf("Precio: %.2f €/kg\n", food.price);
 
     if (food.amount > 0) {
 
-        printf(" x%.2f KG", food.amount);
+        printf("Cantidad: %.2f kg\n", food.amount);
     }
 
     putchar('\n');

@@ -18,6 +18,7 @@
         // Color por defecto
 
         RESET_COLOR, // 0
+        BOLD,
         UNDERLINE = 4,
         UNDERLINE_OFF = 24,
 
