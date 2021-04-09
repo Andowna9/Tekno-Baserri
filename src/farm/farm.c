@@ -26,33 +26,39 @@ void farm_menu() {
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));
 
-  if (!strcmp(input_buffer, "1")){
+    putchar('\n');
 
-    //animals_menu(); // TODO - CPP
+  if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0) {
 
-      printf("\nTO BE IMPLEMENTED IN CPP :)\n\n");
-    
-
-  } else if (!strcmp(input_buffer, "2")){
-
-    //crops_menu(); // TODO - CPP
-
-    printf("\nTO BE IMPLEMENTED IN CPP :)\n\n");
-
-
-  } else if (!strcmp(input_buffer, "3")){
-    lands_menu();
-
-
-  } else if (!strcmp(input_buffer, "4")){
-    management_menu();
-
-
-  } else if (!strcmp(input_buffer, "v")) {
       break;
   }
 
-  press_to_continue();
+  if (strcmp(input_buffer, "1") == 0){
+
+      animals_menu();
+    
+
+  } else if (strcmp(input_buffer, "2") == 0){
+
+    //crops_menu();
+
+    printf("TO BE IMPLEMENTED IN CPP :)\n\n");
+
+    press_to_continue();
+
+
+  } else if (strcmp(input_buffer, "3") == 0){
+
+    lands_menu();
+
+
+  } else if (strcmp(input_buffer, "4") == 0){
+
+    management_menu();
+
+  }
+
+  else { printf("Opción no válida!\n\n"); press_to_continue();}
 
   }
 }

@@ -22,17 +22,29 @@ void animals_menu() {
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));
 
-    if (!strcmp(input_buffer, "1")) {
+    putchar('\n');
+
+    if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0 ) {
+
+      break;
+    }
+
+    else if (strcmp(input_buffer, "1") == 0) {
+
       animal_food_menu(); // alimentos.h
 
 
-    } else if(!strcmp(input_buffer, "2")) {
-      animals_management_menu();
+    } else if(strcmp(input_buffer, "2") == 0) {
 
+      //animals_management_menu();
 
-    } else if (!strcmp(input_buffer, "v")) {
-        break;
+      printf("TO BE IMPLEMENTED IN CPP :)\n\n");
+
+      press_to_continue();
+
     }
+
+    else { printf("Opción incorrecta!\n\n"); press_to_continue();}
 
   }
 

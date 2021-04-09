@@ -22,7 +22,7 @@ void delete_animal_food(int id);
 void check_animal_food();
 int get_food_count();
 Animal_Food* get_food_by_id(int id);
-int buy_animal_food(int id, float amount);
+void buy_animal_food(int id, float amount);
 
 int read_food_types();
 

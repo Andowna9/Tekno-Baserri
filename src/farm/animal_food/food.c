@@ -181,11 +181,9 @@ Animal_Food* get_food_by_id(int id) {
 
 // Compra de comida, proporcionando cantidad en kg
 
-int buy_animal_food(int id, float amount) {
+void buy_animal_food(int id, float amount) {
 
    Animal_Food* ptr = get_food_by_id(id);
-
-   if (ptr == NULL) return -1;
 
    ptr->amount += amount;
 
@@ -194,8 +192,6 @@ int buy_animal_food(int id, float amount) {
    write_food_types();
 
    register_expense(amount * ptr->price);
-
-   return 0;
 
 }
 

@@ -56,10 +56,7 @@ int main() {
 
         }
 
-        else { printf("Opción no reconocida!\n"); press_to_continue();}
-
-        putchar('\n');
-
+        else { printf("Opción no reconocida!\n\n"); press_to_continue();}
 
 
     }

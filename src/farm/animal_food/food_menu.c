@@ -106,17 +106,9 @@ void animal_food_menu() {
 
           float amount = read_float("\nCantidad: ");
 
-          int ret = buy_animal_food(id, amount);
+          buy_animal_food(id, amount);
 
-          if (ret != 0) {
-
-                printf_c(LIGHT_RED_TXT, "\nEl alimento con ID = %d no existe!\n", id);
-          }
-
-          else {
-
-              printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
-          }
+          printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
 
       }
 
