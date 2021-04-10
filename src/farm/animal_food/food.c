@@ -70,8 +70,7 @@ Animal_Food* copy_arr() {
 
 void print_food(Animal_Food food, int index) {
 
-    printf_c(BOLD,"[ID: %d - %s]\n", index + 1, food.name);
-
+    printf_c(BOLD,"[ ID: %d - %s ]\n", index + 1, food.name);
     printf("Precio: %.2f €/kg\n", food.price);
 
     if (food.amount > 0) {

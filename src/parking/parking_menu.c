@@ -415,6 +415,5 @@ void parking_menu() {
         press_to_continue();
     }
 
-    press_to_continue();
     close_logger();
 }

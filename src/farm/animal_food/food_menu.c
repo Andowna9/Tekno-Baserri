@@ -4,6 +4,12 @@
 #include <console_config.h>
 #include "food.h"
 
+void print_food_with_clear() {
+    clear_screen();
+    printf_c(LIGHT_CYAN_TXT, "------- ALIMENTOS -------\n\n");
+    check_animal_food();
+}
+
 void animal_food_menu() {
 
   read_food_types();
@@ -52,7 +58,7 @@ void animal_food_menu() {
 
          food.name = read_str("Nombre: ");
 
-         food.price = read_float("\nPrecio: ");
+         food.price = read_float("\nPrecio(€/kg): ");
 
          register_animal_food(food);
 
@@ -64,28 +70,47 @@ void animal_food_menu() {
 
     else if (strcmp(input_buffer, "2") == 0){
 
-      int id = read_int("ID: ");
+      int not_empty = get_food_count();
+      if (not_empty) {
 
-      Animal_Food* ptr = get_food_by_id(id);
+          print_food_with_clear();
+          int id = read_int("ID: ");
 
-      if (ptr == NULL) {
+          Animal_Food* ptr = get_food_by_id(id);
+          if (ptr == NULL) {
+                printf_c(LIGHT_RED_TXT, "\nEl ID = %d no existe!\n", id);
 
-            printf_c(LIGHT_RED_TXT, "\nEl ID = %d no existe!\n", id);
+          }
+
+          else if (ptr->amount != 0) {
+
+                printf_c(LIGHT_RED_TXT, "\nTodavía hay %.2f kg disponibles\n", ptr->amount);
+                int delete;
+                delete = confirm_action("¿Borrar igualmente?");
+
+                if (delete) {
+                    delete_animal_food(id);
+                    printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
+
+                } else {
+                    printf_c(LIGHT_GREEN_TXT, "No se borró la comida del registro.\n");
+
+                }
+          }
+
+          else {
+
+             delete_animal_food(id);
+             printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
+
+          }
+
+
+      } else {
+          printf_c(LIGHT_RED_TXT, "No hay comida registrada.\n");
 
       }
 
-      else if (ptr->amount != 0) {
-
-            printf_c(LIGHT_RED_TXT, "\nTodavía hay %.2f kg disponibles\n", ptr->amount);
-      }
-
-      else {
-
-         delete_animal_food(id);
-
-         printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
-
-      }
 
     }
 
@@ -93,24 +118,33 @@ void animal_food_menu() {
 
     else if (strcmp(input_buffer, "3") == 0) {
 
-      int id = read_int("ID: ");
+      int not_empty = get_food_count();
+      if (not_empty) {
 
-      Animal_Food* ptr = get_food_by_id(id);
+          print_food_with_clear();
+          int id = read_int("ID: ");
 
-      if (ptr == NULL) {
+          Animal_Food* ptr = get_food_by_id(id);
 
-          printf_c(LIGHT_RED_TXT, "\nNo existe el id proporcionado!\n");
+          if (ptr == NULL) {
+
+              printf_c(LIGHT_RED_TXT, "\nNo existe el id proporcionado!\n");
+          }
+
+          else {
+
+              float amount = read_float("\nCantidad(kg): ");
+
+              buy_animal_food(id, amount);
+
+              printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
+
+          }
+
+      } else {
+            printf_c(LIGHT_RED_TXT, "No hay comida registrada.\n");
       }
 
-      else {
-
-          float amount = read_float("\nCantidad: ");
-
-          buy_animal_food(id, amount);
-
-          printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
-
-      }
 
     }
 
@@ -118,7 +152,7 @@ void animal_food_menu() {
 
     else if (strcmp(input_buffer, "4") == 0) {
 
-        check_animal_food();
+        print_food_with_clear();
     }
 
     // Listado ordenado por precio
