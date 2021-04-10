@@ -158,7 +158,7 @@ void animal_food_menu() {
     // Comprobar tipos de comida
 
     else if (strcmp(input_buffer, "4") == 0) {
-
+        check_ordered_food(order_by_name, true);
         print_food_with_clear();
     }
 

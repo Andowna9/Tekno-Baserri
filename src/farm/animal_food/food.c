@@ -112,6 +112,15 @@ void write_food_types() {
 
 }
 
+int order_by_name(const void* pa, const void* pb) {
+
+    Animal_Food a = *(Animal_Food*) (*(void**)pa);
+
+    Animal_Food b = *(Animal_Food*) (*(void**)pb);
+
+    return strcmp(a.name, b.name) * order_type;
+}
+
 
 // Devuelve el número de alimentos registrados
 

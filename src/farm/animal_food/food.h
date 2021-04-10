@@ -15,6 +15,8 @@ int order_by_price(const void* a, const void* b);
 
 int order_by_amount(const void* a, const void* b);
 
+int order_by_name(const void* pa, const void* pb);
+
 void check_ordered_food(int (*order_criterion)(const void* a, const void* b), bool ascending_order);
 
 void register_animal_food(Animal_Food food);

@@ -40,8 +40,8 @@ void scan_p_plot(int* row_ptr, int* col_ptr) {
 // Pide al usuario datos para determinar la configuración del parking
 void scan_parking() {
 
-    int w, h; // Altura y anchura (filas y columnas)
-
+    int w = 0;   // Altura y anchura (filas y columnas)
+    int h = 0;
     int ret;
 
     while(1) {
@@ -50,6 +50,7 @@ void scan_parking() {
             printf("Tamaño (filas, columnas): ");
             ret = read_format("%2d, %2d", &h, &w);
 
+            // printf("%i %i,",h,w);
             // Comprobación de que el tamaño no se sale de los límites establecidos
 
             if (h > MAX_ROWS || w > MAX_COLS) {
@@ -62,6 +63,12 @@ void scan_parking() {
             if (h < 0 || w < 0) {
 
                 printf_c(LIGHT_RED_TXT, "No se aceptan números negativos!\n");
+
+                ret = 0;
+            }
+
+            if (h == 0 || w == 0) {
+                printf_c(LIGHT_RED_TXT, "No se aceptan filas/columnas nulas!\n");
 
                 ret = 0;
             }
