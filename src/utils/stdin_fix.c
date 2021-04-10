@@ -51,16 +51,19 @@ int read_format(const char* format, ...) {
 
 }
 
-
 char* read_str(const char* message) {
 
     // Internal buffer scanning
 
     char buff [DEFAULT_BUFFER_SIZE];
-
     printf("%s", message);
-
     scan_str(buff, sizeof(buff));
+
+    while(buff[0] == '\0') {
+        printf_c(LIGHT_YELLOW_TXT, "\nLa entrada está vacía.\n\n");
+        printf("%s", message);
+        scan_str(buff, sizeof(buff));
+    }
 
     char* str = (char*) malloc(sizeof(char) * (strlen(buff) + 1));
 

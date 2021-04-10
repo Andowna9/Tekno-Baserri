@@ -54,14 +54,13 @@ void animal_food_menu() {
 
     else if (strcmp(input_buffer, "1") == 0) {
 
+         print_food_with_clear(); // Limpiamos pantalla
+
          Animal_Food food;
-
+         printf_c(LIGHT_MAGENTA_TXT, "\n--- NUEVO ALIMENTO\n\n");
          food.name = read_str("Nombre: ");
-
          food.price = read_float("\nPrecio(€/kg): ");
-
          register_animal_food(food);
-
          printf_c(LIGHT_GREEN_TXT, "\nComida registrada correctamente\n");
 
     }
@@ -74,35 +73,41 @@ void animal_food_menu() {
       if (not_empty) {
 
           print_food_with_clear();
+          printf_c(LIGHT_YELLOW_TXT, "[ ID: 0 - Cancelar operación. ]\n\n");
           int id = read_int("ID: ");
 
-          Animal_Food* ptr = get_food_by_id(id);
-          if (ptr == NULL) {
-                printf_c(LIGHT_RED_TXT, "\nEl ID = %d no existe!\n", id);
+          if(id == 0) {
+            printf_c(LIGHT_RED_TXT, "\nOperación cancelada.\n");
 
-          }
+          } else {
+              Animal_Food* ptr = get_food_by_id(id);
+              if (ptr == NULL) {
+                    printf_c(LIGHT_RED_TXT, "\nEl ID = %d no existe!\n", id);
 
-          else if (ptr->amount != 0) {
+              }
 
-                printf_c(LIGHT_RED_TXT, "\nTodavía hay %.2f kg disponibles\n", ptr->amount);
-                int delete;
-                delete = confirm_action("¿Borrar igualmente?");
+              else if (ptr->amount != 0) {
 
-                if (delete) {
-                    delete_animal_food(id);
-                    printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
+                    printf_c(LIGHT_RED_TXT, "\nTodavía hay %.2f kg disponibles\n", ptr->amount);
+                    int delete;
+                    delete = confirm_action("¿Borrar igualmente?");
 
-                } else {
-                    printf_c(LIGHT_GREEN_TXT, "No se borró la comida del registro.\n");
+                    if (delete) {
+                        delete_animal_food(id);
+                        printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
 
-                }
-          }
+                    } else {
+                        printf_c(LIGHT_GREEN_TXT, "No se borró la comida del registro.\n");
 
-          else {
+                    }
+              }
 
-             delete_animal_food(id);
-             printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
+              else {
 
+                 delete_animal_food(id);
+                 printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
+
+              }
           }
 
 
@@ -122,23 +127,25 @@ void animal_food_menu() {
       if (not_empty) {
 
           print_food_with_clear();
+          printf_c(LIGHT_YELLOW_TXT, "[ ID: 0 - Cancelar operación. ]\n\n");
           int id = read_int("ID: ");
 
-          Animal_Food* ptr = get_food_by_id(id);
+          if(id == 0) {
+            printf_c(LIGHT_RED_TXT, "\nOperación cancelada.\n");
 
-          if (ptr == NULL) {
+          } else { // Operación no cancelada
+              Animal_Food* ptr = get_food_by_id(id);
 
-              printf_c(LIGHT_RED_TXT, "\nNo existe el id proporcionado!\n");
-          }
+              if (ptr == NULL) {
+                  printf_c(LIGHT_RED_TXT, "\nNo existe el id proporcionado!\n");
+              }
 
-          else {
+              else {
+                  float amount = read_float("\nCantidad(kg): ");
+                  buy_animal_food(id, amount);
+                  printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
 
-              float amount = read_float("\nCantidad(kg): ");
-
-              buy_animal_food(id, amount);
-
-              printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
-
+              }
           }
 
       } else {
