@@ -52,6 +52,18 @@ int order_by_amount(const void* pa, const void* pb) {
     return ret * order_type;
 }
 
+// Ordenar por nombre
+
+int order_by_name(const void* pa, const void* pb) {
+
+    Animal_Food a = *(Animal_Food*) (*(void**)pa);
+
+    Animal_Food b = *(Animal_Food*) (*(void**)pb);
+
+    return strcmp(a.name, b.name) * order_type;
+}
+
+
 // Copia dinámica sobre la cual se harán reordenacions, utilizando quick sort
 
 Animal_Food* copy_arr() {
@@ -112,16 +124,6 @@ void write_food_types() {
 
 }
 
-int order_by_name(const void* pa, const void* pb) {
-
-    Animal_Food a = *(Animal_Food*) (*(void**)pa);
-
-    Animal_Food b = *(Animal_Food*) (*(void**)pb);
-
-    return strcmp(a.name, b.name) * order_type;
-}
-
-
 // Devuelve el número de alimentos registrados
 
 int get_food_count() {
@@ -163,7 +165,7 @@ void delete_animal_food(int id) {
 
 void check_ordered_food(int (*order_criterion)(const void* a, const void* b), bool ascending_order) {
 
-    order_type = ascending_order? -1: 1;
+    order_type = ascending_order? 1: -1;
 
     //Animal_Food* copy = copy_arr();
 

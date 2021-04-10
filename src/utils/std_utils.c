@@ -158,7 +158,7 @@ int choose_option(const char* message, int num_options, ...) {
 
             const char* option = va_arg(args, const char*);
 
-            if (strcmp(buff, option)) {
+            if (strcmp(buff, option) == 0) {
 
                 selected = i + 1;
 
