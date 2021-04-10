@@ -26,7 +26,7 @@ int get_food_count();
 Animal_Food* get_food_by_id(int id);
 void buy_animal_food(int id, float amount);
 
-int read_food_types();
+void read_food_types();
 
 void free_animal_food_memory();
 

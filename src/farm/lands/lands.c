@@ -72,14 +72,14 @@ void sell_lands(int i, float price){
 
 void read_lands() {
 
+    init_arr(&lands_arr, 5);
+
     FILE* fp = fopen("terrain.csv", "r");
 
     if (fp == NULL) {
 
         return;
     }
-
-    init_arr(&lands_arr, 15);
 
     char buff [1024];
 

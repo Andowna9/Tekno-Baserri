@@ -221,18 +221,18 @@ void check_animal_food() {
 
 // Lectura de tipos de comida guardados de fichero
 
-int read_food_types() {
+void read_food_types() {
+
+    init_arr(&food_arr, 5);  // Inicialización de array dinámico
 
     FILE* fp = fopen(file_name, "r");
 
     if (fp == NULL) {
 
-        return -1;
+        return;
     }
 
     char buffer[1024];
-
-    init_arr(&food_arr, 15);  // Inicialización de array dinámico
 
     int row = 0;
 
@@ -295,7 +295,6 @@ int read_food_types() {
 
     fclose(fp);
 
-    return 0;
 }
 
 // Libera la memoria asociada a punteros dinámicos: Nombre
