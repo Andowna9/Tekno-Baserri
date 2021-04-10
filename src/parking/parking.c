@@ -296,7 +296,7 @@ static char vehicle_format [] = "(%d, %d) -> %s | %lld";
 
 void save_parking() {
 
-    FILE* fp = fopen("parking.txt", "w");
+    FILE* fp = fopen("parking.config", "w");
 
     fprintf(fp, size_format, num_rows, num_cols);
 
@@ -326,7 +326,7 @@ void save_parking() {
 
 int load_parking() {
 
-    FILE* fp = fopen("parking.txt", "r");
+    FILE* fp = fopen("parking.config", "r");
 
     if (fp == NULL) {
 
