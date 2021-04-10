@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdin_fix.h>
+#include <std_utils.h>
 #include <console_config.h>
 
 static float values[2]; // array común a los dos métodos (y a todo el file, así ahorramos memoria)

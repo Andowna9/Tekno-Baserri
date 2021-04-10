@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdin_fix.h>
+#include <std_utils.h>
 #include <string.h>
 #include <time.h>
 #include <console_config.h>

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <stdin_fix.h>
+#include <std_utils.h>
 #include <management.h>
 #include <console_config.h>
 #include <dynamic_array.h>

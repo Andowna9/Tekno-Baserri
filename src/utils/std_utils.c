@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "stdin_fix.h"
+#include "std_utils.h"
 #include <console_config.h>
 
 void clear_stdin(); // Llamar cuando estemos seguros de que una limpieza de stdin es necesaria (si no puede pausar la ejecución esperando input)

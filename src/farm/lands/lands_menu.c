@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <console_config.h>
-#include <stdin_fix.h>
+#include <std_utils.h>
 #include <dynamic_array.h>
 #include "lands.h"
 

@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <stdin_fix.h>
+#include <std_utils.h>
 #include <console_config.h>
 #include <string.h>
 #include <time.h>
-#include <stdin_fix.h>
+#include <std_utils.h>
 
 #define STACK_SIZE 16
 
