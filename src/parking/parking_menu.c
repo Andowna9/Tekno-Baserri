@@ -23,6 +23,7 @@ void scan_p_plot(int* row_ptr, int* col_ptr) {
 
     do {
 
+        printf("Letra y Número. Ejemplo: A3\n");
         printf("Plaza: ");
         ret = read_format("%c%2d", &row, &column);
 
