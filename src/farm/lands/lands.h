@@ -23,8 +23,11 @@ typedef struct {
 
 // consultas terrenos
 void buy_lands(Terrain);
-void sell_lands(int i);
+void sell_lands(int i, float price);
 void check_lands();
-void print_terrain(Terrain);
+
+void save_lands();
+void read_lands();
+void free_lands_mem();
 
 #endif

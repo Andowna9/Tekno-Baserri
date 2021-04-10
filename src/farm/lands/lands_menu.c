@@ -9,6 +9,8 @@
 
 void lands_menu() {
 
+  read_lands();
+
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while(1){
@@ -26,7 +28,17 @@ void lands_menu() {
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));
 
-    if (!strcmp(input_buffer, "1")) {
+    putchar('\n');
+
+    if(!strcmp(input_buffer, "v")) {
+
+      free_lands_mem();
+      break;
+    }
+
+    // Comprar terreno
+
+    else if (strcmp(input_buffer, "1") == 0) {
 
         Terrain terr;
 
@@ -48,19 +60,19 @@ void lands_menu() {
 
         buy_lands(terr);
 
+    // Vender terreno
 
-    } else if(!strcmp(input_buffer, "2")) {
-      int i = read_int("Introduce el ID del terreno a borrar");
-      sell_lands(i);
+    } else if(strcmp(input_buffer, "2") == 0) {
+      int i = read_int("ID del terreno a vender: ");
+      float f = read_float("Precio de venta: ");
+      sell_lands(i, f);
 
 
     } else if(strcmp(input_buffer,"3") == 0){
         check_lands();
     }
 
-    else if(!strcmp(input_buffer, "v")) {
-      break;
-    }
+    else { printf("Opción incorrecta!\n"); }
 
     putchar('\n');
     press_to_continue();
