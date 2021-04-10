@@ -3,7 +3,9 @@
 #include <string.h>
 #include <console_config.h>
 #include <stdin_fix.h>
+#include <dynamic_array.h>
 #include "lands.h"
+
 
 void lands_menu() {
 
@@ -30,7 +32,7 @@ void lands_menu() {
 
         terr.name = read_str("Nombre: ");
 
-        terr.area = read_float("Aréa: ");
+        terr.area = read_float("Aréa (hectáreas): ");
 
         if (confirm_action("Terreno de cultivo?")) {
 
@@ -42,16 +44,21 @@ void lands_menu() {
             terr.in_use = false;
         }
 
-        terr.cost = read_float("Precio Pagado: ");
+        terr.cost = read_float("Precio Pagado (euros): ");
 
-        buy_lands();
+        buy_lands(terr);
 
 
     } else if(!strcmp(input_buffer, "2")) {
-      sell_lands();
+      int i = read_int("Introduce el ID del terreno a borrar");
+      sell_lands(i);
 
 
-    } else if(!strcmp(input_buffer, "v")) {
+    } else if(strcmp(input_buffer,"3") == 0){
+        check_lands();
+    }
+
+    else if(!strcmp(input_buffer, "v")) {
       break;
     }
 

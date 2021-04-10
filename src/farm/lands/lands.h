@@ -22,8 +22,9 @@ typedef struct {
 } Terrain;
 
 // consultas terrenos
-void buy_lands();
-void sell_lands();
+void buy_lands(Terrain);
+void sell_lands(int i);
 void check_lands();
+void print_terrain(Terrain);
 
 #endif
