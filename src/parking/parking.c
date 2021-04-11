@@ -9,6 +9,12 @@
 // Creación dinámica del parking
 
 void create_parking(int rows, int cols) {
+    /** @brief Function for creation of parking of rows x cols size given in the parameters
+     *
+     *  @param rows Rows
+     *  @param cols Columns
+        @return Void
+      */
 
     // Inicialización de variables globales en header
 
@@ -34,6 +40,12 @@ void create_parking(int rows, int cols) {
 // Función para comprobar si una plaza está ocupada
 
 int vehicle_inside(int row, int col) {
+    /** @brief Checks if a space is occupied by another vehicle
+     *
+     *  @param row Row
+     *  @param col Column
+        @return License plate of the vehicle inside, if it's not empty
+      */
 
     return parking[row][col].l_plate != NULL;
 }
@@ -41,6 +53,11 @@ int vehicle_inside(int row, int col) {
 // MANTENIMIENTO
 
 void modify_columns(int dn) {
+    /** @brief Modifies the number of columns
+     *
+     *  @param dn New number of columns
+     *  @return ---
+      */
 
     if (num_cols + dn > MAX_COLS) {
 
@@ -69,6 +86,11 @@ void modify_columns(int dn) {
 }
 
 void modify_rows(int dn) {
+    /** @brief Modifies the number of rows
+     *
+     *  @param dn New number of rows
+     *  @return ---
+      */
 
     if (num_rows + dn > MAX_ROWS) {
 
@@ -92,6 +114,12 @@ void modify_rows(int dn) {
 // Comprueba si una posición dada está fuera de rango
 
 int out_of_bounds(int row, int col) {
+    /** @brief Checks if a given position is out of bounds
+     *
+     *  @param row Row number
+     *  @param col Column number
+     *  @return true if out of bounds, false if not
+      */
 
     if (row < 0 || row >= num_rows || col < 0 || col >= num_cols) { // Out of bounds
 
@@ -107,6 +135,13 @@ int out_of_bounds(int row, int col) {
 // Inserta un vehículo en el parking
 
 int insert_vehicle(char* key, int row, int col) {
+    /** @brief Inserts a vehicle in a given position
+     *
+     *  @param key License plate
+     *  @param row Row
+     *  @param col COl
+     *  @return true if success, false if occupied
+      */
 
     if (vehicle_inside(row, col)) {
 
@@ -135,6 +170,12 @@ int insert_vehicle(char* key, int row, int col) {
 // Limpieza de aparcamiento
 
 void clear_p_lot(int row, int col) {
+    /** @brief Clears a parking lot position ?????????
+     *
+     *  @param row Row
+     *  @param col Column
+     *  @return Void
+      */
 
     // Liberación de puntero a matrícula
 
@@ -149,6 +190,12 @@ void clear_p_lot(int row, int col) {
 // Elimina un vehículo del parking
 
 int remove_vehicle(int row, int col) {
+    /** @brief Erases vehicle from parking
+     *
+     *  @param row Row
+     *  @param col Column
+     *  @return true if success, false if not
+      */
 
     if (!vehicle_inside(row, col)) {
 
@@ -179,6 +226,10 @@ void reset_highlighted_point() {
 }
 
 void print_parking() {
+    /** @brief Prints the parking lot in console
+     *
+     *  @return Void
+      */
 
     // Variables locales - Configuración visual en consola
 
@@ -263,6 +314,10 @@ void print_parking() {
 // Libera toda la memria dinámica empleada en el parking
 
 void free_parking_memory() {
+    /** @brief Frees dinamic memory used in the creation of the parking
+     *
+     *  @return Void
+      */
 
     int i;
 
@@ -295,6 +350,10 @@ static char vehicle_format [] = "(%d, %d) -> %s | %lld";
 // Guarda los datos del parking en un fichero de texto
 
 void save_parking() {
+    /** @brief Saves parking information in a file
+     *
+     *  @return Void
+      */
 
     FILE* fp = fopen("parking.config", "w");
 
@@ -325,6 +384,10 @@ void save_parking() {
 // Carga los datos del parking
 
 int load_parking() {
+    /** @brief Loads the information of the parking in a file
+     *
+     *  @return -1 if file is empty
+      */
 
     FILE* fp = fopen("parking.config", "r");
 
@@ -372,6 +435,11 @@ int load_parking() {
 }
 
 char* get_time_passed(time_t time_stamp) {
+    /** @brief Logs the time passed
+     *
+     *  @param time_stamp time stamp
+     *  @return formatted string of the passed time
+      */
 
     time_t current_stamp = time(NULL);
 
