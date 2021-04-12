@@ -8,6 +8,10 @@
 
 static dyn_array  lands_arr;
 
+int get_lands_arr_size() {
+    return lands_arr.size;
+}
+
 void print_terrain(Terrain terr){
 
    printf("Nombre: %s\n",terr.name);
