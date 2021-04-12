@@ -15,6 +15,7 @@ static void clear_and_title() {
 static void clear_and_redraw() {
     clear_and_title();
     print_lands(); // Redibujamos el parking
+
 }
 
 void lands_menu() {
@@ -76,25 +77,35 @@ void lands_menu() {
     } else if(strcmp(input_buffer, "2") == 0) {
 
       // Limpiamos
-      clear_and_redraw();
+        if (get_lands_arr_size()) {
+            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
 
-      // Preguntamos
-      int i = read_int("\nID del terreno a vender: ");
+        } else {
+            clear_and_redraw();
 
-      if (land_is_out_of_bounds(i)) {
-          printf_c(LIGHT_RED_TXT, "\nÍndice no válido\n");
-      } else {
-          clear_and_title();
-          print_land(i - 1);
+            // Preguntamos
+            int i = read_int("\nID del terreno a vender: ");
 
-          float f = read_float("\nPrecio de venta: ");
-          putchar('\n');
-          sell_lands(i, f);
-      }
+            if (land_is_out_of_bounds(i)) {
+                printf_c(LIGHT_RED_TXT, "\nÍndice no válido\n");
+            } else {
+                clear_and_title();
+                print_land(i - 1);
+
+                float f = read_float("\nPrecio de venta: ");
+                putchar('\n');
+                sell_lands(i, f);
+            }
+        }
+
 
     } else if(strcmp(input_buffer,"3") == 0){
-        clear_and_redraw();
+        if (get_lands_arr_size()) {
+            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
 
+        } else {
+            clear_and_redraw();
+        }
 
     } else { printf("Opción incorrecta!\n"); }
 
