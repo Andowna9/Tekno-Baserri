@@ -47,6 +47,7 @@ void scan_parking() {
     while(1) {
 
         do {
+
             printf("Tamaño (filas, columnas): ");
             ret = read_format("%2d, %2d", &h, &w);
 
@@ -75,16 +76,21 @@ void scan_parking() {
 
         } while(ret != 2);
 
-
+        putchar('\n');
         printf("Número de aparcamientos posibles: %d\n", w * h);
 
         if (confirm_action("¿Desea continuar?")) {
 
             create_parking(h, w); // Creación de parking en memoria
+            add_to_log("Creado parking");
+            save_needed = true;
+            putchar('\n');
 
             break;
 
         }
+
+        putchar('\n');
 
     }
 
@@ -320,11 +326,12 @@ static inline void close_logger() {
 void parking_menu() {
 
     // Inicialización
+    configure_logger();
+    save_needed = false;
     init_parking();
     char i_buffer [DEFAULT_BUFFER_SIZE];
     reset_highlighted_point();
-    save_needed = false;
-    configure_logger();
+
 
     // Programa
     while(1) {
