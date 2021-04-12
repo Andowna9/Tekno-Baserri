@@ -16,18 +16,33 @@ void print_terrain(Terrain terr){
     printf("Uso: %s \n",terr.in_use ? "Cultivos" : "Animales");
 }
 
-// Comprueba el estado de un terreno en concreto
 
-void check_lands() {
+int land_is_out_of_bounds(int index) {
+    if (index > lands_arr.size) {
+        return 1; // true
+    } else {
+        return 0; // false
+    }
+}
+
+// Comprueba el estado de un terreno en concreto
+void print_land(int index) {   
+    if (land_is_out_of_bounds(index)) {
+        printf_c(LIGHT_RED_TXT, "Index out of bounds.\n");
+
+    } else {
+        Terrain* terr_ptr = (Terrain*) get_elem(lands_arr, index);
+        printf("\n___ TERRENO %i ___\n\n", index + 1);
+        print_terrain(*terr_ptr);
+    }
+
+}
+
+void print_lands() {
 
     int i;
-
     for(i = 0;i < lands_arr.size ;i++) {
-
-        Terrain* terr_ptr = (Terrain*) get_elem(lands_arr,i);
-        printf("\n___ TERRENO %i ___\n\n",i+1);
-        print_terrain(*terr_ptr);
-
+        print_land(i);
     }
 
 }
@@ -48,16 +63,13 @@ void buy_lands(Terrain terr){
 
 void sell_lands(int i, float price){
 
-   printf("Estás borrando el terreno %i \n",i);
-   Terrain* terr_ptr = (Terrain*) get_elem(lands_arr,i-1);
-   print_terrain(*terr_ptr);
-   if (confirm_action("Seguro que quieres borrar? :\n")) {
+   if (confirm_action("¿Seguro que quieres vender?")) {
 
        remove_elem(&lands_arr ,i-1);
-       printf("Se ha borrado");
+       printf_c(LIGHT_GREEN_TXT, "\nTerreno vendido\n");
    }
    else {
-       printf("No se ha borrado");
+       printf_c(LIGHT_RED_TXT, "\nOperación cancelada\n");
    }
 
    save_lands();
