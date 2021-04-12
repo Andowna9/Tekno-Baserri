@@ -2,6 +2,7 @@
     #include <windows.h> // Si la compilación es en Windows incluimos un header para configurar la consola
 #endif
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include "console_config.h"
