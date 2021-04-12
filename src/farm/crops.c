@@ -25,7 +25,7 @@ void crops_menu() {
   
   
     if (!strcmp(input_buffer, "1")){
-      check_land();
+      print_land();
     }
     else if (!strcmp(input_buffer, "2")){
       change_crop();
@@ -51,7 +51,7 @@ void crops_menu() {
 }
 
 
-void check_land(){
+void check_crop(){
     // comprueba qué hay en un terreno en concreto (maíz, trigo, fresas...)
 
     /*

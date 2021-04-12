@@ -5,7 +5,7 @@
 void crops_menu();
 
 // consultas cultivos
-void check_land();
+void print_land();
 void change_crop();
 void seed_lands();
 void remove_lands();
