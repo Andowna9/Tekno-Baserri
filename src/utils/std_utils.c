@@ -207,9 +207,38 @@ void print_title_center(char* title, int size, ANSI_COLOR color, char filler) {
 
     } else {
         for (i = 0; i < ((size - len)/2)-1; i++) { // le resto 1 porque se ve mejor así
+            printf_c(color, "%c", filler);
+        }
+        printf_c(color," %s ", title); // imprimimos el título
+        for (i = i + 0; i < size - len; i++) { // hasta el final (31 caracteres)
+            printf_c(color, "%c", filler);
+        }
+        printf("\n\n");
+    }
+
+}
+
+void print_title_left(char* title, int size, ANSI_COLOR color, char filler) {
+    // hay 33 guiones (-) en la barra de abajo
+    // en el nuestro 2 son espacios (=31),
+    size -= 2;
+    // el centro es nuestro título (31 - len)
+
+
+    int i; // bucles
+    int len = strlen(title);
+    if (strcmp(title, "") == 0) { // Si el título está vacío
+        print_title_center(title, size, color, filler); // hacen lo mismo
+
+    } else if (len >= size) { // Si excede nuestro límite de la barra de abajo
+        printf_c(color, "%c %s %c", filler, title, filler); // - TITLE - // lo hago así para que si es demasiado pequeño no se quede sin guiones
+
+
+    } else {
+        for (i = 0; i < ((size - len)/6)-1; i++) { // le resto 1 porque se ve mejor así
             printf_c(color, "-");
         }
-        printf_c(color," %s ", title);
+        printf_c(color," %s ", title); // imprimimos el título
         for (i = i + 0; i < size - len; i++) { // hasta el final (31 caracteres)
             printf_c(color, "-");
         }
