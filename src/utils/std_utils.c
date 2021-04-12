@@ -3,7 +3,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include "std_utils.h"
-#include <console_config.h>
 
 void clear_stdin(); // Llamar cuando estemos seguros de que una limpieza de stdin es necesaria (si no puede pausar la ejecución esperando input)
 void clean_buffer(char* buffer); // Elimina el caracter de nueva línea de un buffer de caracteres (string)
@@ -182,29 +181,37 @@ void press_to_continue() {
     clear_stdin(); // Con hacer un clear es suficiente, ya que se encargará de pedir input y limpiar hasta encontrar el '\n'
 }
 
-void align_title_to_center(char* title) {
+void print_banner(char filler, int size, ANSI_COLOR color) {
+    print_title_center("", size, color, filler);
+
+}
+
+void print_title_center(char* title, int size, ANSI_COLOR color, char filler) {
     // hay 33 guiones (-) en la barra de abajo
     // en el nuestro 2 son espacios (=31),
+    size -= 2;
     // el centro es nuestro título (31 - len)
-    // le resto 1 porque se ve mejor así
 
+
+    int i; // bucles
     int len = strlen(title);
     if (strcmp(title, "") == 0) { // Si el título está vacío
-        printf_c(LIGHT_MAGENTA_TXT, "---------------------------------");
+        for (i = 0; i < size + 2; i++) { // recontamos los dos espacios
+            printf_c(color, "%c", filler);
+        }
+        printf("\n\n");
 
-
-    } else if (len >= 31) { // Si excede nuestro límite de la barra de abajo
-        printf_c(LIGHT_MAGENTA_TXT, "- %s -", title);
+    } else if (len >= size) { // Si excede nuestro límite de la barra de abajo
+        printf_c(color, "%c %s %c", filler, title, filler); // - TITLE - // lo hago así para que si es demasiado pequeño no se quede sin guiones
 
 
     } else {
-        int i;
-        for (i = 0; i < ((31 - len)/2)-1; i++) {
-            printf_c(LIGHT_MAGENTA_TXT, "-");
+        for (i = 0; i < ((size - len)/2)-1; i++) { // le resto 1 porque se ve mejor así
+            printf_c(color, "-");
         }
-        printf_c(LIGHT_MAGENTA_TXT," %s ", title);
-        for (i = i + 0; i < 31 - len; i++) { // hasta el final (31 caracteres)
-            printf_c(LIGHT_MAGENTA_TXT, "-");
+        printf_c(color," %s ", title);
+        for (i = i + 0; i < size - len; i++) { // hasta el final (31 caracteres)
+            printf_c(color, "-");
         }
         printf("\n\n");
     }

@@ -10,7 +10,7 @@
 
 #ifndef STDIN_FIX_H
 #define STDIN_FIX_H
-
+#include <console_config.h>
 #define DEFAULT_BUFFER_SIZE 10 // Tamaño por defecto para el buffer de caracteres
 
 /**
@@ -93,7 +93,8 @@ int choose_option(const char* message, int num_options, ...);
  */
 void press_to_continue();
 
-void align_title_to_center(char* title);
+void print_banner(char filler, int size, ANSI_COLOR color);
+void print_title_center(char* title, int size, ANSI_COLOR color, char filler);
 
 char* format_str(const char* format, ...);
 
