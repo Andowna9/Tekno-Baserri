@@ -63,8 +63,9 @@ void read_log(char* title) {
     FILE* log_file = fopen(log_file_txt, "r");
     int size = 40;
     int color = LIGHT_MAGENTA_TXT;
+    char filler = '-';
 
-    print_title_center(title, size, color, '-'); //printf_c(LIGHT_MAGENTA_TXT, "------------- %s --------------\n\n", title);
+    print_title_center(title, size, color, filler); //printf_c(LIGHT_MAGENTA_TXT, "------------- %s --------------\n\n", title);
 
     // content of the log
     char c;
@@ -73,7 +74,7 @@ void read_log(char* title) {
         printf_c(color, "%c", c);
 
     } while (c != EOF);
-    print_banner('-', size, color);
+    print_banner(filler, size, color);
 
     fclose(log_file);
 }

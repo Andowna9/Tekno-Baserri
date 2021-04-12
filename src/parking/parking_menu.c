@@ -384,6 +384,8 @@ void parking_menu() {
                     free_parking_memory();
                     clear_log();
                     break;
+                } else {
+                    printf_c(LIGHT_GREEN_TXT, "\nVolviendo al menú anterior.\n");
                 }
             } else {
                 free_parking_memory();
@@ -403,7 +405,7 @@ void parking_menu() {
                 printf_c(LIGHT_GREEN_TXT, "Guardado con éxito\n");
 
             } else {
-                printf_c(LIGHT_MAGENTA_TXT, "Nada que guardar.");
+                printf_c(LIGHT_MAGENTA_TXT, "Nada que guardar.\n");
             }
 
         }
