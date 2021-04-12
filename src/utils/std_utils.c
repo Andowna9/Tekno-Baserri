@@ -127,7 +127,7 @@ int confirm_action(const char* message) {
 
         }
 
-        printf("Opción no disponible!\n");
+        printf_c(LIGHT_RED_TXT, "¡Opción no disponible!\n\n");
 
     }
 
