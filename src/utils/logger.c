@@ -61,16 +61,19 @@ void add_to_log(char* message, ...) {
 
 void read_log(char* title) {
     FILE* log_file = fopen(log_file_txt, "r");
+    int size = 40;
+    int color = LIGHT_MAGENTA_TXT;
 
-    align_title_to_center(title); //printf_c(LIGHT_MAGENTA_TXT, "------------- %s --------------\n\n", title);
+    print_title_center(title, size, color, '-'); //printf_c(LIGHT_MAGENTA_TXT, "------------- %s --------------\n\n", title);
 
     // content of the log
     char c;
     do {
         c = fgetc(log_file);
-        printf_c(LIGHT_MAGENTA_TXT, "%c", c);
+        printf_c(color, "%c", c);
+
     } while (c != EOF);
-    printf_c(LIGHT_MAGENTA_TXT, "---------------------------------\n\n");
+    print_banner('-', size, color);
 
     fclose(log_file);
 }
