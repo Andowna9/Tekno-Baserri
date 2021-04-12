@@ -7,6 +7,16 @@
 #include "lands.h"
 
 
+static void clear_and_title() {
+    clear_screen(); // Limpiamos pantalla
+    print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
+}
+
+static void clear_and_redraw() {
+    clear_and_title();
+    print_lands(); // Redibujamos el parking
+}
+
 void lands_menu() {
 
   read_lands();
@@ -17,7 +27,7 @@ void lands_menu() {
 
     clear_screen();
 
-    printf_c(LIGHT_CYAN_TXT, "------- TERRENOS -------\n\n");
+    print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
     printf("1. Comprar terrerno.\n");
     printf("2. Vender terreno.\n");
     printf("3. Listar terrenos.\n");
@@ -42,7 +52,7 @@ void lands_menu() {
 
         Terrain terr;
 
-        printf_c(LIGHT_CYAN_TXT, "------------------------\n\n");
+        print_banner('-', 33, LIGHT_CYAN_TXT);
 
         terr.name = read_str("Nombre: ");
         terr.area = read_float("Aréa (hectáreas): ");
@@ -64,16 +74,29 @@ void lands_menu() {
     // Vender terreno
 
     } else if(strcmp(input_buffer, "2") == 0) {
-      int i = read_int("ID del terreno a vender: ");
-      float f = read_float("Precio de venta: ");
-      sell_lands(i, f);
 
+      // Limpiamos
+      clear_and_redraw();
+
+      // Preguntamos
+      int i = read_int("\nID del terreno a vender: ");
+
+      if (land_is_out_of_bounds(i)) {
+          printf_c(LIGHT_RED_TXT, "\nÍndice no válido\n");
+      } else {
+          clear_and_title();
+          print_land(i - 1);
+
+          float f = read_float("\nPrecio de venta: ");
+          putchar('\n');
+          sell_lands(i, f);
+      }
 
     } else if(strcmp(input_buffer,"3") == 0){
-        check_lands();
-    }
+        clear_and_redraw();
 
-    else { printf("Opción incorrecta!\n"); }
+
+    } else { printf("Opción incorrecta!\n"); }
 
     putchar('\n');
     press_to_continue();
