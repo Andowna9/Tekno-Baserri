@@ -42,20 +42,21 @@ void lands_menu() {
 
         Terrain terr;
 
-        terr.name = read_str("Nombre: ");
+        printf_c(LIGHT_CYAN_TXT, "------------------------\n\n");
 
+        terr.name = read_str("Nombre: ");
         terr.area = read_float("Aréa (hectáreas): ");
 
+        putchar('\n');
+
         if (confirm_action("Terreno de cultivo?")) {
-
             terr.in_use = true;
-        }
 
-        else {
-
+        } else {
             terr.in_use = false;
         }
 
+        putchar('\n');
         terr.cost = read_float("Precio Pagado (euros): ");
 
         buy_lands(terr);
