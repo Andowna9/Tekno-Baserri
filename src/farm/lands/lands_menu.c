@@ -78,9 +78,6 @@ void lands_menu() {
 
       // Limpiamos
         if (get_lands_arr_size()) {
-            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
-
-        } else {
             clear_and_redraw();
 
             // Preguntamos
@@ -96,15 +93,18 @@ void lands_menu() {
                 putchar('\n');
                 sell_lands(i, f);
             }
+
+        } else {
+            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
         }
 
 
     } else if(strcmp(input_buffer,"3") == 0){
         if (get_lands_arr_size()) {
-            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
+            clear_and_redraw();
 
         } else {
-            clear_and_redraw();
+            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
         }
 
     } else { printf("Opción incorrecta!\n"); }
