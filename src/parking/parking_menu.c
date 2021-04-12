@@ -121,13 +121,14 @@ void init_parking() {
 }
 
 // Métodos para dibujar el parking de cero
-void clear_and_redraw() {
+static void clear_and_redraw() {
     clear_screen(); // Limpiamos pantalla
-    printf_c(LIGHT_MAGENTA_TXT,"------- PARKING -------\n\n");
+    print_title_center("PARKING", 24, LIGHT_MAGENTA_TXT, '-');
+    printf("\n\n");
     print_parking(); // Redibujamos el parking
 }
 
-void clear_redraw_and_highlight(int r, int c) {
+static void clear_redraw_and_highlight(int r, int c) {
     set_highlighted_point(r, c); // Destacamos el punto
     clear_and_redraw();
     reset_highlighted_point(); // Dejamos de destacar
