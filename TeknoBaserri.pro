@@ -16,6 +16,7 @@ SOURCES += src/main.c \
            src/farm/management/management_menu.c \
            src/parking/parking.c \
            src/parking/parking_menu.c \
+           src/parking/vehicle/Vehicle.cpp \
            src/utils/logger.c \
            src/utils/dynamic_array.c \
            src/utils/std_utils.c
@@ -29,6 +30,7 @@ HEADERS += src/console/console_config.h \
     src/parking/parking.h \
     src/parking/parking_menu.h \
     src/farm/*.h \
-    include/*.h
+    include/*.h \
+    src/parking/vehicle/Vehicle.h
 
 INCLUDEPATH += include/
