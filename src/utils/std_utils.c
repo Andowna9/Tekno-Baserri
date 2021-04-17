@@ -201,7 +201,7 @@ void print_title_center(char* title, int size, ANSI_COLOR color, char filler) {
         }
         printf("\n\n");
 
-    } else if (len >= size) { // Si excede nuestro límite de la barra de abajo
+    } else if (len + 2 >= size) { // Si excede nuestro límite de tamaño de la barra de abajo (si no sumamos esos dos adicionales no dibuja el filler)
         printf_c(color, "%c %s %c", filler, title, filler); // - TITLE - // lo hago así para que si es demasiado pequeño no se quede sin guiones
 
 
