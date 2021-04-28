@@ -19,7 +19,19 @@ private:
 public:
 
     Vehicle(); // Constructor por defecto
-    Vehicle(string l_plate, string color, string brand, pair<float, float> dimensions); // Constructor completo
+    Vehicle(string l_plate, string color, string brand); // Constructor completo
+
+    // Getters
+
+    string getLicensePlate() const;
+    string getColor() const;
+    string getBrand() const;
+
+    // Setters
+
+    void setLicensePLate(string lp);
+    void setColor(string c);
+    void setBrand(string b);
 
     // NOTA: Ambas funciones se declaran como friends ya que necesitan acceso a todos los métodos y atributos privados
     // No son métodos de clase, por lo que en el .cpp no es necesario especificarla con ::

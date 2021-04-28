@@ -2,12 +2,41 @@
 
 Vehicle::Vehicle(){}
 
-Vehicle::Vehicle(string l_plate, string color, string brand, pair<float, float> dimensions) {
+Vehicle::Vehicle(string l_plate, string color, string brand) {
 
       this->l_plate = l_plate;
       this->color = color;
       this->brand = brand;
-      this->dim = dimensions;
+}
+
+string Vehicle::getLicensePlate() const {
+
+    return this->l_plate;
+
+}
+string Vehicle::getColor() const {
+
+    return this->color;
+
+}
+string Vehicle::getBrand() const {
+
+    return this->brand;
+}
+
+void Vehicle::setLicensePLate(string lp) {
+
+    this->l_plate = lp;
+}
+
+void Vehicle::setColor(string c) {
+
+    this->color = c;
+}
+
+void Vehicle::setBrand(string b) {
+
+    this->brand = b;
 }
 
 // Permite hacer cout con un vehículo - Referencia constante para evitar modificar la instancia
