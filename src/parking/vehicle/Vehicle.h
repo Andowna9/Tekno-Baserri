@@ -20,6 +20,7 @@ public:
 
     Vehicle(); // Constructor por defecto
     Vehicle(string l_plate, string color, string brand); // Constructor completo
+    Vehicle(char* l_plate);
 
     // Getters
 

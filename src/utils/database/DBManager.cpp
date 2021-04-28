@@ -60,6 +60,24 @@ void DBManager::disconnect() {
 
 }
 
+bool DBManager::vehicleRegistered(const char* l_plate) {
+
+    sqlite3_stmt* stmt;
+
+    string sql = "SELECT * FROM vehicle WHERE license_plate=?";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
+
+    int code = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+
+    return code == SQLITE_ROW;
+
+}
+
 Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
     sqlite3_stmt* stmt;
@@ -74,15 +92,16 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
     Vehicle v;
 
-    if (code == SQLITE_DONE) {
+    if (code == SQLITE_ROW) {
 
         string license_plate(l_plate);
-        string brand((const char*)sqlite3_column_text(stmt, 2));
-        string color((const char*)sqlite3_column_text(stmt, 3));
+        string brand((const char*)sqlite3_column_text(stmt, 1));
+        string color((const char*)sqlite3_column_text(stmt, 2));
 
         v.setLicensePLate(license_plate);
         v.setBrand(brand);
         v.setColor(color);
+
     }
 
     return v;

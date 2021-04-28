@@ -13,6 +13,10 @@ extern "C" {
 #include <stdarg.h>
 #include <ctype.h>
 
+#include <iostream>
+#include <DBManager.h>
+using namespace std;
+
 // Variables del file
 bool save_needed;
 static const char* log_file_txt = "parking_saves.log";
@@ -167,6 +171,20 @@ void insert_vehicle_op() {
                     add_to_log("Vehículo encontrado: %s en %c%i", l_plate, r + 'A', c + 1);
                 }
 
+                // Registro de vehículo en la base de datos, si no existe
+
+                if (!DBManager::vehicleRegistered(l_plate)) {
+
+                    cout << "Vehículo nuevo detectado!" << endl;
+
+                    Vehicle v(l_plate);
+                    cin >> v;
+
+                    DBManager::insertVehicle(v);
+
+                }
+
+
 
             } else {
                 printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no agregado\n");
@@ -252,6 +270,13 @@ void check_parking_lot() {
             char* ptr = get_time_passed(parking[r][c].t_stamp);
             printf("Tiempo en parking: %s\n", ptr);
             free(ptr);
+
+            // Información del vehículo
+
+            Vehicle v_info = DBManager::retrieveVehicle(plate);
+
+            cout << v_info;
+
         }
 
     }
@@ -338,6 +363,10 @@ void parking_menu() {
     init_parking();
     char i_buffer [DEFAULT_BUFFER_SIZE];
     reset_highlighted_point();
+
+    // Conexión con BD
+
+    DBManager::connect();
 
 
     // Programa
@@ -439,4 +468,8 @@ void parking_menu() {
     }
 
     close_logger();
+
+    // Se desconecta la BD
+
+    DBManager::disconnect();
 }

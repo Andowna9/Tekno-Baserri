@@ -28,6 +28,7 @@ class DBManager {
         static Vehicle retrieveVehicle(const char* l_plate);
         static void insertVehicle(Vehicle v);
         static void deleteVehicle(const char* l_plate);
+        static bool vehicleRegistered(const char* l_plate);
 
 };
 

@@ -1,12 +1,22 @@
 #include "Vehicle.h"
 
-Vehicle::Vehicle(){}
+Vehicle::Vehicle(){
+
+    l_plate = "";
+    color = "";
+    brand = "";
+}
 
 Vehicle::Vehicle(string l_plate, string color, string brand) {
 
       this->l_plate = l_plate;
       this->color = color;
       this->brand = brand;
+}
+
+Vehicle::Vehicle(char* l_plate) {
+
+    this->l_plate = string(l_plate);
 }
 
 string Vehicle::getLicensePlate() const {
@@ -43,10 +53,9 @@ void Vehicle::setBrand(string b) {
 
 ostream & operator << (ostream &out, const Vehicle &v) {
 
-    out << "Vehículo " << v.l_plate << endl;
     out << "Color: " << v.color << endl;
     out << "Marca: " << v.brand << endl;
-    out << "Dimensiones: " << v.dim.first << " x " << v.dim.second << endl;
+    // out << "Dimensiones: " << v.dim.first << " x " << v.dim.second << endl;
 
     return out;
 }
@@ -55,10 +64,7 @@ ostream & operator << (ostream &out, const Vehicle &v) {
 
 istream & operator >> (istream &in, Vehicle &v) {
 
-    cout << "Aparcando vehículo..." << endl;
-
-    cout << "Matrícula: ";
-    in >> v.l_plate;
+    cout << "--Introduce la información del vehículo--" << endl;
 
     cout << "Color: ";
     in >> v.color;
