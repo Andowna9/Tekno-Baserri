@@ -32,7 +32,7 @@ char* get_log_file_name() {
     return log_file_txt;
 }
 
-void add_to_log(char* message, ...) {
+void add_to_log(const char* message, ...) {
 
     FILE* log_file = fopen(log_file_txt, "a");
 
@@ -59,7 +59,7 @@ void add_to_log(char* message, ...) {
     fclose(log_file);
 }
 
-void read_log(char* title) {
+void read_log(const char* title) {
     FILE* log_file = fopen(log_file_txt, "r");
     int size = 40;
     int color = LIGHT_MAGENTA_TXT;

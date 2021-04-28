@@ -186,7 +186,7 @@ void print_banner(char filler, int size, ANSI_COLOR color) {
 
 }
 
-void print_title_center(char* title, int size, ANSI_COLOR color, char filler) {
+void print_title_center(const char* title, int size, ANSI_COLOR color, char filler) {
     // hay 33 guiones (-) en la barra de abajo
     // en el nuestro 2 son espacios (=31),
     size -= 2;
@@ -218,7 +218,7 @@ void print_title_center(char* title, int size, ANSI_COLOR color, char filler) {
 
 }
 
-void print_title_left(char* title, int size, ANSI_COLOR color, char filler) {
+void print_title_left(const char* title, int size, ANSI_COLOR color, char filler) {
     // hay 33 guiones (-) en la barra de abajo
     // en el nuestro 2 son espacios (=31),
     size -= 2;

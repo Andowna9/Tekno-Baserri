@@ -96,8 +96,8 @@ void press_to_continue();
 
 // Funciones para imprimir títulos y demás
 void print_banner(char filler, int size, ANSI_COLOR color);
-void print_title_center(char* title, int size, ANSI_COLOR color, char filler);
-void print_title_left(char* title, int size, ANSI_COLOR color, char filler);
+void print_title_center(const char* title, int size, ANSI_COLOR color, char filler);
+void print_title_left(const char* title, int size, ANSI_COLOR color, char filler);
 
 char* format_str(const char* format, ...);
 
