@@ -17,7 +17,6 @@ SOURCES += src/main.c \
            src/farm/lands/lands.c \
            src/farm/management/management_menu.c \
            src/parking/parking.c \
-           src/parking/parking_menu.c \
            src/utils/logger.c \
            src/utils/dynamic_array.c \
            src/utils/std_utils.c \
@@ -26,7 +25,8 @@ SOURCES += src/main.c \
 # SOURCES C++
 
 SOURCES += src/parking/vehicle/Vehicle.cpp \
-           src/utils/database/DBManager.cpp
+           src/utils/database/DBManager.cpp \
+           src/parking/parking_menu.cpp
 
 HEADERS += src/console/console_config.h \
     src/farm/animal_food/food.h \

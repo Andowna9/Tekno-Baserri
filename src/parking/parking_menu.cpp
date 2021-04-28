@@ -1,17 +1,21 @@
+extern "C" {
+
+    #include <std_utils.h>
+    #include <console_config.h>
+    #include "parking.h"
+    #include <logger.h>
+}
+
 #include <stdio.h>
-#include <std_utils.h>
-#include <console_config.h>
 #include <string.h>
 #include <stdlib.h>
-#include "parking.h"
 #include <stdbool.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <logger.h>
 
 // Variables del file
 bool save_needed;
-static char* log_file_txt = "parking_saves.log";
+static const char* log_file_txt = "parking_saves.log";
 
 // Función para pedir por teclado la plaza
 void scan_p_plot(int* row_ptr, int* col_ptr) {
@@ -324,6 +328,8 @@ static inline void close_logger() {
     pop_filename();
 }
 
+extern "C" void parking_menu(); // De esta manera podremos llamar a la función implemenetada en cpp desde C
+
 void parking_menu() {
 
     // Inicialización
@@ -428,7 +434,6 @@ void parking_menu() {
         else { printf("Opción no válida!\n"); } // Opción incorrecta
 
         putchar('\n'); // Nueva línea
-
 
         press_to_continue();
     }

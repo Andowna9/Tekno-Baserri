@@ -10,11 +10,11 @@
 #define STACK_SIZE 16
 
 // Variables
-static char* log_file_txt;
+static const char* log_file_txt;
 unsigned char counter = 0;
-char* filename_stack[STACK_SIZE];
+const char* filename_stack[STACK_SIZE];
 
-void set_log_file(char* file_name) {
+void set_log_file(const char* file_name) {
     if (log_file_txt == NULL) {
         printf_c(LIGHT_RED_TXT, "No existe un logger inicializado.\n");
 
@@ -24,7 +24,7 @@ void set_log_file(char* file_name) {
 
 }
 
-char* get_log_file_name() {
+const char* get_log_file_name() {
     if (log_file_txt == NULL) {
         return "N/A";
     }
