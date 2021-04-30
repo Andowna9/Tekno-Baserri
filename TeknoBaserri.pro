@@ -40,3 +40,8 @@ HEADERS += src/console/console_config.h \
     src/parking/vehicle/Vehicle.h
 
 INCLUDEPATH += include/
+
+# Database 4 Unix
+unix {
+    LIBS += -lpthread -ldl -lm
+}
