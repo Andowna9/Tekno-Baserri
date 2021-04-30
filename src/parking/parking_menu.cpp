@@ -343,6 +343,34 @@ void confirm_new_config() {
     }
 }
 
+// Menú 8. Configuración de la BDD del parking
+void manage_parking_access() {
+    char i_buffer [DEFAULT_BUFFER_SIZE];
+
+    clear_screen();
+    printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n");
+
+    printf("USUARIO: ADMIN\n");
+    printf("Contraseña: ");
+    scan_str(i_buffer, sizeof(i_buffer));
+    if (strcmp(i_buffer, "admin") != 0) return;
+
+    while(1) {
+        clear_screen();
+        printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n\n");
+        printf(" 1. Permitir acceso a vehículos\n");
+        printf(" 2. Retirar acceso al parking a vehículos\n");
+
+        printf("\nIntroduce 'v' para volver.\n");
+
+        printf("\nInput: ");
+        scan_str(i_buffer, sizeof(i_buffer));
+
+        if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) break;
+        else printf_c(LIGHT_RED_TXT, "No funcionales.\n");
+    }
+}
+
 static void configure_logger() {
     push_filename();
     set_log_file(log_file_txt);
@@ -381,22 +409,21 @@ void parking_menu() {
 
         // Imprimir opciones disponibles por categorías
 
-        int numMenu = 1;
         printf("--- Gestión");
         printf("\n\n");
 
-        printf(" %i. Introducir vehículo.\n", numMenu); numMenu++;
-        printf(" %i. Sacar vehículo.\n", numMenu); numMenu++;
-        printf(" %i. Consultar información de plaza.\n", numMenu); numMenu++;
-        printf(" %i. Obtener estadísticas generales.\n", numMenu); numMenu++;
+        printf(" 1. Introducir vehículo.\n");
+        printf(" 2. Sacar vehículo.\n");
+        printf(" 3. Consultar información de plaza.\n");
+        printf(" 4. Obtener estadísticas generales.\n");
         putchar('\n');
 
         printf("--- Mantenimiento\n\n");
 
-        printf(" %i. Añadir filas.\n", numMenu); numMenu++;
-        printf(" %i. Añadir columnas.\n", numMenu); numMenu++;
-        printf(" %i. Crear nueva configuración.\n", numMenu); numMenu++;
-        printf(" %i. [ADMIN] Registrar vehículos\n", numMenu); numMenu++;
+        printf(" 5. Añadir filas.\n");
+        printf(" 6. Añadir columnas.\n");
+        printf(" 7. Crear nueva configuración.\n");
+        printf(" 8. [ADMIN] Gestionar acceso al parking\n");
         putchar('\n');
 
         printf("\nIntroduce 's' para guardar los cambios.\n");
@@ -447,21 +474,23 @@ void parking_menu() {
 
         }
 
-        else if (strcmp(i_buffer,"1") == 0) { insert_vehicle_op(); } // Introducir vehículo en plaza
+        else if (strcmp(i_buffer,"1") == 0) insert_vehicle_op(); // Introducir vehículo en plaza
 
-        else if (strcmp(i_buffer, "2") == 0) { remove_vehicle_op(); } // Quitar vehículo de la plaza
+        else if (strcmp(i_buffer, "2") == 0) remove_vehicle_op(); // Quitar vehículo de la plaza
 
-        else if (strcmp(i_buffer, "3") == 0) { check_parking_lot(); } // Consultar información de plaza
+        else if (strcmp(i_buffer, "3") == 0) check_parking_lot(); // Consultar información de plaza
 
-        else if (strcmp(i_buffer, "4") == 0) { check_statistics(); }// Consultar estadísticas generales
+        else if (strcmp(i_buffer, "4") == 0) check_statistics();// Consultar estadísticas generales
 
-        else if (strcmp(i_buffer, "5") == 0) { modify_parking(modify_rows); } // Cambiar número de filas
+        else if (strcmp(i_buffer, "5") == 0) modify_parking(modify_rows); // Cambiar número de filas
 
-        else if (strcmp(i_buffer, "6") == 0) { modify_parking(modify_columns); } // Cambiar número de columnas
+        else if (strcmp(i_buffer, "6") == 0) modify_parking(modify_columns); // Cambiar número de columnas
 
-        else if (strcmp(i_buffer, "7") == 0) { confirm_new_config(); } //Crear nueva configuración
+        else if (strcmp(i_buffer, "7") == 0) confirm_new_config(); //Crear nueva configuración
 
-        else { printf("Opción no válida!\n"); } // Opción incorrecta
+        else if (strcmp(i_buffer, "8") == 0) manage_parking_access(); // Acceso al parking (ADMIN)
+
+        else printf("Opción no válida!\n"); // Opción incorrecta
 
         putchar('\n'); // Nueva línea
 
