@@ -365,7 +365,6 @@ void parking_menu() {
     reset_highlighted_point();
 
     // Conexión con BD
-
     DBManager::connect();
 
 
@@ -382,20 +381,22 @@ void parking_menu() {
 
         // Imprimir opciones disponibles por categorías
 
+        int numMenu = 1;
         printf("--- Gestión");
         printf("\n\n");
 
-        printf(" 1. Introducir vehículo.\n");
-        printf(" 2. Sacar vehículo.\n");
-        printf(" 3. Consultar información de plaza.\n");
-        printf(" 4. Obtener estadísticas generales.\n");
+        printf(" %i. Introducir vehículo.\n", numMenu); numMenu++;
+        printf(" %i. Sacar vehículo.\n", numMenu); numMenu++;
+        printf(" %i. Consultar información de plaza.\n", numMenu); numMenu++;
+        printf(" %i. Obtener estadísticas generales.\n", numMenu); numMenu++;
         putchar('\n');
 
         printf("--- Mantenimiento\n\n");
 
-        printf(" 5. Añadir filas.\n");
-        printf(" 6. Añadir columnas.\n");
-        printf(" 7. Crear nueva configuración.\n");
+        printf(" %i. Añadir filas.\n", numMenu); numMenu++;
+        printf(" %i. Añadir columnas.\n", numMenu); numMenu++;
+        printf(" %i. Crear nueva configuración.\n", numMenu); numMenu++;
+        printf(" %i. [ADMIN] Registrar vehículos\n", numMenu); numMenu++;
         putchar('\n');
 
         printf("\nIntroduce 's' para guardar los cambios.\n");
