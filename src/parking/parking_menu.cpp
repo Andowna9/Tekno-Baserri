@@ -173,7 +173,7 @@ void insert_vehicle_op() {
 
                 // Registro de vehículo en la base de datos, si no existe
 
-                if (!DBManager::vehicleRegistered(l_plate)) {
+                if (!DBManager::isVehicleRegistered(l_plate)) {
 
                     cout << "Vehículo nuevo detectado!" << endl;
 

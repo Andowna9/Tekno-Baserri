@@ -32,9 +32,9 @@ class DBManager {
         // Parking
 
         static Vehicle retrieveVehicle(const char* l_plate);
-        static void insertVehicle(Vehicle v);
+        static void insertVehicle(Vehicle& v);
         static void deleteVehicle(const char* l_plate);
-        static bool vehicleRegistered(const char* l_plate);
+        static bool isVehicleRegistered(const char* l_plate);
 
         // Granja
 

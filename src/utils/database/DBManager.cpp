@@ -112,7 +112,7 @@ void DBManager::disconnect() {
 
 }
 
-bool DBManager::vehicleRegistered(const char* l_plate) {
+bool DBManager::isVehicleRegistered(const char* l_plate) {
 
     sqlite3_stmt* stmt;
 
@@ -159,7 +159,7 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
     return v;
 }
 
-void DBManager::insertVehicle(Vehicle v) {
+void DBManager::insertVehicle(Vehicle& v) {
 
     sqlite3_stmt* stmt;
 
