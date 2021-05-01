@@ -60,6 +60,13 @@ void DBManager::prepareFarmDB() {
           "CHECK(weight > 0),"
           ")";
 
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK) {
+
+        cerr << "Error al preparar la tabla Animal";
+    }
+
 }
 
 void DBManager::connect(DBName name) {
