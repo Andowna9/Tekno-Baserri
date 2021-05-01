@@ -347,28 +347,85 @@ void confirm_new_config() {
 void manage_parking_access() {
     char i_buffer [DEFAULT_BUFFER_SIZE];
 
+    // logger
+    push_filename();
+    set_log_file("fichero_de_auditoria.log");
+
     clear_screen();
-    printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n");
+    printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n\n");
 
     printf("USUARIO: ADMIN\n");
     printf("Contraseña: ");
     scan_str(i_buffer, sizeof(i_buffer));
-    if (strcmp(i_buffer, "admin") != 0) return;
+
+    if (strcmp(i_buffer, "admin") != 0) {
+
+        add_to_log("Intento de acceso a la BDD. Contraseña incorrecta. Usuario: ADMIN.");
+        printf_c(LIGHT_RED_TXT, "\nContraseña incorrecta. Volviendo al menú principal.\n");
+        return;
+    }
+
+    add_to_log("Intento de acceso a la BDD. Contraseña correcta.");
+
+    printf_c(LIGHT_GREEN_TXT, "\nContraseña correcta.\n\n");
+    press_to_continue();
 
     while(1) {
+
         clear_screen();
         printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n\n");
-        printf(" 1. Permitir acceso a vehículos\n");
-        printf(" 2. Retirar acceso al parking a vehículos\n");
-
+        printf(" 1. Permitir acceso a nuevos vehículos\n");
+        printf(" 2. Retirar acceso al parking a vehículos ya registrados\n");
+		printf(" 3. Mostrar todos los vehículos con acceso al parking\n");
+		
         printf("\nIntroduce 'v' para volver.\n");
 
         printf("\nInput: ");
         scan_str(i_buffer, sizeof(i_buffer));
 
         if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) break;
-        else printf_c(LIGHT_RED_TXT, "No funcionales.\n");
+
+        else if (strcmp(i_buffer, "1") == 0) {
+
+            Vehicle v;
+
+            putchar('\n');
+
+            cin >> v;
+            cout << v << endl;
+
+            DBManager::insertVehicle(v);
+
+            cout << "Finalizado sin errores" << endl;
+
+
+        } else if (strcmp(i_buffer, "2") == 0) {
+            // TODO delete from
+
+            cout << "Matrícula: ";
+            scan_str(i_buffer, sizeof(i_buffer));
+            DBManager::deleteVehicle(i_buffer);
+
+        } else if (strcmp(i_buffer, "3") == 0) {
+
+            cout << endl;
+            print_title_center("", 18, RESET_COLOR, '-');
+
+            DBManager::retrieveAllVehicles();
+
+
+        } else {
+            printf_c(LIGHT_RED_TXT, "Opción no válida.\n");
+
+        }
+
+        press_to_continue();
+
     }
+
+    cout << "Regresando al menú principal." << endl;
+    pop_filename();
+
 }
 
 static void configure_logger() {

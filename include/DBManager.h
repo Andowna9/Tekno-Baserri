@@ -36,6 +36,8 @@ class DBManager {
         static void deleteVehicle(const char* l_plate);
         static bool isVehicleRegistered(const char* l_plate);
 
+        static void retrieveAllVehicles();
+
         // Granja
 
 };

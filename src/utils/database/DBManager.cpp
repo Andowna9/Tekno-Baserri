@@ -204,3 +204,27 @@ void DBManager::deleteVehicle(const char* l_plate) {
 
 }
 
+static int print_each_row(void *notUsed, int argc, char ** argv, char ** azColName) {
+
+    Vehicle v;
+    v.setLicensePLate(argv[0]);
+    v.setBrand(argv[1]);
+    v.setColor(argv[2]);
+    v.setHeight(0); // TODO
+
+    cout << v;
+
+    return 0;
+}
+
+void DBManager::retrieveAllVehicles() {
+
+    string sql = "SELECT * FROM vehicle";
+
+    int code = sqlite3_exec(DB, sql.c_str(), print_each_row, 0, NULL);
+
+    if (code != SQLITE_OK) {
+        cerr << "No se pudo mostrar el contenido de la BDD."<< endl;
+    }
+
+}

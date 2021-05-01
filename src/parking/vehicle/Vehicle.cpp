@@ -73,9 +73,11 @@ void Vehicle::setHeight(float height) {
 // Permite hacer cout con un vehículo - Referencia constante para evitar modificar la instancia
 ostream & operator << (ostream &out, const Vehicle &v) {
 
+    out << "Matrícula: " << v.l_plate << endl;
     out << "Color: " << v.color << endl;
     out << "Marca: " << v.brand << endl;
-    // out << "Dimensiones: " << v.dim.first << " x " << v.dim.second << endl;
+    out << "Altura: " << v.height << endl;
+    print_title_center("", 18, RESET_COLOR, '-');
 
     return out;
 }
@@ -85,6 +87,9 @@ istream & operator >> (istream &in, Vehicle &v) {
 
     //cout << "------------------" << endl << endl;
     print_title_center("", 33, RESET_COLOR, '-');
+
+    cout << "Matrícula del vehículo: ";
+    in >> v.l_plate;
 
     cout << "Color del vehículo: ";
     in >> v.color;
