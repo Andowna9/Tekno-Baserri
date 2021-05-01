@@ -9,6 +9,7 @@
 class DBManager {
 
     private:
+
         // Variables estáticas
 
         static const char* DBPath;
@@ -16,19 +17,26 @@ class DBManager {
 
         DBManager() {} // Constructor privado, ya que no se requerirán instancias
 
-        static void initDB();
+        static void prepareParkingDB();
+        static void prepareFarmDB();
 
     public:
 
+        enum DBName {PARKING, FARM};
+
         // Métodos estáticos de utilidad
 
-        static void connect();
+        static void connect(DBName name);
         static void disconnect();
+
+        // Parking
 
         static Vehicle retrieveVehicle(const char* l_plate);
         static void insertVehicle(Vehicle v);
         static void deleteVehicle(const char* l_plate);
         static bool vehicleRegistered(const char* l_plate);
+
+        // Granja
 
 };
 

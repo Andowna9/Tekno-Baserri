@@ -11,7 +11,7 @@ sqlite3* DBManager::DB;
 
 // Método privado que crea las tablas correspondientes en caso de que no existan
 
-void DBManager::initDB() {
+void DBManager::prepareParkingDB() {
 
     // Tabla Vehículo
 
@@ -27,11 +27,42 @@ void DBManager::initDB() {
         cerr << "Error preparando la tabla Vehículo" << endl;
     }
 
-    // TODO Resto de tablas
+}
+
+void DBManager::prepareFarmDB() {
+
+    // Tabla Tipo de Animal
+
+    string sql = "CREATE TABLE IF NOT EXISTS animal_type("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "name TEXT NOT NULL,"
+          "life_expectancy INTEGER);"
+          "INSERT INTO animal_type(name, life_expectancy) VALUES"
+          "('Cerdo', 20),"
+          "('Gallina', 15),"
+          "('Oveja', 22);";
+
+    int code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK) {
+
+        cerr << "Error al preparar tabla de tipos de animales" << endl;
+    }
+
+    // Tabla Animal
+
+    sql = "CREATE TABLE IF NOT EXISTS animal("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "weight REAL,"
+          "birth_date TEXT,"
+          "type INTEGER,"
+          "FOREIGN KEY(type) REFERENCES animal_type(id),"
+          "CHECK(weight > 0),"
+          ")";
 
 }
 
-void DBManager::connect() {
+void DBManager::connect(DBName name) {
 
     int code = sqlite3_open(DBPath, &DB);
 
@@ -44,7 +75,21 @@ void DBManager::connect() {
 
         cout << "Base de datos abierta con éxito!" << endl;
 
-        initDB();
+        // Dependiendo de la constante proporcionada, se prepara la BD de la granja o el parking
+
+        switch(name) {
+
+            case PARKING:
+
+                prepareParkingDB();
+                break;
+
+            case FARM:
+
+                prepareFarmDB();
+                break;
+        }
+
     }
 
 }

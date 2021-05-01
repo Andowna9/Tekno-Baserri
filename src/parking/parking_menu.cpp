@@ -393,7 +393,7 @@ void parking_menu() {
     reset_highlighted_point();
 
     // Conexión con BD
-    DBManager::connect();
+    DBManager::connect(DBManager::PARKING);
 
 
     // Programa
