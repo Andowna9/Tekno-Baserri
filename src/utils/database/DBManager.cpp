@@ -64,7 +64,7 @@ void DBManager::prepareFarmDB() {
 
     if (code != SQLITE_OK) {
 
-        cerr << "Error al preparar la tabla Animal";
+        cerr << "Error al preparar la tabla Animal" << endl;
     }
 
 }

@@ -2,8 +2,8 @@
 #include <string.h>
 #include <std_utils.h>
 #include <console_config.h>
-#include "animals.h"
-#include "crops.h"
+#include "animals/animals_menu.h"
+#include "crops/crops.h"
 #include "lands/lands_menu.h"
 #include "management/management_menu.h"
 
@@ -36,16 +36,10 @@ void farm_menu() {
   if (strcmp(input_buffer, "1") == 0){
 
       animals_menu();
-    
 
   } else if (strcmp(input_buffer, "2") == 0){
 
-    //crops_menu();
-
-    printf("TO BE IMPLEMENTED IN CPP :)\n\n");
-
-    press_to_continue();
-
+    crops_menu();
 
   } else if (strcmp(input_buffer, "3") == 0){
 
