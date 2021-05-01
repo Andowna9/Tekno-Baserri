@@ -1,5 +1,10 @@
+extern "C" {
+    #include <std_utils.h>
+}
 #include "Vehicle.h"
 
+
+// CONSTRUCTORES
 Vehicle::Vehicle(){
 
     l_plate = "";
@@ -19,6 +24,8 @@ Vehicle::Vehicle(char* l_plate) {
     this->l_plate = string(l_plate);
 }
 
+
+// GETTERS
 string Vehicle::getLicensePlate() const {
 
     return this->l_plate;
@@ -34,6 +41,12 @@ string Vehicle::getBrand() const {
     return this->brand;
 }
 
+float Vehicle::getHeight() const {
+    return this->height;
+}
+
+
+// SETTERS
 void Vehicle::setLicensePLate(string lp) {
 
     this->l_plate = lp;
@@ -49,8 +62,15 @@ void Vehicle::setBrand(string b) {
     this->brand = b;
 }
 
-// Permite hacer cout con un vehículo - Referencia constante para evitar modificar la instancia
+void Vehicle::setHeight(float height) {
 
+    this->height = height;
+}
+
+
+// OTROS
+
+// Permite hacer cout con un vehículo - Referencia constante para evitar modificar la instancia
 ostream & operator << (ostream &out, const Vehicle &v) {
 
     out << "Color: " << v.color << endl;
@@ -61,19 +81,19 @@ ostream & operator << (ostream &out, const Vehicle &v) {
 }
 
 // Permite hacer cin con un vehículo
-
 istream & operator >> (istream &in, Vehicle &v) {
 
-    cout << "--Introduce la información del vehículo--" << endl;
+    //cout << "------------------" << endl << endl;
+    print_title_center("", 33, RESET_COLOR, '-');
 
-    cout << "Color: ";
+    cout << "Color del vehículo: ";
     in >> v.color;
 
-    cout << "Marca: ";
+    cout << "Marca del vehículo: ";
     in >> v.brand;
 
-    cout << "Dimensiones: ";
-    in >> v.dim.first >> v.dim.second;
+    cout << "Altura del vehículo: ";
+    in >> v.height;
 
     return in;
 }
