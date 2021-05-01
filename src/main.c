@@ -61,10 +61,6 @@ int main() {
 
     }
 
-    // Liberación de memoria dinámica sobrante
-
-    free_parking_memory();
-
     restore_console(); // Restauración de configuración de consola (se revocan los cambios)
 
     return 0;
