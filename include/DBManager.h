@@ -3,6 +3,9 @@
 
 #include "sqlite3.h"
 #include "src/parking/vehicle/Vehicle.h"
+#include "src/farm/animals/animal/Animal.h"
+#include <vector>
+#include <unordered_map>
 
 // Clase gestora de acceso a la base de datos
 
@@ -39,6 +42,11 @@ class DBManager {
         static void retrieveAllVehicles();
 
         // Granja
+
+        static vector<Animal> retriveAnimals();
+        static void insertAnimal(Animal& a, int type_id);
+        static void removeAnimal(int id);
+        static unordered_map<string, int> getAnimalTypes();
 
 };
 

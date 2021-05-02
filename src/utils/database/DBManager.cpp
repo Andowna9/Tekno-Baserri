@@ -2,7 +2,6 @@
 #include <sqlite3.h>
 #include <iostream>
 #include <string>
-#include <cstring>
 
 using namespace std;
 
@@ -34,13 +33,13 @@ void DBManager::prepareFarmDB() {
     // Tabla Tipo de Animal
 
     string sql = "CREATE TABLE IF NOT EXISTS animal_type("
-          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "id INTEGER PRIMARY KEY,"
           "name TEXT NOT NULL,"
           "life_expectancy INTEGER);"
-          "INSERT INTO animal_type(name, life_expectancy) VALUES"
-          "('Cerdo', 20),"
-          "('Gallina', 15),"
-          "('Oveja', 22);";
+          "INSERT INTO animal_type(id, name, life_expectancy) VALUES"
+          "(1, 'Cerdo', 20),"
+          "(2, 'Gallina', 15),"
+          "(3, 'Oveja', 22);";
 
     int code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
@@ -53,11 +52,12 @@ void DBManager::prepareFarmDB() {
 
     sql = "CREATE TABLE IF NOT EXISTS animal("
           "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "name TEXT,"
           "weight REAL,"
           "birth_date TEXT,"
           "type INTEGER,"
           "FOREIGN KEY(type) REFERENCES animal_type(id),"
-          "CHECK(weight > 0),"
+          "CHECK(weight > 0)"
           ")";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
@@ -112,6 +112,8 @@ void DBManager::disconnect() {
 
 }
 
+///////////////////// PARKING ////////////////////////////
+
 bool DBManager::isVehicleRegistered(const char* l_plate) {
 
     sqlite3_stmt* stmt;
@@ -130,6 +132,18 @@ bool DBManager::isVehicleRegistered(const char* l_plate) {
 
 }
 
+// Vehículo a partir de fila SQLite
+
+Vehicle vehicleFromRow(sqlite3_stmt* stmt) {
+
+    string license((const char*) sqlite3_column_text(stmt, 0));
+    string brand((const char*) sqlite3_column_text(stmt, 1));
+    string color((const char*) sqlite3_column_text(stmt, 2));
+
+    return Vehicle(license, brand, color);
+}
+
+
 Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
     sqlite3_stmt* stmt;
@@ -142,21 +156,12 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
     int code = sqlite3_step(stmt);
 
-    Vehicle v;
-
     if (code == SQLITE_ROW) {
 
-        string license_plate(l_plate);
-        string brand((const char*)sqlite3_column_text(stmt, 1));
-        string color((const char*)sqlite3_column_text(stmt, 2));
-
-        v.setLicensePLate(license_plate);
-        v.setBrand(brand);
-        v.setColor(color);
-
+        return vehicleFromRow(stmt);
     }
 
-    return v;
+    return Vehicle();
 }
 
 void DBManager::insertVehicle(Vehicle& v) {
@@ -204,27 +209,146 @@ void DBManager::deleteVehicle(const char* l_plate) {
 
 }
 
-static int print_each_row(void *notUsed, int argc, char ** argv, char ** azColName) {
-
-    Vehicle v;
-    v.setLicensePLate(argv[0]);
-    v.setBrand(argv[1]);
-    v.setColor(argv[2]);
-    v.setHeight(0); // TODO
-
-    cout << v;
-
-    return 0;
-}
-
 void DBManager::retrieveAllVehicles() {
+
+    sqlite3_stmt* stmt;
 
     string sql = "SELECT * FROM vehicle";
 
-    int code = sqlite3_exec(DB, sql.c_str(), print_each_row, 0, NULL);
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        Vehicle v = vehicleFromRow(stmt);
+
+        cout << v;
+    }
+
+}
+
+///////////////////// GRANJA ////////////////////////////
+
+vector<Animal> DBManager::retriveAnimals() {
+
+    vector<Animal> animals;
+
+    sqlite3_stmt* stmt;
+
+    string sql = "SELECT a.id, a.name, a.weight, t.name FROM animal a INNER JOIN animal_type t ON a.type = t.id";
+
+    int code = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
     if (code != SQLITE_OK) {
-        cerr << "No se pudo mostrar el contenido de la BDD."<< endl;
+
+        cerr << sqlite3_errmsg(DB) << endl;
     }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        int id = sqlite3_column_int(stmt, 0);
+        string name((const char*)sqlite3_column_text(stmt, 1));
+        float weight = (float) sqlite3_column_double(stmt, 2);
+        string type((const char*)sqlite3_column_text(stmt, 3));
+
+        Animal a(id, name, weight, type);
+        animals.push_back(a);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return animals;
+}
+
+void DBManager::insertAnimal(Animal& a, int type_id) {
+
+
+    sqlite3_stmt* stmt;
+
+    string sql = "INSERT INTO animal(name, weight, birth_date, type) VALUES (?, ?, DATE('now'), ?)";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    sqlite3_bind_text(stmt, 1, a.getName().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 2, a.getWeight());
+    sqlite3_bind_int(stmt, 3, type_id);
+
+    int code = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+
+    if (code != SQLITE_DONE) {
+
+        cerr << "Error al introducir animal" << endl;
+    }
+
+    else {
+
+        sql = "SELECT last_insert_rowid()";
+        sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+        code = sqlite3_step(stmt);
+
+        if (code == SQLITE_ROW) {
+
+            int id = sqlite3_column_int(stmt, 0);
+            a.setID(id);
+        }
+
+        else {
+
+            cerr << "Error al obtener el id del animal nuevo!" << endl;
+
+        }
+
+        sqlite3_finalize(stmt);
+
+    }
+
+}
+
+void DBManager::removeAnimal(int id) {
+
+    sqlite3_stmt* stmt;
+
+    string sql = "DELETE FROM animal WHERE id=?";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    int code = sqlite3_step(stmt);
+
+    if (code != SQLITE_DONE) {
+
+        cerr << "Error al borrar animal" << endl;
+    }
+
+    sqlite3_finalize(stmt);
+
+}
+
+
+
+unordered_map<string, int> DBManager::getAnimalTypes() {
+
+    unordered_map<string, int> available_types;
+
+    sqlite3_stmt* stmt;
+
+    string sql = "SELECT id, name FROM animal_type";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        int type_id = sqlite3_column_int(stmt, 0);
+        string type_name((const char*)sqlite3_column_text(stmt, 1));
+
+        available_types[type_name] = type_id;
+
+    }
+
+    sqlite3_finalize(stmt);
+
+    return available_types;
 
 }

@@ -2,6 +2,7 @@ extern "C" {
     #include <std_utils.h>
 }
 #include "Vehicle.h"
+#include <cpp_utils.h>
 
 
 // CONSTRUCTORES
@@ -89,16 +90,16 @@ istream & operator >> (istream &in, Vehicle &v) {
     print_title_center("", 33, RESET_COLOR, '-');
 
     cout << "Matrícula del vehículo: ";
-    in >> v.l_plate;
+    readVar(in, v.l_plate);
 
     cout << "Color del vehículo: ";
-    in >> v.color;
+    readVar(in, v.color);
 
     cout << "Marca del vehículo: ";
-    in >> v.brand;
+    readVar(in,  v.brand);
 
     cout << "Altura del vehículo: ";
-    in >> v.height;
+    readVar(in, v.height);
 
     return in;
 }
