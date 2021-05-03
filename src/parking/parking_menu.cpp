@@ -163,33 +163,23 @@ void insert_vehicle_op() {
         } else {
             char* l_plate = read_str("Matrícula: ");
 
-            // Confirmamos que quiera guardar
-            int save = confirm_action("Aparcar coche?");
-
-            if (save) {
-                int parked = insert_vehicle(l_plate, r, c);
-                if (parked) {
-                    save_needed = true;
-                    add_to_log("Vehículo encontrado: %s en %c%i", l_plate, r + 'A', c + 1);
-                }
-
-                // Registro de vehículo en la base de datos, si no existe
-
-                if (!DBManager::isVehicleRegistered(l_plate)) {
-
-                    cout << "Vehículo nuevo detectado!" << endl;
-
-                    Vehicle v(l_plate);
-                    cin >> v;
-
-                    DBManager::insertVehicle(v);
-
-                }
-
-
+            if (!DBManager::isVehicleRegistered(l_plate)) {
+                printf_c(LIGHT_RED_TXT, "\nEl vehículo no tiene acceso al parking");
 
             } else {
-                printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no agregado\n");
+                // Confirmamos que quiera guardar
+                int save = confirm_action("Aparcar coche?");
+
+                if (save) {
+                    int parked = insert_vehicle(l_plate, r, c);
+                    if (parked) {
+                        save_needed = true;
+                        add_to_log("Vehículo encontrado: %s en %c%i", l_plate, r + 'A', c + 1);
+                    }
+
+                } else {
+                    printf_c(LIGHT_RED_TXT, "Operación cancelada. Coche no agregado\n");
+                }
             }
         }
 
@@ -448,7 +438,7 @@ void manage_parking_access() {
 
     }
 
-    cout << "Regresando al menú principal." << endl;
+    cout << "\nRegresando al menú principal." << endl;
     close_logger();
 
 }
