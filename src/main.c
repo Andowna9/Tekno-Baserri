@@ -7,7 +7,7 @@
 #include <logger.h>
 
 static void configure_logger() {
-    set_log_file("main.log");
+    open_logger("main.log");
 }
 
 int main() {
