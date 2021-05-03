@@ -365,7 +365,7 @@ void manage_parking_access() {
 
     } else if (user != "admin") {
         printf_c(LIGHT_RED_TXT, "\nEl usuario no cuenta con los privilegios adecuados.\n");
-        pop_filename();
+        close_logger();
         return;
     }
 
@@ -386,7 +386,7 @@ void manage_parking_access() {
 
         add_to_log("Intento de acceso a la BDD. Contraseña incorrecta. Usuario: admin.");
         printf_c(LIGHT_RED_TXT, "\nContraseña incorrecta. Volviendo al menú principal.\n");
-        pop_filename();
+        close_logger();
         return;
     }
 
@@ -449,7 +449,7 @@ void manage_parking_access() {
     }
 
     cout << "Regresando al menú principal." << endl;
-    pop_filename();
+    close_logger();
 
 }
 
