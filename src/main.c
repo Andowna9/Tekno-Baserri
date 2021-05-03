@@ -61,6 +61,7 @@ int main() {
     }
 
     restore_console(); // Restauración de configuración de consola (se revocan los cambios)
+    close_logger();
 
     return 0;
 }
