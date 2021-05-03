@@ -119,6 +119,15 @@ int pop_filename() {
 
 }
 
+void open_logger(const char* file_name) {
+    push_filename();
+    set_log_file(file_name);
+}
+
+void close_logger() {
+    pop_filename();
+}
+
 void logger_demo() {
     printf("CHECK THE SOURCE CODE!\n");
     printf("This demo should aid you on having a clear idea of what does each method of this file\n\n");

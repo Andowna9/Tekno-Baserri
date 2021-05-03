@@ -1,13 +1,18 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-void set_log_file(const char* file_name);
+//
 char* get_log_file_name();
+
+// Read / write operations
 void add_to_log(const char* message, ...);
 void read_log(const char* title);
 void clear_log();
-int push_filename();
-int pop_filename();
+
+// Open / close operations
+void open_logger(const char* file_name);
+void close_logger();
+
 void logger_demo();
 
 #endif // LOGGER_H
