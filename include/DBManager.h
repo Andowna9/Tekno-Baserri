@@ -38,8 +38,9 @@ class DBManager {
         static void insertVehicle(Vehicle& v);
         static void deleteVehicle(const char* l_plate);
         static bool isVehicleRegistered(const char* l_plate);
-
         static void retrieveAllVehicles();
+
+        static string retrievePassword(const char* username);
 
         // Granja
 

@@ -26,6 +26,17 @@ void DBManager::prepareParkingDB() {
         cerr << "Error preparando la tabla Vehículo" << endl;
     }
 
+    sql = "CREATE TABLE IF NOT EXISTS user("
+          "username TEXT NOT NULL PRIMARY KEY,"
+          "pswdSHA1 TEXT NOT NULL);"
+          "INSERT INTO user VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997');";
+
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK) {
+        cerr << "Error preparando la tabla de usuarios" << endl;
+    }
+
 }
 
 void DBManager::prepareFarmDB() {
@@ -224,6 +235,22 @@ void DBManager::retrieveAllVehicles() {
         cout << v;
     }
 
+}
+
+string DBManager::retrievePassword(const char* username) {
+
+    sqlite3_stmt* stmt;
+    string sql = "SELECT pswdSHA1 FROM user WHERE username=?";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+
+    int code = sqlite3_step(stmt);
+    if (code == SQLITE_ROW) {
+        return (const char*) sqlite3_column_text(stmt, 0);
+    }
+
+    return "";
 }
 
 ///////////////////// GRANJA ////////////////////////////

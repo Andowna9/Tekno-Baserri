@@ -15,6 +15,8 @@ extern "C" {
 
 #include <iostream>
 #include <DBManager.h>
+#include <QCryptographicHash>
+
 using namespace std;
 
 // Variables del file
@@ -141,7 +143,7 @@ static void clear_redraw_and_highlight(int r, int c) {
     clear_and_redraw();
     reset_highlighted_point(); // Dejamos de destacar
 }
-// endof
+// endof Métodos para dibujar el parking de cero
 
 
 // MENÚS (MODULARIZADOS)
@@ -196,7 +198,6 @@ void insert_vehicle_op() {
     putchar('\n');
 }
 
-
 // Menú 2. Sacar vehículo
 void remove_vehicle_op() {
     int r, c;
@@ -236,7 +237,6 @@ void remove_vehicle_op() {
 
     putchar('\n');
 }
-
 
 // Menú 3. Consultar información de plaza
 void check_parking_lot() {
@@ -299,8 +299,6 @@ void check_statistics() {
     printf("Total de plazas: %d\n", total);
 }
 
-
-
 // Menús 5 & 6
 void modify_parking(void(*modify)(int)) { // Función que modifica filas o columnas dependiendo del puntero a una función que se pase
 
@@ -345,31 +343,59 @@ void confirm_new_config() {
 
 // Menú 8. Configuración de la BDD del parking
 void manage_parking_access() {
-    char i_buffer [DEFAULT_BUFFER_SIZE];
+    char i_buffer [20];
 
     // logger
-    push_filename();
-    set_log_file("fichero_de_auditoria.log");
+    open_logger("fichero_de_auditoria.log");
 
     clear_screen();
     printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n\n");
 
-    printf("USUARIO: ADMIN\n");
-    printf("Contraseña: ");
+    // Entrada de usuario y contraseña
+    printf("Usuario: ");
     scan_str(i_buffer, sizeof(i_buffer));
+    string user (i_buffer, strlen(i_buffer));
 
-    if (strcmp(i_buffer, "admin") != 0) {
+    // Recuperación de la contraseña de la BDD
+    string passwordSha1 = DBManager::retrievePassword(user.c_str());
+    if (passwordSha1 == "") {
+        printf_c(LIGHT_RED_TXT, "\nNo se localizó el usuario.\n");
+        close_logger();
+        return;
 
-        add_to_log("Intento de acceso a la BDD. Contraseña incorrecta. Usuario: ADMIN.");
-        printf_c(LIGHT_RED_TXT, "\nContraseña incorrecta. Volviendo al menú principal.\n");
+    } else if (user != "admin") {
+        printf_c(LIGHT_RED_TXT, "\nEl usuario no cuenta con los privilegios adecuados.\n");
+        pop_filename();
         return;
     }
 
-    add_to_log("Intento de acceso a la BDD. Contraseña correcta.");
+    printf("Contraseña: ");
+    scan_str(i_buffer, sizeof(i_buffer));
+    char pswd[strlen(i_buffer)];
+    strcpy(pswd, i_buffer);
+
+    // Calculamos el hash de la contraseña
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+
+    hash.addData(pswd, strlen(pswd));
+    string inputSha1(hash.result().toHex());
+    //string passwordSha1("d033e22ae348aeb5660fc2140aec35850c4da997"); // contraseña hardcodeada en SHA1
+
+    // Comprobamos que la contraseña coincida
+    if (inputSha1.compare(passwordSha1) != 0) {
+
+        add_to_log("Intento de acceso a la BDD. Contraseña incorrecta. Usuario: admin.");
+        printf_c(LIGHT_RED_TXT, "\nContraseña incorrecta. Volviendo al menú principal.\n");
+        pop_filename();
+        return;
+    }
+
+    add_to_log("Intento de acceso a la BDD. Contraseña correcta. Usuario: admin");
 
     printf_c(LIGHT_GREEN_TXT, "\nContraseña correcta.\n\n");
     press_to_continue();
 
+    // Submenú de la gestión del acceso
     while(1) {
 
         clear_screen();
@@ -400,7 +426,6 @@ void manage_parking_access() {
 
 
         } else if (strcmp(i_buffer, "2") == 0) {
-            // TODO delete from
 
             cout << "Matrícula: ";
             scan_str(i_buffer, sizeof(i_buffer));
@@ -428,16 +453,13 @@ void manage_parking_access() {
 
 }
 
+// LOGGER del parking_menu
 static void configure_logger() {
-    push_filename();
-    set_log_file(log_file_txt);
+    open_logger(log_file_txt);
     clear_log(); // limpiamos cualquier contenido residual posible (crashes, etc.)
 }
 
-static inline void close_logger() {
-    pop_filename();
-}
-
+// MENÚ
 extern "C" void parking_menu(); // De esta manera podremos llamar a la función implemenetada en cpp desde C
 
 void parking_menu() {
