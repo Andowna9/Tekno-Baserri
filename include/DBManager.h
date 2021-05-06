@@ -1,7 +1,7 @@
 #ifndef DBMANAGER_H
 #define DBMANAGER_H
 
-#include "sqlite3.h"
+#include <sqlite3.h>
 #include "src/parking/vehicle/Vehicle.h"
 #include "src/farm/animals/animal/Animal.h"
 #include <vector>
@@ -38,8 +38,9 @@ class DBManager {
         static void insertVehicle(Vehicle& v);
         static void deleteVehicle(const char* l_plate);
         static bool isVehicleRegistered(const char* l_plate);
-
         static void retrieveAllVehicles();
+
+        static string retrievePassword(const char* username);
 
         // Granja
 

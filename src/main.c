@@ -7,7 +7,7 @@
 #include <logger.h>
 
 static void configure_logger() {
-    set_log_file("main.log");
+    open_logger("main.log");
 }
 
 int main() {
@@ -61,6 +61,7 @@ int main() {
     }
 
     restore_console(); // Restauración de configuración de consola (se revocan los cambios)
+    close_logger();
 
     return 0;
 }

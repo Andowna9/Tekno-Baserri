@@ -1,7 +1,8 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
-CONFIG -= qt
+
+QT += core
 
 # SOURCES C
 
@@ -19,8 +20,8 @@ SOURCES += src/main.c \
            src/parking/parking.c \
            src/utils/logger.c \
            src/utils/dynamic_array.c \
-           src/utils/std_utils.c \
-           src/utils/database/sqlite3.c
+           src/utils/std_utils.c
+
 
 # SOURCES C++
 
@@ -49,7 +50,15 @@ HEADERS += src/console/console_config.h \
 
 INCLUDEPATH += include/
 
+# Sqlite3
+
+SOURCES += 3rdparty/sqlite3/src/sqlite3.c
+HEADERS += 3rdparty/sqlite3/include/sqlite3.h
+INCLUDEPATH += 3rdparty/sqlite3/include/
+
 # Database 4 Unix
+
 unix {
+
     LIBS += -lpthread -ldl -lm
 }
