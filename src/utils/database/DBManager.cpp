@@ -67,6 +67,25 @@ void DBManager::prepareFarmDB() {
         cerr << "Error al preparar la tabla Animal" << endl;
     }
 
+    // Tabla Cultivo
+
+    sql = "CREATE TABLE IF NOT EXISTS crop("
+    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "name TEXT,"
+    ");"
+    "INSERT INTO crop(id, name) VALUES"
+    "(1, Lechuga),"
+    "(2, Pepino),"
+    "(3, Zanhaoria),"
+    "(4, Tomate)";
+
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK){
+
+        cerr << "Error al preparar la tabla Cultivo" << endl;
+    }
+
 }
 
 void DBManager::connect(DBName name) {
@@ -352,3 +371,31 @@ unordered_map<string, int> DBManager::getAnimalTypes() {
     return available_types;
 
 }
+
+vector<Crop> DBManager::getCrops() {
+
+    vector<Crop> crops;
+
+    sqlite3_stmt* stmt;
+
+    string sql = "SELECT id, name FROM crop ";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        int id = sqlite3_column_int(stmt, 0);
+        string name((const char*)sqlite3_column_text(stmt, 1));
+
+
+        Crop c(id, name);
+        crops.push_back(c);
+
+    }
+
+    sqlite3_finalize(stmt);
+
+    return crops;
+
+}
+

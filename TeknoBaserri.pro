@@ -10,6 +10,7 @@ SOURCES += src/main.c \
            src/farm/animals/food/food.c \
            src/farm/animals/food/food_menu.c \
            src/farm/animals/animals_menu.c \
+           src/farm/crops/Crop.cpp \
            src/farm/farm.c \
            src/farm/lands/lands_menu.c \
            src/farm/management/management.c \
@@ -35,6 +36,7 @@ HEADERS += src/console/console_config.h \
     src/farm/animals/animal/animals_management.h \
     src/farm/animals/food/food.h \
     src/farm/animals/food/food_menu.h \
+    src/farm/crops/Crop.h \
     src/farm/lands/lands_menu.h \
     src/farm/management/management_menu.h \
     src/parking/parking.h \
