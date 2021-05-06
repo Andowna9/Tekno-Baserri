@@ -87,6 +87,29 @@ void DBManager::prepareFarmDB() {
     }
 
 
+
+
+    // Tabla Cultivo
+
+    sql = "CREATE TABLE IF NOT EXISTS crop("
+    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "name TEXT,"
+    ");"
+    "INSERT INTO crop(id, name) VALUES"
+    "(1, Lechuga),"
+    "(2, Pepino),"
+    "(3, Zanhaoria),"
+    "(4, Tomate)";
+
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK){
+
+        cerr << "Error al preparar la tabla Cultivo" << endl;
+    }
+
+
+
 }
 
 void DBManager::connect(DBName name) {
