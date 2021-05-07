@@ -1,8 +1,9 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-//
+// Other
 char* get_log_file_name();
+int verify_logger_integrity();
 
 // Read / write operations
 void add_to_log(const char* message, ...);

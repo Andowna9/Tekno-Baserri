@@ -11,8 +11,10 @@
 
 // Variables
 static const char* log_file_txt;
-unsigned char counter = 0;
+unsigned char stack_index = 0;
+int num_pushes = 0;
 const char* filename_stack[STACK_SIZE];
+const char* stack_trace_file = "logger_stack_trace.log";
 
 void set_log_file(const char* file_name) {
     if (log_file_txt == NULL) {
@@ -86,7 +88,7 @@ void clear_log() {
 
 int push_filename() {
 
-    if (counter == STACK_SIZE) { // ya no hay espacio
+    if (stack_index == STACK_SIZE) { // ya no hay espacio
         printf_c(LIGHT_RED_TXT, "Maximum amount of pushes reached. Need to pop.\n");
         return 0;
 
@@ -95,23 +97,22 @@ int push_filename() {
         return 0;
 
     } else {
-        filename_stack[counter] = log_file_txt;
-        counter++;
+        filename_stack[stack_index] = log_file_txt;
+        stack_index++;
+        return 1;
     }
-
-    return 1;
 
 }
 
 int pop_filename() {
 
-    if (counter == 0) {
+    if (stack_index == 0) {
         //printf_c(LIGHT_RED_TXT, "Filename stack clean. Can't pop.\n");
         return 0;
 
     } else {
-        counter--;
-        log_file_txt = filename_stack[counter];
+        stack_index--;
+        log_file_txt = filename_stack[stack_index];
 
     }
 
@@ -122,10 +123,35 @@ int pop_filename() {
 void open_logger(const char* file_name) {
     push_filename();
     set_log_file(file_name);
+    num_pushes++;
+
+    // Registro para detectar errores
+    FILE* file = fopen(stack_trace_file, "a");
+
+    // formateamos con tabuladores
+    int i;
+    for(i = 0; i < stack_index; i++) {
+        fprintf(file, "\t");
+    }
+
+    fprintf(file, "Pusheado %s\n", file_name);
+    fclose(file);
 }
 
 void close_logger() {
+    // Registro para detectar errores
+    FILE* file = fopen(stack_trace_file, "a");
+    // formateamos con tabuladores
+    int i;
+    for(i = 0; i < stack_index; i++) {
+        fprintf(file, "\t");
+    }
+    fprintf(file, "Popeado %s\n\n", get_log_file_name());
+    fclose(file);
+    num_pushes--;
+
     pop_filename();
+
 }
 
 void logger_demo() {
@@ -144,7 +170,7 @@ void logger_demo() {
     // if you wonder why should you be doing this, this is like a "pause" function that allowys you to pause (push) the main log
     // to temporarily use another and resume it later (pop)
     // -main.c [m] ---*log*------> parking.c [pc] ----*log [pc]*----*log [m]*---> main.c -- X
-    push_filename();
+    push_filename(); // open_logger()
 
     printf("Sets logger to programa.log and logs its name\n");
     set_log_file("programa.log");
@@ -155,7 +181,7 @@ void logger_demo() {
     clear_log();
 
     printf("Now we pop (should be prog4.log)\n");
-    pop_filename();
+    pop_filename(); //close_logger
 
     printf("Now we introduce a message.\n");
     add_to_log("[%s] I've been popped.", get_log_file_name());
@@ -165,4 +191,41 @@ void logger_demo() {
     clear_log();
 
     press_to_continue();
+}
+
+int verify_logger_integrity() {
+
+    FILE* file;
+
+    // si el número de pushes es > 0, entonces no se ha popeado el mismo número de veces que pusheado
+    // lo cual implica que existe algún logger que no se ha cerrado de forma adecuada.
+    if (num_pushes > 0) {
+
+        file = fopen(stack_trace_file, "r");
+        char buffer[1024];
+
+        clear_screen();
+        printf_c(LIGHT_RED_TXT, "Algún logger no se cerró de forma adecuada.\n\n");
+
+        // Imprimimos la stack trace entera
+        int i = 0;
+        while(fgets(buffer, 1024, file) != NULL) {
+            printf("[ %.3i ] %s", i, buffer);
+            i++;
+        }
+
+        putchar('\n');
+        printf_c(LIGHT_CYAN_TXT, "Número de loggers mal cerrados: %i\n", num_pushes);
+        press_to_continue();
+
+        fclose(file);
+    }
+
+
+
+    // vaciamos el fichero
+    file = fopen(stack_trace_file, "w");
+    fclose(file);
+
+    return 0;
 }

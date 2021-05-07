@@ -37,7 +37,7 @@ int main() {
 
         if (strcmp(input_buffer, "q") == 0 || strcmp(input_buffer, "Q") == 0) {
 
-            printf("Finalizando programa...\n");
+            printf_c(LIGHT_CYAN_TXT, "Finalizando programa...\n");
 
             break;
         }
@@ -60,9 +60,9 @@ int main() {
 
     }
 
+    close_logger(); // Cerramos el logger
+    verify_logger_integrity(); // Comprobamos que los loggers se hayan cerrado correctamente
     restore_console(); // Restauración de configuración de consola (se revocan los cambios)
-    close_logger();
-    verify_stack_trace();
 
     return 0;
 }
