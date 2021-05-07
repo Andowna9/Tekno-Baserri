@@ -445,10 +445,18 @@ char* get_time_passed(time_t time_stamp) {
 
     time_t elapsed = current_stamp - time_stamp;
 
-    struct tm *info;
+    // Cálculo de horas minutos y segundos
 
-    info = gmtime(&elapsed);
+    int hours = elapsed / 3600;
 
-    return format_str("%d h %d min %d s", info->tm_hour, info->tm_min, info->tm_sec);
+    elapsed %= 3600;
+    int minutes = elapsed / 60;
+
+    elapsed %= 60;
+    int seconds = elapsed;
+
+    // Devolvemos string formateado
+
+    return format_str("%d h %d min %d s", hours, minutes, seconds);
 
 }
