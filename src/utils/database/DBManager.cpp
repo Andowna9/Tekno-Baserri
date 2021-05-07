@@ -35,7 +35,7 @@ void DBManager::prepareParkingDB() {
     sql = "CREATE TABLE IF NOT EXISTS user("
           "username TEXT NOT NULL PRIMARY KEY,"
           "pswdSHA1 TEXT NOT NULL);"
-          "INSERT INTO user VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997');";
+          "INSERT OR IGNORE INTO user VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997');";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
@@ -57,7 +57,7 @@ void DBManager::prepareFarmDB() {
           "id INTEGER PRIMARY KEY,"
           "name TEXT NOT NULL,"
           "life_expectancy INTEGER);"
-          "INSERT INTO animal_type(id, name, life_expectancy) VALUES"
+          "INSERT OR IGNORE INTO animal_type(id, name, life_expectancy) VALUES"
           "(1, 'Cerdo', 20),"
           "(2, 'Gallina', 15),"
           "(3, 'Oveja', 22);";
@@ -95,7 +95,7 @@ void DBManager::prepareFarmDB() {
     "id INTEGER PRIMARY KEY AUTOINCREMENT,"
     "name TEXT,"
     ");"
-    "INSERT INTO crop(id, name) VALUES"
+    "INSERT OR IGNORE INTO crop(id, name) VALUES"
     "(1, Lechuga),"
     "(2, Pepino),"
     "(3, Zanhaoria),"
@@ -149,7 +149,7 @@ void DBManager::connect(DBName name) {
 
 void DBManager::disconnect() {
 
-    open_logger(log_file_txt);
+     open_logger(log_file_txt);
 
      int code = sqlite3_close(DB);
 
@@ -209,6 +209,8 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
         return vehicleFromRow(stmt);
     }
+
+    sqlite3_finalize(stmt);
 
     return Vehicle();
 }
@@ -270,6 +272,8 @@ void DBManager::retrieveAllVehicles() {
         cout << v;
     }
 
+    sqlite3_finalize(stmt);
+
 }
 
 string DBManager::retrievePassword(const char* username) {
@@ -281,9 +285,16 @@ string DBManager::retrievePassword(const char* username) {
     sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
 
     int code = sqlite3_step(stmt);
+
     if (code == SQLITE_ROW) {
-        return (const char*) sqlite3_column_text(stmt, 0);
+
+        string password = (const char*) sqlite3_column_text(stmt, 0);
+        sqlite3_finalize(stmt);
+
+        return password;
     }
+
+    sqlite3_finalize(stmt);
 
     return "";
 }
@@ -424,7 +435,7 @@ vector<Crop> DBManager::getCrops() {
 
     sqlite3_stmt* stmt;
 
-    string sql = "SELECT id, name FROM crop ";
+    string sql = "SELECT id, name FROM crop";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
