@@ -3,8 +3,9 @@
 
 #include <sqlite3.h>
 #include "src/parking/vehicle/Vehicle.h"
-#include "src/farm/animals/animal/Animal.h"
-#include "src/farm/crops/Crop.h"
+#include "src/farm/lands/animals/Animal.h"
+#include "src/farm/lands/crops/Crop.h"
+#include "src/farm/lands/Terrain.h"
 #include <vector>
 #include <unordered_map>
 
@@ -23,6 +24,8 @@ class DBManager {
 
         static void prepareParkingDB();
         static void prepareFarmDB();
+        static vector<Animal> retriveAnimals(int terrain_id);
+        static Crop getCrop(int id);
 
     public:
 
@@ -45,11 +48,10 @@ class DBManager {
 
         // Granja
 
-        static vector<Animal> retriveAnimals();
         static void insertAnimal(Animal& a, int type_id);
         static void removeAnimal(int id);
         static unordered_map<string, int> getAnimalTypes();
-        static vector<Crop> getCrops();
+        static vector<Terrain*> retrieveTerrains();
 
 };
 

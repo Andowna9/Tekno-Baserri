@@ -9,19 +9,18 @@ class Crop
 
 private:
 
-    int id; // IdentificaciÃ³n Ãºnica del animal
     string name; // Nombre
 
 
 public:
-    Crop();
-    Crop(int id, string name);
+    Crop() {}
+    Crop(string name);
 
 
     // Getters
 
-    int getId() const;
     string getName() const;
+    void setName(string name);
 
 
     // Sobrecarga de operadores de inserciÃ³n y extracciÃ³n

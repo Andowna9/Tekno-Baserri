@@ -1,10 +1,14 @@
+extern "C" {
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
 #include <console_config.h>
 #include <std_utils.h>
-#include <dynamic_array.h>
-#include "lands.h"
+#include "management.h"
+#include "animals/animals_menu.h"
+}
+
+#include <DBManager.h>
+#include "Terrain.h"
 
 
 static void clear_and_title() {
@@ -12,15 +16,22 @@ static void clear_and_title() {
     print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
 }
 
-static void clear_and_redraw() {
-    clear_and_title();
-    print_lands(); // Redibujamos el parking
+static void clear_and_redraw(vector<Terrain*> terrains) {
 
+    clear_and_title();
+
+    // Mostrar terrenos
+
+    for(Terrain* terr: terrains) {
+
+        terr->print();
+    }
 }
 
-void lands_menu() {
 
-  read_lands();
+extern "C" void lands_menu() {
+
+  vector<Terrain*> terrains = DBManager::retrieveTerrains();
 
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
@@ -33,6 +44,8 @@ void lands_menu() {
     printf("2. Vender terreno.\n");
     printf("3. Listar terrenos.\n");
 
+    printf("\n4. [Animales] Gestionar animales.\n");
+
 
     printf("\nIntroduce 'v' para volver.\n\n");
 
@@ -43,7 +56,14 @@ void lands_menu() {
 
     if(!strcmp(input_buffer, "v")) {
 
-      free_lands_mem();
+      // Liberación de memoria
+
+      for (Terrain* terr: terrains) {
+
+          delete terr;
+
+      }
+
       break;
     }
 
@@ -51,48 +71,45 @@ void lands_menu() {
 
     else if (strcmp(input_buffer, "1") == 0) {
 
-        Terrain terr;
-
         print_banner('-', 33, LIGHT_CYAN_TXT);
 
-        terr.name = read_str("Nombre: ");
-        terr.area = read_float("Aréa (hectáreas): ");
+
+        float area = read_float("Aréa (hectáreas): ");
 
         putchar('\n');
+
+        putchar('\n');
+        float cost = read_float("Precio Pagado (euros): ");
+
+        Terrain* t;
 
         if (confirm_action("Terreno de cultivo?")) {
-            terr.in_use = true;
+
+            t = new CropTerrain(area, cost);
+
 
         } else {
-            terr.in_use = false;
+
+            t = new AnimalTerrain(area, cost);
+
         }
 
-        putchar('\n');
-        terr.cost = read_float("Precio Pagado (euros): ");
+        terrains.push_back(t);
 
-        buy_lands(terr);
+        register_expense(cost);
 
     // Vender terreno
 
     } else if(strcmp(input_buffer, "2") == 0) {
 
       // Limpiamos
-        if (get_lands_arr_size()) {
-            clear_and_redraw();
+        if (terrains.size() > 0) {
+            clear_and_redraw(terrains);
 
             // Preguntamos
-            int i = read_int("\nID del terreno a vender: ");
+            //int i = read_int("\nTerreno a vender: ");
 
-            if (land_is_out_of_bounds(i)) {
-                printf_c(LIGHT_RED_TXT, "\nÍndice no válido\n");
-            } else {
-                clear_and_title();
-                print_land(i - 1);
-
-                float f = read_float("\nPrecio de venta: ");
-                putchar('\n');
-                sell_lands(i, f);
-            }
+            // Todo
 
         } else {
             printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
@@ -100,14 +117,23 @@ void lands_menu() {
 
 
     } else if(strcmp(input_buffer,"3") == 0){
-        if (get_lands_arr_size()) {
-            clear_and_redraw();
+        if (terrains.size() > 0) {
+
+            clear_and_redraw(terrains);
 
         } else {
             printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
         }
 
-    } else { printf("Opción incorrecta!\n"); }
+    }
+
+    else if(strcmp(input_buffer, "4") == 0) {
+
+        animals_menu();
+    }
+
+
+    else { printf("Opción incorrecta!\n"); }
 
     putchar('\n');
     press_to_continue();

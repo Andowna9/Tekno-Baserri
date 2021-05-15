@@ -1,57 +1,34 @@
-// consultas animales
-
 extern "C" {
-
-#include <std_utils.h>
 #include <stdio.h>
-#include <console_config.h>
 #include <string.h>
+#include <std_utils.h>
+#include "food/food_menu.h"
+#include "animals_menu.h"
+#include <console_config.h>
 }
 
 #include <iostream>
-#include "Animal.h"
-#include "DBManager.h"
-using namespace std;
+#include <DBManager.h>
 #include <vector>
 #include <unordered_map>
+#include "Animal.h"
+using namespace std;
 
-// TODO Funcionalidades
+void animals_menu() {
 
-void check_animals() {
+   DBManager::connect(DBManager::FARM);
 
-}
+   vector<Animal> animals; // La lista se carga con los animales almacenados en la BD
 
-void remove_animals() {
-
-}
-
-void add_animals() {
-
-}
-
-void sell_animals() {
-
-}
-
-void buy_animals() {
-
-}
-
-extern "C" void animals_management_menu(){
+   unordered_map<string, int> animal_types = DBManager::getAnimalTypes();
 
   char input_buffer [DEFAULT_BUFFER_SIZE];
-
-  DBManager::connect(DBManager::FARM);
-
-  vector<Animal> animals = DBManager::retriveAnimals(); // La lista se carga con los animales almacenados en la BD
-
-  unordered_map<string, int> animal_types = DBManager::getAnimalTypes();
 
   while (1) {
 
     clear_screen();
 
-    printf_c(LIGHT_CYAN_TXT, "------- GESTIÓN ANIMALES -------\n\n");
+    printf_c(LIGHT_CYAN_TXT, "------- ANIMALES -------\n\n");
     printf("1. Consultar animales.\n");
     printf("2. Retirar animales.\n");
     printf("3. Agregar animales.\n");
@@ -60,19 +37,23 @@ extern "C" void animals_management_menu(){
 
     cout << endl << "Total de animales: " << animals.size() << endl;
 
-    printf("\nIntroduce 'v' para volver\n\n");
+    printf("\n6. [COMIDA] Gestionar comida.\n");
+    
+    printf("\nIntroduce 'v' para volver.\n\n");
 
     printf("Input: ");
     scan_str(input_buffer, sizeof(input_buffer));
+
     putchar('\n');
 
-    if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0) {
-        break;
+    if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0 ) {
+
+      break;
     }
 
     // Check animals
 
-    if (strcmp(input_buffer, "1") == 0) {
+    else if (strcmp(input_buffer, "1") == 0) {
 
 
         if (animals.size() == 0) {
@@ -93,18 +74,12 @@ extern "C" void animals_management_menu(){
 
     }
 
-    // Remove animal
-
     else if(strcmp(input_buffer, "2") == 0) {
-
-
 
 
     }
 
-    // Add animal
-
-    else if(strcmp(input_buffer, "3") == 0) {
+    else if (strcmp(input_buffer, "3") == 0) {
 
         // Se muestran los tipos de animales
 
@@ -138,24 +113,24 @@ extern "C" void animals_management_menu(){
 
     }
 
-    else if(strcmp(input_buffer, "4") == 0) {
-      sell_animals();
-
+    else if (strcmp(input_buffer, "4") == 0) {
 
     }
 
-    else if(strcmp(input_buffer, "5") == 0) {
-      buy_animals();
+    else if (strcmp(input_buffer, "5") == 0) {
 
     }
 
-    else printf("Opción no disponible!\n");
+    else if (strcmp(input_buffer, "6") == 0) {
 
-    putchar('\n');
-    press_to_continue();
+        animal_food_menu();
+    }
+
+    else { printf("Opción incorrecta!\n\n"); press_to_continue();}
+
   }
 
   DBManager::disconnect();
 
-}
 
+}
