@@ -45,6 +45,11 @@ string Animal::getType() const {
     return animal_types.at(this->type_id);
 }
 
+int Animal::getTypeID() const {
+
+    return type_id;
+}
+
 // Setters
 
 void Animal::setID(int id) {
@@ -81,27 +86,14 @@ istream & operator >> (istream &in, Animal &a) {
 
     // Se muestran los tipos de animales
 
+    cout << "------------------------------" << endl;
     cout << "Tipos de animales disponibles: " << endl;
+    cout << "------------------------------" << endl;
+    printMap(a.animal_types);
+    cout << "------------------------------" << endl;
 
-    for (auto & x: Animal::animal_types) {
-
-        cout << x.first << ". " << x.second << endl;
-    }
-
-    int type_id = -1;
-
-    do {
-
-        readVar(in, type_id);
-
-        if (Animal::animal_types.find(type_id) == Animal::animal_types.end()) {
-
-            cout << "El tipo de animal introducido no existe!" << endl;
-            type_id = -1;
-        }
-
-    } while (type_id == -1);
-
+    int type_id = scanMapKey(a.animal_types);
+    a.type_id = type_id;
 
     return in;
 }

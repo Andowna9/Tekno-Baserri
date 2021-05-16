@@ -8,6 +8,7 @@ extern "C" {
 }
 
 #include <iostream>
+#include <QDate>
 #include <DBManager.h>
 #include <vector>
 #include "Animal.h"
@@ -60,7 +61,8 @@ void animals_menu() {
 
             for (const Animal & a: animals) {
 
-                cout << a << endl;
+                cout << a;
+                cout<< "Edad " << DBManager::getAnimalAge(a.getID()) << endl;
 
             }
 
@@ -74,9 +76,31 @@ void animals_menu() {
 
     }
 
+    // Añadir animal nuevo
+
     else if (strcmp(input_buffer, "3") == 0) {
 
+        Animal a;
+        cin >> a;
 
+        unsigned int y;
+        unsigned int m;
+        unsigned int d;
+
+        int n;
+
+        do {
+            cout << "Fecha de nacimiento (Formato aaaa-mm-dd): ";
+            n = read_format("%4u-%2u-%2u", &y, &m, &d);
+
+        } while(n != 3);
+
+        QDate date(y, m, d);
+        string birth_date = date.toString(Qt::ISODate).toStdString();
+
+        DBManager::insertAnimal(a, birth_date);
+
+        animals.push_back(a);
 
 
     }

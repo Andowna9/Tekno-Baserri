@@ -11,7 +11,7 @@
 #ifndef STDIN_FIX_H
 #define STDIN_FIX_H
 #include <console_config.h>
-#define DEFAULT_BUFFER_SIZE 10 // Tamaño por defecto para el buffer de caracteres
+#define DEFAULT_BUFFER_SIZE 20 // Tamaño por defecto para el buffer de caracteres
 
 /**
  * @brief Limpia el buffer de entrada de la consola (stdin)

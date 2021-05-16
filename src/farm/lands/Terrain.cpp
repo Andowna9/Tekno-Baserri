@@ -39,6 +39,7 @@ void AnimalTerrain::print() {
     cout << "TERRENO DE ANIMALES" << endl;
     cout << "-------------------" << endl;
     Terrain::print();
+    cout << "Número de animales: " << animals.size() << endl;
 
 }
 
@@ -64,29 +65,10 @@ void CropTerrain::readFromConsole() {
     cout << "------------------------------" << endl;
     cout << "Tipos de cultivos disponibles: " <<  endl;
     cout << "------------------------------" << endl;
-
-    for (auto & t: crop_types) {
-
-        cout << t.first << ". " << t.second << endl;
-    }
+    printMap(crop_types);
     cout << "------------------------------" << endl;
 
-
-    int type_id = - 1;
-
-    do {
-
-        cout << "Tipo: ";
-        readVar(cin, type_id);
-
-        if (crop_types.find(type_id) == crop_types.end()) {
-
-            cout << "El tipo de cultivo no existe!" << endl;
-            type_id = -1;
-
-        }
-    } while(type_id == -1);
-
+    int type_id = scanMapKey(crop_types);
     this->crop_id = type_id;
 
 }

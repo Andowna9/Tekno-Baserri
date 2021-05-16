@@ -124,6 +124,7 @@ void DBManager::prepareFarmDB() {
         add_to_log("Error al preparar la tabla Animal. Código: %i", code);
     }
 
+    close_logger();
 
 }
 
@@ -341,19 +342,20 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
     return animals;
 }
 
-void DBManager::insertAnimal(Animal& a, int type_id) {
+void DBManager::insertAnimal(Animal& a, string birth_date) {
 
     open_logger(log_file_txt);
 
     sqlite3_stmt* stmt;
 
-    string sql = "INSERT INTO animal(name, weight, birth_date, type) VALUES (?, ?, DATE('now'), ?)";
+    string sql = "INSERT INTO animal(name, weight, birth_date, type) VALUES (?, ?, DATE(?), ?)";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
     sqlite3_bind_text(stmt, 1, a.getName().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_double(stmt, 2, a.getWeight());
-    sqlite3_bind_int(stmt, 3, type_id);
+    sqlite3_bind_text(stmt, 3, birth_date.c_str(),-1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, a.getTypeID());
 
     int code = sqlite3_step(stmt);
 
@@ -385,6 +387,40 @@ void DBManager::insertAnimal(Animal& a, int type_id) {
     }
 
     close_logger();
+
+}
+
+int DBManager::getAnimalAge(int id) {
+
+    int age = -1;
+
+    open_logger(log_file_txt);
+
+    sqlite3_stmt* stmt;
+
+    string sql = "SELECT (julianday('now') - julianday(birth_date)) / 365 AS age FROM animal WHERE id=?";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    int code = sqlite3_step(stmt);
+
+    if (code != SQLITE_ROW) {
+
+        add_to_log("Error al obtener edad de animal. Código: %i", code);
+    }
+
+    else {
+
+        age = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+
+    close_logger();
+
+    return age;
 
 }
 

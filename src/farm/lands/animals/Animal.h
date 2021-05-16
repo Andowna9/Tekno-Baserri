@@ -28,6 +28,7 @@ class Animal {
         float getWeight() const;
         string getName() const;
         string getType() const;
+        int getTypeID() const;
 
         // Setters
 
