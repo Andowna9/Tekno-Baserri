@@ -31,6 +31,8 @@ static void clear_and_redraw(vector<Terrain*> terrains) {
 
 extern "C" void lands_menu() {
 
+  DBManager::connect();
+
   vector<Terrain*> terrains = DBManager::retrieveTerrains();
 
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
@@ -40,7 +42,7 @@ extern "C" void lands_menu() {
     clear_screen();
 
     print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
-    printf("1. Comprar terrerno.\n");
+    printf("1. Comprar terreno.\n");
     printf("2. Vender terreno.\n");
     printf("3. Listar terrenos.\n");
 
@@ -73,30 +75,25 @@ extern "C" void lands_menu() {
 
         print_banner('-', 33, LIGHT_CYAN_TXT);
 
-
-        float area = read_float("Aréa (hectáreas): ");
-
-        putchar('\n');
-
-        putchar('\n');
-        float cost = read_float("Precio Pagado (euros): ");
-
         Terrain* t;
 
-        if (confirm_action("Terreno de cultivo?")) {
+        int opt = choose_option("Terreno de cultivo (C) o animales (A)? ", 2, "C", "A");
 
-            t = new CropTerrain(area, cost);
+        if (opt == 1) {
 
-
-        } else {
-
-            t = new AnimalTerrain(area, cost);
-
+            t = new CropTerrain();
         }
+
+        else {
+
+            t = new AnimalTerrain();
+        }
+
+        t->readFromConsole();
 
         terrains.push_back(t);
 
-        register_expense(cost);
+        // TODO Registrar gasto
 
     // Vender terreno
 
@@ -139,4 +136,6 @@ extern "C" void lands_menu() {
     press_to_continue();
 
   }
+
+  DBManager::disconnect();
 }

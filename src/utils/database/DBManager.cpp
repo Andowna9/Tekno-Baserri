@@ -53,15 +53,15 @@ void DBManager::prepareFarmDB() {
 
     // Tabla Cultivo
 
-    string sql = "CREATE TABLE IF NOT EXISTS crop("
-    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-    "name TEXT,"
+    string sql = "CREATE TABLE IF NOT EXISTS crop_type("
+    "id INTEGER PRIMARY KEY,"
+    "name TEXT NOT NULL"
     ");"
-    "INSERT OR IGNORE INTO crop(id, name) VALUES"
-    "(1, Lechuga),"
-    "(2, Pepino),"
-    "(3, Zanhaoria),"
-    "(4, Tomate)";
+    "INSERT OR IGNORE INTO crop_type(id, name) VALUES"
+    "(1, 'Lechuga'),"
+    "(2, 'Pepino'),"
+    "(3, 'Zanahoria'),"
+    "(4, 'Tomate');";
 
     int code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
@@ -77,7 +77,7 @@ void DBManager::prepareFarmDB() {
           "area REAL,"
           "cost REAL,"
           "crop_in_use INTEGER,"
-          "FOREIGN KEY(crop_in_use) REFERENCES crop(id)"
+          "FOREIGN KEY(crop_in_use) REFERENCES crop_type(id)"
           ");";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
@@ -127,7 +127,22 @@ void DBManager::prepareFarmDB() {
 
 }
 
-void DBManager::connect(DBName name) {
+void DBManager::initDB() {
+
+    DBManager::connect();
+
+    DBManager::prepareParkingDB();
+    DBManager::prepareFarmDB();
+
+
+    CropTerrain::loadTypes(DBManager::getAvailableTypes(DBManager::CROP_TYPE));
+    Animal::loadTypes(DBManager::getAvailableTypes(DBManager::ANIMAL_TYPE));
+
+    DBManager::disconnect();
+
+}
+
+void DBManager::connect() {
 
     open_logger(log_file_txt);
 
@@ -135,27 +150,6 @@ void DBManager::connect(DBName name) {
 
     if (code != SQLITE_OK) {
         add_to_log("Error al abrir la base de datos. Código: %i", code);
-    }
-
-    else {
-
-        cout << "Base de datos abierta con éxito!" << endl;
-
-        // Dependiendo de la constante proporcionada, se prepara la BD de la granja o el parking
-
-        switch(name) {
-
-            case PARKING:
-
-                prepareParkingDB();
-                break;
-
-            case FARM:
-
-                prepareFarmDB();
-                break;
-        }
-
     }
 
     close_logger();
@@ -322,7 +316,7 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
 
     vector<Animal> animals;
     sqlite3_stmt* stmt;
-    string sql = "SELECT a.id, a.name, a.weight, t.name FROM animal a INNER JOIN animal_type t ON a.type = t.id WHERE a.terrain=?";
+    string sql = "SELECT id, name, weight, type WHERE terrain=?";
     int code = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
     sqlite3_bind_int(stmt, 1, terrain_id);
     if (code != SQLITE_OK) {
@@ -334,7 +328,7 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
         int id = sqlite3_column_int(stmt, 0);
         string name((const char*)sqlite3_column_text(stmt, 1));
         float weight = (float) sqlite3_column_double(stmt, 2);
-        string type((const char*)sqlite3_column_text(stmt, 3));
+        int type = sqlite3_column_int(stmt, 3);
 
         Animal a(id, name, weight, type);
         animals.push_back(a);
@@ -419,13 +413,30 @@ void DBManager::removeAnimal(int id) {
 
 
 
-unordered_map<string, int> DBManager::getAnimalTypes() {
+map<int, string> DBManager::getAvailableTypes(TypeTable type_table) {
 
-    unordered_map<string, int> available_types;
+    map<int, string> available_types;
+
+    string table_name;
+
+    switch (type_table) {
+
+        case ANIMAL_TYPE:
+
+            table_name = "animal_type";
+
+            break;
+
+        case CROP_TYPE:
+
+            table_name = "crop_type";
+
+            break;
+    }
 
     sqlite3_stmt* stmt;
 
-    string sql = "SELECT id, name FROM animal_type";
+    string sql = "SELECT id, name FROM " + table_name;
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
@@ -434,7 +445,7 @@ unordered_map<string, int> DBManager::getAnimalTypes() {
         int type_id = sqlite3_column_int(stmt, 0);
         string type_name((const char*)sqlite3_column_text(stmt, 1));
 
-        available_types[type_name] = type_id;
+        available_types[type_id] = type_name;
 
     }
 
@@ -444,7 +455,7 @@ unordered_map<string, int> DBManager::getAnimalTypes() {
 
 }
 
-Crop DBManager::getCrop(int id) {
+string DBManager::getCrop(int id) {
 
 
     sqlite3_stmt* stmt;
@@ -454,17 +465,17 @@ Crop DBManager::getCrop(int id) {
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
     sqlite3_bind_int(stmt, 1, id);
 
-    Crop c;
+    string s;
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
 
-        string name((const char*)sqlite3_column_text(stmt, 1));
-        c.setName(name);
+        s = (const char*)sqlite3_column_text(stmt, 1);
 
     }
 
-    return c;
+    sqlite3_finalize(stmt);
 
+    return s;
 
 }
 
@@ -501,13 +512,15 @@ vector<Terrain*> DBManager::retrieveTerrains() {
 
         else {
 
-            Crop crop = getCrop(crop_id);
-            t = new CropTerrain(area, crop, cost);
+
+            t = new CropTerrain(area, crop_id, cost);
 
         }
 
         terrains.push_back(t);
     }
+
+    sqlite3_finalize(stmt);
 
     return terrains;
 }

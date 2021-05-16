@@ -1,10 +1,14 @@
+extern "C" {
 #include <stdio.h>
 #include <string.h>
 #include <console_config.h>
 #include <std_utils.h>
-#include "farm/farm.h"
-#include "parking/parking_menu.h"
 #include <logger.h>
+#include "farm/farm.h"
+}
+
+#include "parking/parking_menu.h"
+#include <DBManager.h>
 
 static void configure_logger() {
     open_logger("main.log");
@@ -14,6 +18,9 @@ int main() {
 
     setup_console(); // Configuración de consola con colores + UTF-8
     configure_logger();
+
+    DBManager::initDB(); // Inicialización de tablas y datos estáticos
+
     char input_buffer[DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
     //test_each_printf_c();

@@ -2,8 +2,9 @@
 #define TERRAIN_H
 
 #include <vector>
+#include <map>
 #include "animals/Animal.h"
-#include "crops/Crop.h"
+
 using namespace std;
 
 // Clase base
@@ -18,9 +19,11 @@ class Terrain {
 
     public:
 
+        Terrain() {}
         Terrain(float area, float cost);
         virtual ~Terrain() {}
 
+        virtual void readFromConsole();
         virtual void print();
 };
 
@@ -34,6 +37,7 @@ class AnimalTerrain: public Terrain {
 
     public:
 
+        AnimalTerrain() {}
         AnimalTerrain(float area, float cost);
         AnimalTerrain(float area, vector<Animal> animals, float cost);
 
@@ -45,13 +49,19 @@ class CropTerrain: public Terrain {
 
     private:
 
-        string crop;
+        static map<int, string> crop_types;
+
+        int crop_id;
 
     public:
 
+        CropTerrain() {}
         CropTerrain(float area, float cost);
-        CropTerrain(float area, Crop crop, float cost);
+        CropTerrain(float area, int crop_id, float cost);
 
+        static void loadTypes(map<int, string> map);
+
+        void readFromConsole();
         void print();
 
 };

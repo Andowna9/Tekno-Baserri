@@ -450,7 +450,6 @@ static void configure_logger() {
 }
 
 // MENÚ
-extern "C" void parking_menu(); // De esta manera podremos llamar a la función implemenetada en cpp desde C
 
 void parking_menu() {
 
@@ -462,7 +461,7 @@ void parking_menu() {
     reset_highlighted_point();
 
     // Conexión con BD
-    DBManager::connect(DBManager::PARKING);
+    DBManager::connect();
 
 
     // Programa

@@ -2,22 +2,25 @@
 #define ANIMAL_H
 
 #include <string>
+#include <map>
 using namespace std;
 
 class Animal {
 
-    protected:
+    private:
+
+        static map<int, string> animal_types;
 
         int id; // Identificación única del animal
         float weight; // Peso
         string name; // Nombre propio
-        string type; // Tipo de animal (raza y/o especie)
+        int type_id; // Tipo de animal (raza y/o especie)
 
 
     public:
 
         Animal();
-        Animal(int id, string name, float weight, string type);
+        Animal(int id, string name, float weight, int type_id);
 
         // Getters
 
@@ -29,6 +32,8 @@ class Animal {
         // Setters
 
         void setID(int id);
+
+        static void loadTypes(map<int, string> map);
 
 
         // Sobrecarga de operadores de inserción y extracción

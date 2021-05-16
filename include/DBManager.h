@@ -4,10 +4,11 @@
 #include <sqlite3.h>
 #include "src/parking/vehicle/Vehicle.h"
 #include "src/farm/lands/animals/Animal.h"
-#include "src/farm/lands/crops/Crop.h"
 #include "src/farm/lands/Terrain.h"
 #include <vector>
-#include <unordered_map>
+#include <map>
+
+//void initDB();
 
 // Clase gestora de acceso a la base de datos
 
@@ -25,15 +26,16 @@ class DBManager {
         static void prepareParkingDB();
         static void prepareFarmDB();
         static vector<Animal> retriveAnimals(int terrain_id);
-        static Crop getCrop(int id);
+        static string getCrop(int id);
 
     public:
 
-        enum DBName {PARKING, FARM};
+        enum TypeTable {ANIMAL_TYPE, CROP_TYPE};
 
         // Métodos estáticos de utilidad
 
-        static void connect(DBName name);
+        static void initDB();
+        static void connect();
         static void disconnect();
 
         // Parking
@@ -50,9 +52,10 @@ class DBManager {
 
         static void insertAnimal(Animal& a, int type_id);
         static void removeAnimal(int id);
-        static unordered_map<string, int> getAnimalTypes();
+        static map<int, string> getAvailableTypes(TypeTable table);
         static vector<Terrain*> retrieveTerrains();
 
+        friend void initDB();
 };
 
 #endif // DBMANAGER_H

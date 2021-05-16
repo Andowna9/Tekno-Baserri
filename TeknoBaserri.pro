@@ -6,8 +6,7 @@ QT += core
 
 # SOURCES C
 
-SOURCES += src/main.c \
-           src/console/console_config.c \
+SOURCES += src/console/console_config.c \
            src/farm/lands/animals/food/food.c \
            src/farm/lands/animals/food/food_menu.c \
            src/farm/farm.c \
@@ -21,14 +20,14 @@ SOURCES += src/main.c \
 
 # SOURCES C++
 
-SOURCES += src/parking/vehicle/Vehicle.cpp \
+SOURCES += src/main.cpp \
+           src/parking/vehicle/Vehicle.cpp \
            src/utils/database/DBManager.cpp \
            src/parking/parking_menu.cpp \
            src/farm/lands/animals/Animal.cpp \
            src/farm/lands/animals/animals_menu.cpp \
            src/farm/lands/crops/crops.cpp \
            src/farm/lands/Terrain.cpp \
-           src/farm/lands/crops/Crop.cpp \
            src/farm/lands/lands_menu.cpp
 
 HEADERS += src/console/console_config.h \
@@ -36,7 +35,6 @@ HEADERS += src/console/console_config.h \
     src/farm/lands/animals/Animal.h \
     src/farm/lands/animals/food/food.h \
     src/farm/lands/animals/food/food_menu.h \
-    src/farm/lands/crops/Crop.h \
     src/farm/lands/lands_menu.h \
     src/farm/management/management_menu.h \
     src/parking/parking.h \

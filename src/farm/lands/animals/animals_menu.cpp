@@ -10,17 +10,12 @@ extern "C" {
 #include <iostream>
 #include <DBManager.h>
 #include <vector>
-#include <unordered_map>
 #include "Animal.h"
 using namespace std;
 
 void animals_menu() {
 
-   DBManager::connect(DBManager::FARM);
-
-   vector<Animal> animals; // La lista se carga con los animales almacenados en la BD
-
-   unordered_map<string, int> animal_types = DBManager::getAnimalTypes();
+  vector<Animal> animals; // La lista se carga con los animales almacenados en la BD
 
   char input_buffer [DEFAULT_BUFFER_SIZE];
 
@@ -81,34 +76,7 @@ void animals_menu() {
 
     else if (strcmp(input_buffer, "3") == 0) {
 
-        // Se muestran los tipos de animales
 
-        cout << "Tipos de animales disponibles: " << endl;
-
-        for (auto & x: animal_types) {
-
-            cout << "[" << x.first << "]" << endl;
-        }
-
-        Animal new_animal;
-        cin >> new_animal;
-
-        try {
-
-            int type_id = animal_types.at(new_animal.getType());
-            DBManager::insertAnimal(new_animal, type_id);
-            animals.push_back(new_animal);
-
-            cout << "Animal registrado sin problema" << endl;
-
-        }
-
-        // El mapa lanza una excepción si la clave no existe
-
-        catch (const out_of_range& oor) {
-
-            cout << "El tipo introducido no existe!" << endl;
-        }
 
 
     }
@@ -126,11 +94,12 @@ void animals_menu() {
         animal_food_menu();
     }
 
-    else { printf("Opción incorrecta!\n\n"); press_to_continue();}
+    else { printf("Opción incorrecta!\n"); }
+
+
+    putchar('\n');
+    press_to_continue();
 
   }
-
-  DBManager::disconnect();
-
 
 }
