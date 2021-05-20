@@ -9,6 +9,15 @@ Terrain::Terrain(float area, float cost) {
     this->cost = cost;
 }
 
+float Terrain::getArea() {
+    return this->area;
+
+}
+
+float Terrain::getCost() {
+    return this->cost;
+}
+
 void Terrain::readFromConsole() {
 
     cout << "Área (hectáreas): ";

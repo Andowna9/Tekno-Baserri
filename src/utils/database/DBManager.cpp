@@ -542,6 +542,8 @@ string DBManager::getCrop(int id) {
 
 }
 
+// TERRENOS //////
+
 vector<Terrain*> DBManager::retrieveTerrains() {
 
     vector<Terrain*> terrains;
@@ -585,3 +587,15 @@ vector<Terrain*> DBManager::retrieveTerrains() {
     return terrains;
 }
 
+void DBManager::insertTerrain(Terrain& t) {
+    // TODO
+}
+void DBManager::removeTerrain(int id) {
+    // TODO
+}
+float DBManager::getTerrainCost(int id) {
+    // TODO
+}
+float DBManager::getTerrainArea(int id) {
+    // TODO
+}

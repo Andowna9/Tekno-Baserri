@@ -22,9 +22,12 @@ static void clear_and_redraw(vector<Terrain*> terrains) {
 
     // Mostrar terrenos
 
-    for(Terrain* terr: terrains) {
+    for(int i = 0; i < (int) terrains.size(); i++) {
 
+        Terrain* terr = terrains[i];
+        cout << i + 1 << ". ";
         terr->print();
+        cout << endl;
     }
 }
 
@@ -80,20 +83,18 @@ extern "C" void lands_menu() {
         int opt = choose_option("Terreno de cultivo (C) o animales (A)? ", 2, "C", "A");
 
         if (opt == 1) {
-
             t = new CropTerrain();
         }
 
         else {
-
             t = new AnimalTerrain();
         }
 
         t->readFromConsole();
-
+        register_expense(t->getCost());
         terrains.push_back(t);
 
-        // TODO Registrar gasto
+        // TODO registrar en la base de datos
 
     // Vender terreno
 
@@ -104,9 +105,13 @@ extern "C" void lands_menu() {
             clear_and_redraw(terrains);
 
             // Preguntamos
-            //int i = read_int("\nTerreno a vender: ");
+            int i = read_int("\nTerreno a vender: ");
+            i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
 
-            // Todo
+            int precio = read_int("Precio de venta: ");
+            register_profit(precio);
+
+            // TODO registrar en la base de datos
 
         } else {
             printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");

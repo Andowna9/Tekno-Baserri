@@ -23,6 +23,9 @@ class Terrain {
         Terrain(float area, float cost);
         virtual ~Terrain() {}
 
+        float getArea();
+        float getCost();
+
         virtual void readFromConsole();
         virtual void print();
 };
