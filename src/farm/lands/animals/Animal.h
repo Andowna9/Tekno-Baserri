@@ -9,33 +9,25 @@ class Animal {
 
     private:
 
-        static map<int, string> animal_types;
-
         int id; // Identificación única del animal
         float weight; // Peso
         string name; // Nombre propio
-        int type_id; // Tipo de animal (raza y/o especie)
 
 
     public:
 
         Animal();
-        Animal(int id, string name, float weight, int type_id);
+        Animal(int id, string name, float weight);
 
         // Getters
 
         int getID() const;
         float getWeight() const;
         string getName() const;
-        string getType() const;
-        int getTypeID() const;
 
         // Setters
 
         void setID(int id);
-
-        static void loadTypes(map<int, string> map);
-
 
         // Sobrecarga de operadores de inserción y extracción
 

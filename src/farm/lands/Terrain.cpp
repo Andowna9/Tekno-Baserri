@@ -28,9 +28,31 @@ void Terrain::print() {
 AnimalTerrain::AnimalTerrain(float area, float cost): Terrain(area, cost) {}
 
 
-AnimalTerrain::AnimalTerrain(float area, vector<Animal> animals, float cost): Terrain(area, cost) {
+map<int, string> AnimalTerrain::animal_types;
 
+AnimalTerrain::AnimalTerrain(float area, vector<Animal> animals, float cost, int type_id): Terrain(area, cost) {
+
+    this->animal_type_id = type_id;
     this->animals = animals;
+}
+
+void AnimalTerrain::loadTypes(map<int, string> map) {
+
+    animal_types = map;
+}
+
+void AnimalTerrain::readFromConsole() {
+
+    Terrain::readFromConsole();
+
+    cout << "------------------------------" << endl;
+    cout << "Tipos de cultivos disponibles: " <<  endl;
+    cout << "------------------------------" << endl;
+    printMap(animal_types);
+    cout << "------------------------------" << endl;
+
+    int type_id = scanMapKey(animal_types);
+    this->animal_type_id = type_id;
 }
 
 void AnimalTerrain::print() {
@@ -43,8 +65,8 @@ void AnimalTerrain::print() {
 
 }
 
-map<int, string> CropTerrain::crop_types;
 
+map<int, string> CropTerrain::crop_types;
 
 void CropTerrain::loadTypes(map<int, string> map) {
 

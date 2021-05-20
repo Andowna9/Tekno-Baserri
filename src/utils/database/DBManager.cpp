@@ -18,15 +18,16 @@ const char* log_file_txt = "database_errors.log";
 void DBManager::prepareParkingDB() {
 
     open_logger(log_file_txt);
+    string sql; int code;
 
     // Tabla Vehículo
 
-    string sql = "CREATE TABLE IF NOT EXISTS vehicle("
+    sql = "CREATE TABLE IF NOT EXISTS vehicle("
                  "license_plate TEXT PRIMARY KEY,"
                  "brand TEXT,"
                  "color TEXT)";
 
-    int code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
     if (code != SQLITE_OK) {
         add_to_log("Error preparando la tabla Vehículo. Código: %d", code);
@@ -50,10 +51,11 @@ void DBManager::prepareParkingDB() {
 void DBManager::prepareFarmDB() {
 
     open_logger(log_file_txt);
+    string sql; int code;
 
     // Tabla Cultivo
 
-    string sql = "CREATE TABLE IF NOT EXISTS crop_type("
+    sql = "CREATE TABLE IF NOT EXISTS crop_type("
     "id INTEGER PRIMARY KEY,"
     "name TEXT NOT NULL"
     ");"
@@ -63,7 +65,7 @@ void DBManager::prepareFarmDB() {
     "(3, 'Zanahoria'),"
     "(4, 'Tomate');";
 
-    int code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
     if (code != SQLITE_OK){
 
@@ -75,9 +77,7 @@ void DBManager::prepareFarmDB() {
     sql = "CREATE TABLE IF NOT EXISTS terrain("
           "id TEXT PRIMARY KEY,"
           "area REAL,"
-          "cost REAL,"
-          "crop_in_use INTEGER,"
-          "FOREIGN KEY(crop_in_use) REFERENCES crop_type(id)"
+          "cost REAL"
           ");";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
@@ -86,6 +86,23 @@ void DBManager::prepareFarmDB() {
 
         add_to_log("Error al preparar la tabla Terreno. Código: %i", code);
     }
+
+    // Tabla Terrenos Cultivo
+
+    sql = "CREATE TABLE IF NOT EXISTS crop_terrain("
+          "id TEXT PRIMARY KEY,"
+          "type INT,"
+          "FOREIGN KEY(id) REFERENCES terrain(id),"
+          "FOREIGN KEY(type) REFERENCES crop_type(id)"
+          ");";
+
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK){
+
+        add_to_log("Error al preparar la tabla Terreno-Cultivo. Código: %i", code);
+    }
+
 
     // Tabla Tipo de Animal
 
@@ -104,6 +121,23 @@ void DBManager::prepareFarmDB() {
         add_to_log("Error al preparar tabla de tipos de animales. Código: %d", code);
     }
 
+    // Tabla Terrenos Animal
+
+    sql = "CREATE TABLE IF NOT EXISTS animal_terrain("
+          "id TEXT PRIMARY KEY,"
+          "type INT,"
+          "FOREIGN KEY(id) REFERENCES terrain(id),"
+          "FOREIGN KEY(type) REFERENCES animal_type(id)"
+          ");";
+
+    code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+    if (code != SQLITE_OK){
+
+        add_to_log("Error al preparar la tabla Terreno-Animal. Código: %i", code);
+    }
+
+
     // Tabla Animal
 
     sql = "CREATE TABLE IF NOT EXISTS animal("
@@ -111,10 +145,8 @@ void DBManager::prepareFarmDB() {
           "name TEXT,"
           "weight REAL,"
           "birth_date TEXT,"
-          "type INTEGER,"
           "terrain INTEGER,"
-          "FOREIGN KEY(type) REFERENCES animal_type(id),"
-          "FOREIGN KEY(terrain) REFERENCES terrain(id),"
+          "FOREIGN KEY(terrain) REFERENCES animal_terrain(id),"
           "CHECK(weight > 0)"
           ")";
 
@@ -137,7 +169,7 @@ void DBManager::initDB() {
 
 
     CropTerrain::loadTypes(DBManager::getAvailableTypes(DBManager::CROP_TYPE));
-    Animal::loadTypes(DBManager::getAvailableTypes(DBManager::ANIMAL_TYPE));
+    AnimalTerrain::loadTypes(DBManager::getAvailableTypes(DBManager::ANIMAL_TYPE));
 
     DBManager::disconnect();
 
@@ -201,7 +233,6 @@ Vehicle vehicleFromRow(sqlite3_stmt* stmt) {
 
     return Vehicle(license, brand, color);
 }
-
 
 Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
@@ -329,9 +360,8 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
         int id = sqlite3_column_int(stmt, 0);
         string name((const char*)sqlite3_column_text(stmt, 1));
         float weight = (float) sqlite3_column_double(stmt, 2);
-        int type = sqlite3_column_int(stmt, 3);
 
-        Animal a(id, name, weight, type);
+        Animal a(id, name, weight);
         animals.push_back(a);
     }
 
@@ -348,14 +378,13 @@ void DBManager::insertAnimal(Animal& a, string birth_date) {
 
     sqlite3_stmt* stmt;
 
-    string sql = "INSERT INTO animal(name, weight, birth_date, type) VALUES (?, ?, DATE(?), ?)";
+    string sql = "INSERT INTO animal(name, weight, birth_date) VALUES (?, ?, DATE(?))";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
     sqlite3_bind_text(stmt, 1, a.getName().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_double(stmt, 2, a.getWeight());
     sqlite3_bind_text(stmt, 3, birth_date.c_str(),-1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 4, a.getTypeID());
 
     int code = sqlite3_step(stmt);
 
@@ -447,8 +476,6 @@ void DBManager::removeAnimal(int id) {
     close_logger();
 }
 
-
-
 map<int, string> DBManager::getAvailableTypes(TypeTable type_table) {
 
     map<int, string> available_types;
@@ -518,10 +545,13 @@ string DBManager::getCrop(int id) {
 vector<Terrain*> DBManager::retrieveTerrains() {
 
     vector<Terrain*> terrains;
+    string sql;
 
     sqlite3_stmt* stmt;
 
-    string sql = "SELECT * FROM terrain";
+    sql = "SELECT t.id, area, cost, at.type, ct.type FROM terrain t"
+          "LEFT OUTER JOIN crop_terrain ct ON t.id = ct.id"
+          "LEFT OUTER JOIN animal_terrain at ON t.id = at.id;";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
@@ -530,28 +560,22 @@ vector<Terrain*> DBManager::retrieveTerrains() {
         int terrain_id = sqlite3_column_int(stmt, 0);
         float area = (float) sqlite3_column_double(stmt, 1);
         float cost = (float) sqlite3_column_double(stmt, 2);
-        int crop_id = sqlite3_column_int(stmt, 3);
 
         Terrain* t;
 
-        // Si id del cultivo es NULL, se trata de un terreno de animales
+        if (sqlite3_column_type(stmt, 3) != SQLITE_NULL) {
+            int cropType = sqlite3_column_double(stmt, 3);
+            t = new CropTerrain(area, cropType, cost);
 
-        if (sqlite3_column_type(stmt, 2) == SQLITE_NULL) {
-
+        } else {
+            int animalType = sqlite3_column_double(stmt, 4);
             vector<Animal> animals = retriveAnimals(terrain_id);
-            t = new AnimalTerrain(area, animals, cost);
 
-
-        }
-
-        // En caso contrario, se trata de un terreno de cultivo
-
-        else {
-
-
-            t = new CropTerrain(area, crop_id, cost);
+            t = new AnimalTerrain(area, animals, cost, animalType);
 
         }
+
+
 
         terrains.push_back(t);
     }

@@ -11,7 +11,7 @@ using namespace std;
 
 class Terrain {
 
-    private:
+    protected:
 
         float area;
         float cost;
@@ -31,26 +31,30 @@ class Terrain {
 
 class AnimalTerrain: public Terrain {
 
-    private:
+    protected:
 
         vector<Animal> animals;
+        int animal_type_id;
+        static map<int, string> animal_types;
 
     public:
 
         AnimalTerrain() {}
         AnimalTerrain(float area, float cost);
-        AnimalTerrain(float area, vector<Animal> animals, float cost);
+        AnimalTerrain(float area, vector<Animal> animals, float cost, int type_id);
 
+        static void loadTypes(map<int, string> types_map);
+
+        void readFromConsole();
         void print();
 
 };
 
 class CropTerrain: public Terrain {
 
-    private:
+    protected:
 
         static map<int, string> crop_types;
-
         int crop_id;
 
     public:
@@ -59,7 +63,7 @@ class CropTerrain: public Terrain {
         CropTerrain(float area, float cost);
         CropTerrain(float area, int crop_id, float cost);
 
-        static void loadTypes(map<int, string> map);
+        static void loadTypes(map<int, string> types_map);
 
         void readFromConsole();
         void print();
