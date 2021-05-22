@@ -56,10 +56,12 @@ class DBManager {
         static map<int, string> getAvailableTypes(TypeTable table);
         static vector<Terrain*> retrieveTerrains();
 
-        static void insertTerrain(Terrain& t); // TODO
+        static bool insertTerrain(Terrain& t);
+        static void insertAnimalTerrain(AnimalTerrain& t);
+        static void insertCropTerrain(CropTerrain& t);
         static void removeTerrain(int id); // TODO
-        static float getTerrainCost(int id); // TODO
-        static float getTerrainArea(int id); // TODO
+        static float getTerrainCost(int id);
+        static float getTerrainArea(int id);
 
         friend void initDB();
 };

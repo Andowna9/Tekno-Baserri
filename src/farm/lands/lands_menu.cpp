@@ -105,9 +105,12 @@ extern "C" void lands_menu() {
             clear_and_redraw(terrains);
 
             // Preguntamos
-            int i = read_int("\nTerreno a vender: ");
-            i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
+            int i;
+            do {
+                i = read_int("\nTerreno a vender: ");
+            } while(i <= 0 || i > (int) terrains.size());
 
+            i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
             int precio = read_int("Precio de venta: ");
             register_profit(precio);
 

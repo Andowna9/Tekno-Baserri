@@ -587,15 +587,179 @@ vector<Terrain*> DBManager::retrieveTerrains() {
     return terrains;
 }
 
-void DBManager::insertTerrain(Terrain& t) {
-    // TODO
+bool DBManager::insertTerrain(Terrain &t) {
+
+    open_logger(log_file_txt);
+
+    bool success;
+    sqlite3_stmt* stmt;
+
+    string sql = "INSERT INTO terrain(area, cost) VALUES (?, ?)";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    sqlite3_bind_double(stmt, 1, t.getArea());
+    sqlite3_bind_double(stmt, 2, t.getCost());
+
+    int code = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+
+    if (code != SQLITE_DONE) {
+        add_to_log("Error al introducir terreno. Código: %i", code);
+        success = false;
+    }
+
+    else {
+
+        sql = "SELECT last_insert_rowid()";
+        sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+        code = sqlite3_step(stmt);
+
+        if (code == SQLITE_ROW) {
+
+            int id = sqlite3_column_int(stmt, 0);
+            t.setID(id);
+
+            success = true;
+        }
+
+        else {
+            add_to_log("Error al obtener el id del terreno nuevo. Código: %i", code);
+            success = false;
+
+        }
+
+        sqlite3_finalize(stmt);
+
+    }
+
+    close_logger();
+
+    return success;
+
 }
+
+void DBManager::insertAnimalTerrain(AnimalTerrain& t) {
+
+    open_logger(log_file_txt);
+
+    bool success = insertTerrain(t);
+
+    if (success) {
+        sqlite3_stmt* stmt;
+        int code;
+
+        // Insertamos ahora dentro del AnimalTerrain
+        string sql = "INSERT INTO animal_terrain(id, type) values (?, ?)";
+
+        sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+        sqlite3_bind_int(stmt, 1, t.getID()); // El ID se le acaba de asignar en insertTerrain(t)
+        sqlite3_bind_int(stmt, 2, t.getAnimalTypeID());
+
+        code = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+
+        if (code!=SQLITE_DONE) {
+            add_to_log("Error al insertar el terreno de animal. Código: %i", code);
+
+        }
+
+    } else {
+        add_to_log("El terreno no se insertó de forma adecuada, abortada inserción de terreno animal.");
+
+    }
+
+    close_logger();
+
+
+}
+
+void DBManager::insertCropTerrain(CropTerrain& t) {
+
+    open_logger(log_file_txt);
+
+    bool success = insertTerrain(t);
+
+    if (success) {
+        sqlite3_stmt* stmt;
+        int code;
+
+        string sql = "INSERT INTO crop_terrain(id, type) values (?, ?)";
+
+        sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+        sqlite3_bind_int(stmt, 1, t.getID()); // El ID se le acaba de asignar en insertTerrain(t)
+        sqlite3_bind_int(stmt, 2, t.getCropTypeID());
+
+        code = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+
+        if (code!=SQLITE_DONE) {
+            add_to_log("Error al insertar el terreno de cultivo. Código: %i", code);
+
+        }
+
+    } else {
+        add_to_log("El terreno no se insertó de forma adecuada, abortada inserción de terreno de cultivo.");
+
+    }
+
+    close_logger();
+
+}
+
 void DBManager::removeTerrain(int id) {
     // TODO
 }
+
 float DBManager::getTerrainCost(int id) {
-    // TODO
+
+    open_logger(log_file_txt);
+
+    string sql = "SELECT cost from TERRAIN"
+          "WHERE id = ?";
+
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+    sqlite3_bind_int(stmt, 1, id);
+
+    float cost = -1; // Devolverá -1 en caso de error
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        cost = sqlite3_column_double(stmt, 1);
+
+    } else {
+        add_to_log("Error al recuperar el coste del terreno.");
+    }
+
+    sqlite3_finalize(stmt);
+
+    close_logger();
+    return cost;
+
 }
+
 float DBManager::getTerrainArea(int id) {
-    // TODO
+    open_logger(log_file_txt);
+
+    string sql = "SELECT area FROM terrain WHERE id = ?";
+
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+    sqlite3_bind_int(stmt, 1, id);
+
+    float area = -1; // Devolverá -1 en caso de error
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        area = sqlite3_column_double(stmt, 1);
+        add_to_log("Error al obtener el área del terreno.");
+
+    }
+
+    sqlite3_finalize(stmt);
+
+    close_logger();
+    return area;
 }

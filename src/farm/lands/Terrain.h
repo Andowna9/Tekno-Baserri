@@ -15,6 +15,7 @@ class Terrain {
 
         float area;
         float cost;
+        int id;
 
 
     public:
@@ -23,6 +24,9 @@ class Terrain {
         Terrain(float area, float cost);
         virtual ~Terrain() {}
 
+        void setID(int id);
+
+        int getID();
         float getArea();
         float getCost();
 
@@ -48,6 +52,8 @@ class AnimalTerrain: public Terrain {
 
         static void loadTypes(map<int, string> types_map);
 
+        int getAnimalTypeID();
+
         void readFromConsole();
         void print();
 
@@ -58,7 +64,7 @@ class CropTerrain: public Terrain {
     protected:
 
         static map<int, string> crop_types;
-        int crop_id;
+        int crop_type_id;
 
     public:
 
@@ -67,6 +73,8 @@ class CropTerrain: public Terrain {
         CropTerrain(float area, int crop_id, float cost);
 
         static void loadTypes(map<int, string> types_map);
+
+        int getCropTypeID();
 
         void readFromConsole();
         void print();

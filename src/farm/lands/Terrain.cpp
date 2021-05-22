@@ -5,8 +5,17 @@ using namespace std;
 
 Terrain::Terrain(float area, float cost) {
 
+    this->id = -1;
     this->area = area;
     this->cost = cost;
+}
+
+void Terrain::setID(int id) {
+    this->id = id;
+}
+
+int Terrain::getID() {
+    return id;
 }
 
 float Terrain::getArea() {
@@ -45,6 +54,10 @@ AnimalTerrain::AnimalTerrain(float area, vector<Animal> animals, float cost, int
     this->animals = animals;
 }
 
+int AnimalTerrain::getAnimalTypeID() {
+    return this->animal_type_id;
+}
+
 void AnimalTerrain::loadTypes(map<int, string> map) {
 
     animal_types = map;
@@ -54,6 +67,7 @@ void AnimalTerrain::readFromConsole() {
 
     Terrain::readFromConsole();
 
+    cout << endl;
     cout << "------------------------------" << endl;
     cout << "Tipos de cultivos disponibles: " <<  endl;
     cout << "------------------------------" << endl;
@@ -82,17 +96,22 @@ void CropTerrain::loadTypes(map<int, string> map) {
     crop_types = map;
 }
 
+int CropTerrain::getCropTypeID() {
+    return crop_type_id;
+}
+
 CropTerrain::CropTerrain(float area, float cost): Terrain(area, cost) {}
 
 CropTerrain::CropTerrain(float area, int crop_id, float cost): Terrain(area, cost) {
 
-    this->crop_id = crop_id;
+    this->crop_type_id = crop_id;
 }
 
 void CropTerrain::readFromConsole() {
 
     Terrain::readFromConsole();
 
+    cout << endl;
     cout << "------------------------------" << endl;
     cout << "Tipos de cultivos disponibles: " <<  endl;
     cout << "------------------------------" << endl;
@@ -100,16 +119,16 @@ void CropTerrain::readFromConsole() {
     cout << "------------------------------" << endl;
 
     int type_id = scanMapKey(crop_types);
-    this->crop_id = type_id;
+    this->crop_type_id = type_id;
 
 }
 
 void CropTerrain::print() {
 
     cout << "TERRENO DE CULTIVO" << endl;
-    cout << "-------------------" << endl;
+    cout << "----------------------" << endl;
     Terrain::print();
-    cout << "Cultivo: " << crop_types.at(crop_id) << endl;
+    cout << "Cultivo: " << crop_types.at(crop_type_id) << endl;
 }
 
 
