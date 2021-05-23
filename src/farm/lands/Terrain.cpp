@@ -1,6 +1,7 @@
 #include "Terrain.h"
 #include "cpp_utils.h"
 #include <iostream>
+#include <DBManager.h>
 using namespace std;
 
 Terrain::Terrain(float area, float cost) {
@@ -14,16 +15,16 @@ void Terrain::setID(int id) {
     this->id = id;
 }
 
-int Terrain::getID() {
+int Terrain::getID() const {
     return id;
 }
 
-float Terrain::getArea() {
+float Terrain::getArea() const {
     return this->area;
 
 }
 
-float Terrain::getCost() {
+float Terrain::getCost() const {
     return this->cost;
 }
 
@@ -54,7 +55,7 @@ AnimalTerrain::AnimalTerrain(float area, vector<Animal> animals, float cost, int
     this->animals = animals;
 }
 
-int AnimalTerrain::getAnimalTypeID() {
+int AnimalTerrain::getAnimalTypeID() const {
     return this->animal_type_id;
 }
 
@@ -78,13 +79,23 @@ void AnimalTerrain::readFromConsole() {
     this->animal_type_id = type_id;
 }
 
+bool AnimalTerrain::saveInDB() {
+
+    if (DBManager::isDBOpen()) {
+
+        return DBManager::insertAnimalTerrain(*this);
+    }
+
+    return false;
+}
+
 void AnimalTerrain::print() {
 
 
     cout << "TERRENO DE ANIMALES" << endl;
     cout << "-------------------" << endl;
     Terrain::print();
-    cout << "Número de animales: " << animals.size() << endl;
+    cout << "Animal: " << animal_types.at(animal_type_id) << endl;
 
 }
 
@@ -121,6 +132,16 @@ void CropTerrain::readFromConsole() {
     int type_id = scanMapKey(crop_types);
     this->crop_type_id = type_id;
 
+}
+
+bool CropTerrain::saveInDB() {
+
+    if (DBManager::isDBOpen()) {
+
+        return DBManager::insertCropTerrain(*this);
+    }
+
+    return false;
 }
 
 void CropTerrain::print() {

@@ -26,11 +26,12 @@ class Terrain {
 
         void setID(int id);
 
-        int getID();
-        float getArea();
-        float getCost();
+        int getID() const;
+        float getArea() const;
+        float getCost() const;
 
         virtual void readFromConsole();
+        virtual bool saveInDB() = 0;
         virtual void print();
 };
 
@@ -52,9 +53,10 @@ class AnimalTerrain: public Terrain {
 
         static void loadTypes(map<int, string> types_map);
 
-        int getAnimalTypeID();
+        int getAnimalTypeID() const;
 
         void readFromConsole();
+        bool saveInDB();
         void print();
 
 };
@@ -77,6 +79,7 @@ class CropTerrain: public Terrain {
         int getCropTypeID();
 
         void readFromConsole();
+        bool saveInDB();
         void print();
 
 };

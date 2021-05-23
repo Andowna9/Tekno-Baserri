@@ -37,6 +37,7 @@ class DBManager {
         static void initDB();
         static void connect();
         static void disconnect();
+        static bool isDBOpen();
 
         // Parking
 
@@ -57,9 +58,9 @@ class DBManager {
         static vector<Terrain*> retrieveTerrains();
 
         static bool insertTerrain(Terrain& t);
-        static void insertAnimalTerrain(AnimalTerrain& t);
-        static void insertCropTerrain(CropTerrain& t);
-        static void removeTerrain(int id); // TODO
+        static bool insertAnimalTerrain(AnimalTerrain& t);
+        static bool insertCropTerrain(CropTerrain& t);
+        static bool removeTerrain(int id);
         static float getTerrainCost(int id);
         static float getTerrainArea(int id);
 

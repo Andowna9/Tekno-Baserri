@@ -10,7 +10,7 @@ extern "C" {
 using namespace std;
 
 const char* DBManager::DBPath = "teknobaserri.db"; // Inicialización de variable estática para la ruta de acceso
-sqlite3* DBManager::DB;
+sqlite3* DBManager::DB = NULL;
 const char* log_file_txt = "database_errors.log";
 
 // Método privado que crea las tablas correspondientes en caso de que no existan
@@ -75,7 +75,7 @@ void DBManager::prepareFarmDB() {
     // Tabla Terreno
 
     sql = "CREATE TABLE IF NOT EXISTS terrain("
-          "id TEXT PRIMARY KEY,"
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
           "area REAL,"
           "cost REAL"
           ");";
@@ -92,7 +92,7 @@ void DBManager::prepareFarmDB() {
     sql = "CREATE TABLE IF NOT EXISTS crop_terrain("
           "id TEXT PRIMARY KEY,"
           "type INT,"
-          "FOREIGN KEY(id) REFERENCES terrain(id),"
+          "FOREIGN KEY(id) REFERENCES terrain(id) ON DELETE CASCADE,"
           "FOREIGN KEY(type) REFERENCES crop_type(id)"
           ");";
 
@@ -126,7 +126,7 @@ void DBManager::prepareFarmDB() {
     sql = "CREATE TABLE IF NOT EXISTS animal_terrain("
           "id TEXT PRIMARY KEY,"
           "type INT,"
-          "FOREIGN KEY(id) REFERENCES terrain(id),"
+          "FOREIGN KEY(id) REFERENCES terrain(id) ON DELETE CASCADE,"
           "FOREIGN KEY(type) REFERENCES animal_type(id)"
           ");";
 
@@ -146,7 +146,7 @@ void DBManager::prepareFarmDB() {
           "weight REAL,"
           "birth_date TEXT,"
           "terrain INTEGER,"
-          "FOREIGN KEY(terrain) REFERENCES animal_terrain(id),"
+          "FOREIGN KEY(terrain) REFERENCES animal_terrain(id) ON DELETE CASCADE,"
           "CHECK(weight > 0)"
           ")";
 
@@ -186,7 +186,11 @@ void DBManager::connect() {
     }
 
     close_logger();
+}
 
+bool DBManager::isDBOpen() {
+
+    return DB != NULL;
 }
 
 void DBManager::disconnect() {
@@ -198,6 +202,11 @@ void DBManager::disconnect() {
      if (code != SQLITE_OK) {
          add_to_log("Error al cerrar la base de datos. Código: %i", code);
       }
+
+     else {
+
+         DB = NULL;
+     }
 
      close_logger();
 
@@ -551,9 +560,7 @@ vector<Terrain*> DBManager::retrieveTerrains() {
 
     sqlite3_stmt* stmt;
 
-    sql = "SELECT t.id, area, cost, at.type, ct.type FROM terrain t"
-          "LEFT OUTER JOIN crop_terrain ct ON t.id = ct.id"
-          "LEFT OUTER JOIN animal_terrain at ON t.id = at.id;";
+    sql = "SELECT t.id, area, cost, ct.type, at.type FROM terrain t LEFT OUTER JOIN crop_terrain ct ON t.id = ct.id LEFT OUTER JOIN animal_terrain at ON t.id = at.id;";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
@@ -566,18 +573,16 @@ vector<Terrain*> DBManager::retrieveTerrains() {
         Terrain* t;
 
         if (sqlite3_column_type(stmt, 3) != SQLITE_NULL) {
-            int cropType = sqlite3_column_double(stmt, 3);
+            int cropType = sqlite3_column_int(stmt, 3);
             t = new CropTerrain(area, cropType, cost);
 
         } else {
-            int animalType = sqlite3_column_double(stmt, 4);
+            int animalType = sqlite3_column_int(stmt, 4);
             vector<Animal> animals = retriveAnimals(terrain_id);
 
             t = new AnimalTerrain(area, animals, cost, animalType);
 
         }
-
-
 
         terrains.push_back(t);
     }
@@ -640,7 +645,7 @@ bool DBManager::insertTerrain(Terrain &t) {
 
 }
 
-void DBManager::insertAnimalTerrain(AnimalTerrain& t) {
+ bool DBManager::insertAnimalTerrain(AnimalTerrain& t) {
 
     open_logger(log_file_txt);
 
@@ -663,6 +668,7 @@ void DBManager::insertAnimalTerrain(AnimalTerrain& t) {
 
         if (code!=SQLITE_DONE) {
             add_to_log("Error al insertar el terreno de animal. Código: %i", code);
+            success = false;
 
         }
 
@@ -673,10 +679,12 @@ void DBManager::insertAnimalTerrain(AnimalTerrain& t) {
 
     close_logger();
 
+    return success;
+
 
 }
 
-void DBManager::insertCropTerrain(CropTerrain& t) {
+bool DBManager::insertCropTerrain(CropTerrain& t) {
 
     open_logger(log_file_txt);
 
@@ -698,6 +706,7 @@ void DBManager::insertCropTerrain(CropTerrain& t) {
 
         if (code!=SQLITE_DONE) {
             add_to_log("Error al insertar el terreno de cultivo. Código: %i", code);
+            success = false;
 
         }
 
@@ -708,10 +717,33 @@ void DBManager::insertCropTerrain(CropTerrain& t) {
 
     close_logger();
 
+    return success;
+
 }
 
-void DBManager::removeTerrain(int id) {
-    // TODO
+bool DBManager::removeTerrain(int id) {
+
+    open_logger(log_file_txt);
+
+    bool success = true;
+
+    sqlite3_stmt* stmt;
+    string sql = "DELETE FROM terrain WHERE id = ?";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+    sqlite3_bind_int(stmt,1, id);
+
+    int code = sqlite3_step(stmt);
+
+    if (code != SQLITE_DONE) {
+
+        add_to_log("Error al borrar terreno!. Código: %i", code);
+        success = false;
+    }
+
+    close_logger();
+
+    return success;
 }
 
 float DBManager::getTerrainCost(int id) {

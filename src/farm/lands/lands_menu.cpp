@@ -91,10 +91,26 @@ extern "C" void lands_menu() {
         }
 
         t->readFromConsole();
-        register_expense(t->getCost());
-        terrains.push_back(t);
 
-        // TODO registrar en la base de datos
+        bool saved = t->saveInDB(); // Comprueba si hay conexión a la BD y guarda el terreno
+
+        if (saved) {
+
+            printf_c(LIGHT_GREEN_TXT, "Terreno guardado correctamente");
+
+            // Registrar gasto
+            register_expense(t->getCost());
+
+            // Añadir terreno a vector en memoria
+            terrains.push_back(t);
+
+        }
+
+        else {
+
+            printf_c(LIGHT_RED_TXT, "Error al guardar terreno!");
+        }
+
 
     // Vender terreno
 
@@ -112,9 +128,26 @@ extern "C" void lands_menu() {
 
             i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
             int precio = read_int("Precio de venta: ");
-            register_profit(precio);
 
-            // TODO registrar en la base de datos
+            // Borrar terreno de BD y memoria
+
+            Terrain* t = terrains.at(i);
+            bool success = DBManager::removeTerrain(t->getID());
+
+            if (success) {
+
+                delete t; //Liberación de memoria
+                terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
+                register_profit(precio);
+
+                printf_c(LIGHT_GREEN_TXT, "Venta realizada");
+            }
+
+            else {
+
+                printf_c(LIGHT_RED_TXT, "Error al realizar venta!");
+            }
+
 
         } else {
             printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
