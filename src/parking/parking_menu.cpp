@@ -410,16 +410,41 @@ void manage_parking_access() {
             cin >> v;
             cout << v << endl;
 
-            DBManager::insertVehicle(v);
+            if (DBManager::isVehicleRegistered(i_buffer)) {
+                printf_c(LIGHT_RED_TXT, "El vehículo ya está registrado.\n");
 
-            cout << "Finalizado sin errores" << endl;
+            } else {
+                if (DBManager::insertVehicle(v)) {
+                    printf_c(LIGHT_RED_TXT, "Error al insertar el vehículo\n");
+
+                } else {
+                    printf_c(LIGHT_GREEN_TXT, "Finalizado sin errores\n");
+                }
+
+            }
+
+
 
 
         } else if (strcmp(i_buffer, "2") == 0) {
 
             cout << "Matrícula: ";
             scan_str(i_buffer, sizeof(i_buffer));
-            DBManager::deleteVehicle(i_buffer);
+
+            // Checamos primero que el vehículo no esté ya registrado
+            if (DBManager::isVehicleRegistered(i_buffer)) {
+
+                if (DBManager::deleteVehicle(i_buffer)) {
+                    printf_c(LIGHT_RED_TXT, "Error al retirar el vehículo.\n");
+
+                } else {
+                    printf_c(LIGHT_GREEN_TXT, "Finalizado sin errores.\n");
+                }
+
+            } else { // Vehicle not registered
+                printf_c(LIGHT_RED_TXT, "El vehículo no está registrado.\n");
+            }
+
 
         } else if (strcmp(i_buffer, "3") == 0) {
 

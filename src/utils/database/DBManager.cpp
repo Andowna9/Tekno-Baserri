@@ -265,11 +265,13 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
     return Vehicle();
 }
 
-void DBManager::insertVehicle(Vehicle& v) {
+bool DBManager::insertVehicle(Vehicle& v) {
 
     open_logger(log_file_txt);
 
     sqlite3_stmt* stmt;
+    bool success;
+
     string sql = "INSERT INTO vehicle(license_plate, brand, color) VALUES (?, ?, ?)";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
@@ -280,16 +282,24 @@ void DBManager::insertVehicle(Vehicle& v) {
     int code = sqlite3_step(stmt);
     if (code != SQLITE_DONE) {
         add_to_log("Error al introducir vehículo con mátricula %s. Código: %i", v.getLicensePlate().c_str(), code);
+        success = false;
+
+    } else {
+        success = true;
     }
 
     sqlite3_finalize(stmt);
 
     close_logger();
+
+    return success;
 }
 
-void DBManager::deleteVehicle(const char* l_plate) {
+bool DBManager::deleteVehicle(const char* l_plate) {
 
     open_logger(log_file_txt);
+
+    bool success;
 
     sqlite3_stmt* stmt;
     string sql = "DELETE FROM vehicle WHERE license_plate=?";
@@ -300,11 +310,17 @@ void DBManager::deleteVehicle(const char* l_plate) {
     int code = sqlite3_step(stmt);
     if (code != SQLITE_DONE) {
         add_to_log("Error al borrar vehículo con matrícula %s. Código: %i", l_plate, code);
+        success = false;
+
+    } else {
+        success = true;
     }
 
     sqlite3_finalize(stmt);
 
     close_logger();
+
+    return success;
 }
 
 void DBManager::retrieveAllVehicles() {
@@ -645,7 +661,7 @@ bool DBManager::insertTerrain(Terrain &t) {
 
 }
 
- bool DBManager::insertAnimalTerrain(AnimalTerrain& t) {
+bool DBManager::insertAnimalTerrain(AnimalTerrain& t) {
 
     open_logger(log_file_txt);
 
