@@ -22,7 +22,7 @@ void set_log_file(const char* file_name) {
 
     }
 
-    log_file_txt = file_name;
+    log_file_txt = file_name; // TODO hacer un append de la carpeta
 
 }
 
@@ -67,7 +67,7 @@ void read_log(const char* title) {
     int color = LIGHT_MAGENTA_TXT;
     char filler = '-';
 
-    print_title_center(title, size, color, filler); //printf_c(LIGHT_MAGENTA_TXT, "------------- %s --------------\n\n", title);
+    print_title_center(title, size, color, filler);
 
     // content of the log
     char c;
