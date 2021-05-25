@@ -2,8 +2,7 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 
-QT += core
-QT -= gui
+QT = core
 
 # SOURCES C
 
@@ -27,23 +26,19 @@ SOURCES += src/main.cpp \
            src/parking/parking_menu.cpp \
            src/farm/lands/animals/Animal.cpp \
            src/farm/lands/animals/animals_menu.cpp \
-           src/farm/lands/crops/crops.cpp \
            src/farm/lands/Terrain.cpp \
            src/farm/lands/lands_menu.cpp
 
-HEADERS += src/console/console_config.h \
-    src/farm/lands/Terrain.h \
-    src/farm/lands/animals/Animal.h \
-    src/farm/lands/animals/food/food.h \
-    src/farm/lands/animals/food/food_menu.h \
-    src/farm/lands/lands_menu.h \
-    src/farm/management/management_menu.h \
-    src/parking/parking.h \
-    src/parking/parking_menu.h \
-    src/farm/*.h \
-    include/*.h \
-    src/parking/vehicle/Vehicle.h \
-    src/farm/lands/crops/crops.h
+
+HEADERS += src/farm/lands/Terrain.h \
+           src/farm/lands/animals/Animal.h \
+           src/farm/lands/animals/food/food.h \
+           src/farm/lands/animals/food/food_menu.h \
+           src/farm/lands/lands_menu.h \
+           src/farm/management/management_menu.h \
+           src/parking/parking.h \
+           src/parking/parking_menu.h \
+           src/parking/vehicle/Vehicle.h
 
 INCLUDEPATH += include/
 
