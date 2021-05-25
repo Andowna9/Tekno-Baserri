@@ -199,7 +199,6 @@ void print_title_center(const char* title, int size, ANSI_COLOR color, char fill
         for (i = 0; i < size + 2; i++) { // recontamos los dos espacios
             printf_c(color, "%c", filler);
         }
-        printf("\n\n");
 
     } else if (len + 2 >= size) { // Si excede nuestro límite de tamaño de la barra de abajo (si no sumamos esos dos adicionales no dibuja el filler)
         printf_c(color, "%c %s %c", filler, title, filler); // - TITLE - // lo hago así para que si es demasiado pequeño no se quede sin guiones
@@ -213,8 +212,10 @@ void print_title_center(const char* title, int size, ANSI_COLOR color, char fill
         for (i = i + 0; i < size - len; i++) { // hasta el final (31 caracteres)
             printf_c(color, "%c", filler);
         }
-        printf("\n\n");
+
     }
+
+    printf("\n\n");
 
 }
 
