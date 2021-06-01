@@ -96,7 +96,9 @@ extern "C" void lands_menu() {
 
         if (saved) {
 
+            cout << endl;
             printf_c(LIGHT_GREEN_TXT, "Terreno guardado correctamente");
+            cout << endl;
 
             // Registrar gasto
             register_expense(t->getCost());
@@ -140,7 +142,9 @@ extern "C" void lands_menu() {
                 terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
                 register_profit(precio);
 
+                cout << endl;
                 printf_c(LIGHT_GREEN_TXT, "Venta realizada");
+                cout << endl;
             }
 
             else {
@@ -168,6 +172,7 @@ extern "C" void lands_menu() {
     else if(strcmp(input_buffer, "4") == 0) {
 
         animals_menu();
+        continue;
     }
 
 

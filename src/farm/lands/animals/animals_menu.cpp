@@ -116,6 +116,7 @@ void animals_menu() {
     else if (strcmp(input_buffer, "6") == 0) {
 
         animal_food_menu();
+        continue;
     }
 
     else { printf("Opción incorrecta!\n"); }
