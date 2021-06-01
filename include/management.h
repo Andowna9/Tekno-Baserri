@@ -10,6 +10,8 @@
 #ifndef MANAGEMENT_H
 #define MANAGEMENT_H
 
+void reset_ledger();
+
 /**
  * @brief Dado un beneficio, lo registra en el archivo de balance
  *

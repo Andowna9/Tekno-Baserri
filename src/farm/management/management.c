@@ -34,6 +34,13 @@ void write_to_ledger() {
 
 }
 
+void reset_ledger() {
+    values[0] = 0;
+    values[1] = 0;
+
+    write_to_ledger();
+}
+
 // Registra los beneficios
 
 void register_profit(float profit) {
