@@ -8,6 +8,7 @@ extern "C" {
 }
 
 #include <DBManager.h>
+#include <cpp_utils.h>
 #include "Terrain.h"
 
 
@@ -36,7 +37,14 @@ extern "C" void lands_menu() {
 
   DBManager::connect();
 
-  vector<Terrain*> terrains = DBManager::retrieveTerrains();
+  // Vectores auxiliares
+
+  vector<CropTerrain*> crop_terrains;
+  vector<AnimalTerrain*> animal_terrains;
+
+  // Carga de Base de Datos
+
+  vector<Terrain*> terrains = DBManager::retrieveTerrains(crop_terrains, animal_terrains);
 
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
@@ -49,7 +57,14 @@ extern "C" void lands_menu() {
     printf("2. Vender terreno.\n");
     printf("3. Listar terrenos.\n");
 
-    printf("\n4. [Animales] Gestionar animales.\n");
+    printf("\n--Terrenos de cultivo\n");
+    printf("\n4. Listar cultivos.\n");
+    printf("\n5. Registrar cosechs.\n");
+
+    printf("\n--Terrenos de animales\n");
+    printf("\n6. Listar corrales.\n");
+
+    //printf("\n4. [Animales] Gestionar animales.\n");
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -106,6 +121,17 @@ extern "C" void lands_menu() {
             // Añadir terreno a vector en memoria
             terrains.push_back(t);
 
+            if (typeid(t).hash_code() == typeid(CropTerrain).hash_code()) {
+
+                crop_terrains.push_back((CropTerrain*) t);
+            }
+
+            else {
+
+                animal_terrains.push_back((AnimalTerrain*) t);
+            }
+
+
         }
 
         else {
@@ -129,7 +155,7 @@ extern "C" void lands_menu() {
             } while(i <= 0 || i > (int) terrains.size());
 
             i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
-            int precio = read_int("Precio de venta: ");
+            float price = read_float("Precio de venta: ");
 
             // Borrar terreno de BD y memoria
 
@@ -140,7 +166,21 @@ extern "C" void lands_menu() {
 
                 delete t; //Liberación de memoria
                 terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
-                register_profit(precio);
+
+                // Borrado de lista auxiliar
+                // Como se trata de punteros son iguales si apuntan a la misma dirección de memoria
+
+                if (typeid (t).hash_code() == typeid(CropTerrain).hash_code()) {
+
+                    removeVectorElement(crop_terrains, (CropTerrain*)t);
+                }
+
+                else {
+
+                    removeVectorElement(animal_terrains, (AnimalTerrain*)t);
+                }
+
+                register_profit(price);
 
                 cout << endl;
                 printf_c(LIGHT_GREEN_TXT, "Venta realizada");
@@ -169,11 +209,40 @@ extern "C" void lands_menu() {
 
     }
 
+    // Listar cultivos
+
     else if(strcmp(input_buffer, "4") == 0) {
 
-        animals_menu();
-        continue;
+        for (unsigned int i = 0; i < crop_terrains.size(); i++) {
+
+            cout << i + 1 << ". ";
+            crop_terrains[i]->print();
+            cout << endl;
+        }
+
     }
+
+    // TODO Registrar cosechas
+
+    else if (strcmp(input_buffer, "5") == 0) {
+
+    }
+
+    // Listar corrales
+
+    else if (strcmp(input_buffer, "6") == 0) {
+
+        for (unsigned int i = 0; i < animal_terrains.size(); i++) {
+
+            cout << i + 1 << ". ";
+            animal_terrains[i]->print();
+            cout << endl;
+        }
+
+
+    }
+
+    // TODO Métodos para corrales adicionales
 
 
     else { printf("Opción incorrecta!\n"); }

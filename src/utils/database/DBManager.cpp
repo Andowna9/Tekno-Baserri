@@ -569,7 +569,7 @@ string DBManager::getCrop(int id) {
 
 // TERRENOS //////
 
-vector<Terrain*> DBManager::retrieveTerrains() {
+vector<Terrain*> DBManager::retrieveTerrains(vector<CropTerrain*> &crop_terrains, vector<AnimalTerrain*> &animal_terrains) {
 
     vector<Terrain*> terrains;
     string sql;
@@ -589,14 +589,20 @@ vector<Terrain*> DBManager::retrieveTerrains() {
         Terrain* t;
 
         if (sqlite3_column_type(stmt, 3) != SQLITE_NULL) {
+
             int cropType = sqlite3_column_int(stmt, 3);
             t = new CropTerrain(area, cropType, cost);
 
+            crop_terrains.push_back((CropTerrain*) t);
+
         } else {
+
             int animalType = sqlite3_column_int(stmt, 4);
             vector<Animal> animals = retriveAnimals(terrain_id);
 
             t = new AnimalTerrain(area, animals, cost, animalType);
+
+            animal_terrains.push_back((AnimalTerrain*) t);
 
         }
 

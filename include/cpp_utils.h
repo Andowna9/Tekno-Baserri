@@ -2,6 +2,8 @@
 #define CPP_UTILS_H
 
 #include <iostream>
+#include <algorithm>
+#include <vector>
 #include <map>
 using namespace std;
 
@@ -52,6 +54,12 @@ K scanMapKey(map<K,V> m) {
 
     return key;
 
+}
+
+template<class T>
+void removeVectorElement(vector<T> &v, T value) {
+
+    v.erase(remove(v.begin(), v.end(), value), v.end());
 }
 
 #endif // CPP_UTILS_H

@@ -55,7 +55,7 @@ class DBManager {
         static void removeAnimal(int id);
         static int getAnimalAge(int id);
         static map<int, string> getAvailableTypes(TypeTable table);
-        static vector<Terrain*> retrieveTerrains();
+        static vector<Terrain*> retrieveTerrains(vector<CropTerrain*> &crop_terrains, vector<AnimalTerrain*> &animal_terrains);
 
         static bool insertTerrain(Terrain& t);
         static bool insertAnimalTerrain(AnimalTerrain& t);
