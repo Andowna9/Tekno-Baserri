@@ -108,14 +108,24 @@ void AnimalTerrain::addAnimal(Animal a) {
     this->animals.push_back(a);
 }
 
-vector<Animal> AnimalTerrain::getAnimals() {
+vector<Animal> AnimalTerrain::getAnimals() const {
 
     return this->animals;
 }
 
-bool AnimalTerrain::isEmpty() {
+bool AnimalTerrain::isEmpty() const {
 
     return this->animals.size() == 0;
+}
+
+int AnimalTerrain::getNumAnimals() const {
+
+    return this->animals.size();
+}
+
+string AnimalTerrain::getAnimalType() const {
+
+    return this->animal_types[animal_type_id];
 }
 
 

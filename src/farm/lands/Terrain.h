@@ -55,10 +55,12 @@ class AnimalTerrain: public Terrain {
         static void loadTypes(map<int, string> types_map);
 
         int getAnimalTypeID() const;
+        string getAnimalType() const;
 
         void addAnimal(Animal a);
-        vector<Animal> getAnimals();
-        bool isEmpty();
+        vector<Animal> getAnimals() const;
+        int getNumAnimals() const;
+        bool isEmpty() const;
 
         void readFromConsole();
         bool saveInDB();

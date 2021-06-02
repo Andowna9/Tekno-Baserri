@@ -21,45 +21,56 @@ static void clear_and_title(const char* title) {
 
 static void show_terrains(const vector<Terrain*> &terrains) {
 
-    clear_and_title("TERRENOS");
 
-    // Mostrar terrenos
 
-    for(int i = 0; i < (int) terrains.size(); i++) {
+     clear_and_title("TERRENOS");
 
-        Terrain* terr = terrains[i];
-        cout << i + 1 << ". ";
-        terr->print();
-        cout << endl;
-    }
+     // Mostrar terrenos
+
+     for(int i = 0; i < (int) terrains.size(); i++) {
+
+          Terrain* terr = terrains[i];
+          cout << i + 1 << ". ";
+          terr->print();
+          cout << endl;
+      }
+
+
+
 }
 
 
 static void show_crop_terrains(const vector<CropTerrain*> &crop_terrains) {
 
-    clear_and_title("CULTIVOS");
 
-    for (unsigned int i = 0; i < crop_terrains.size(); i++) {
 
-        cout << "Cultivo " << i + 1 << endl;
-        cout << "-------------------" << endl;
-        crop_terrains[i]->printContent();
-        cout << endl;
-    }
+     clear_and_title("CULTIVOS");
+
+     for (unsigned int i = 0; i < crop_terrains.size(); i++) {
+
+            cout << "Cultivo " << i + 1 << endl;
+            cout << "-------------------" << endl;
+            crop_terrains[i]->printContent();
+            cout << endl;
+      }
+
+
+
 
 }
 
 static void show_animal_terrains(const vector<AnimalTerrain*> &animal_terrains) {
 
-    clear_and_title("CORRALES");
 
-    for (unsigned int i = 0; i < animal_terrains.size(); i++) {
+     clear_and_title("CORRALES");
 
-        cout << "Corral " << i + 1 << endl;
-        cout << "-------------------" << endl;
-        animal_terrains[i]->printContent();
-        cout << endl;
-    }
+     for (unsigned int i = 0; i < animal_terrains.size(); i++) {
+
+          cout << "Corral " << i + 1 << endl;
+          cout << "-------------------" << endl;
+          animal_terrains[i]->printContent();
+          cout << endl;
+     }
 
 }
 
@@ -74,8 +85,28 @@ static void animal_terrain_management(AnimalTerrain* at) {
         clear_screen();
         print_title_center("GESTIÓN DE CORRAL", 30,  LIGHT_CYAN_TXT, '-');
 
-        printf("1. Añadir animal.\n");
-        printf("2. Listar detalles de animales.\n");
+        // Imprimimos el corral vacío o con animales
+
+        cout << "[Corral de " << at->getAnimalType() << "s]" << endl;
+        cout << endl;
+
+        if (at->isEmpty()) {
+
+            cout << "+-------+" << endl;
+            cout << "| Vacío |" << endl;
+            cout << "+-------+" << endl;
+        }
+
+        else {
+
+            cout << "x" << at->getNumAnimals() << " animales" << endl;
+
+        }
+
+        printf("\n1. Añadir animal.\n");
+        printf("2. Retirar animal\n");
+        printf("3. Listar detalles de animales.\n");
+
 
         printf("\nIntroduce 'v' para volver.\n\n");
 
@@ -111,15 +142,21 @@ static void animal_terrain_management(AnimalTerrain* at) {
             QDate date(y, m, d);
             string birth_date = date.toString(Qt::ISODate).toStdString();
 
-            DBManager::insertAnimal(a, birth_date);
+            DBManager::insertAnimal(a, birth_date, at->getID());
 
             at->addAnimal(a);
 
         }
 
-        // Listar animales con detalle
+        // Retirar animal
 
         else if (strcmp(i_buffer, "2") == 0) {
+
+        }
+
+        // Listar animales con detalle
+
+        else if (strcmp(i_buffer, "3") == 0) {
 
 
             if (at->isEmpty()) {
@@ -172,17 +209,45 @@ extern "C" void lands_menu() {
     clear_screen();
 
     print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
+
+    // Terrenos genérico
+
     printf("1. Comprar terreno.\n");
     printf("2. Vender terreno.\n");
     printf("3. Listar terrenos.\n");
 
-    printf("\n--Terrenos de cultivo\n");
-    printf("\n4. Listar cultivos.\n");
-    printf("5. Registrar cosechas.\n");
+    // Terreno de cultivo
 
-    printf("\n--Terrenos de animales\n");
-    printf("\n6. Listar corrales.\n");
-    printf("7. Gestionar corral.\n");
+    printf("\n--Terrenos de cultivo\n\n");
+
+    if (crop_terrains.size() > 0) {
+
+        printf("4. Listar cultivos.\n");
+        printf("5. Registrar cosechas.\n");
+
+    }
+
+    else {
+
+        printf_c(LIGHT_CYAN_TXT, "De momento no hay ningún cultivo.\n");
+    }
+
+    // Terreno de animales
+
+    printf("\n--Terrenos de animales\n\n");
+
+    if (animal_terrains.size() > 0) {
+
+        printf("6. Listar corrales.\n");
+        printf("7. Gestionar corral.\n");
+
+    }
+
+    else {
+
+        printf_c(LIGHT_CYAN_TXT, "De momento no hay ningún corral.\n");
+
+    }
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -318,26 +383,32 @@ extern "C" void lands_menu() {
 
 
     } else if(strcmp(input_buffer,"3") == 0){
+
         if (terrains.size() > 0) {
 
            show_terrains(terrains);
 
-        } else {
-            printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
         }
+
+         else {
+
+              printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
+
+         }
 
     }
 
     // Listar cultivos
 
-    else if(strcmp(input_buffer, "4") == 0) {
+    else if(strcmp(input_buffer, "4") == 0 && crop_terrains.size() > 0) {
 
-        show_crop_terrains(crop_terrains);
+
+         show_crop_terrains(crop_terrains);
     }
 
     // Registrar cosechas
 
-    else if (strcmp(input_buffer, "5") == 0) {
+    else if (strcmp(input_buffer, "5") == 0 && crop_terrains.size() > 0) {
 
         // Los productos cosechados pueden venderse o añadirse como mida para animales
 
@@ -347,7 +418,7 @@ extern "C" void lands_menu() {
 
         try {
 
-            CropTerrain* ct = crop_terrains.at(index);
+            CropTerrain* ct = crop_terrains.at(index - 1);
 
             // TODO Guardar cantidad
         }
@@ -361,15 +432,16 @@ extern "C" void lands_menu() {
 
     // Listar corrales
 
-    else if (strcmp(input_buffer, "6") == 0) {
+    else if (strcmp(input_buffer, "6") == 0 && animal_terrains.size() > 0) {
 
-        show_animal_terrains(animal_terrains);
+
+         show_animal_terrains(animal_terrains);
 
     }
 
     // Gestionar corral
 
-    else if (strcmp(input_buffer, "7") == 0) {
+    else if (strcmp(input_buffer, "7") == 0 && animal_terrains.size() > 0) {
 
         show_animal_terrains(animal_terrains);
 
@@ -377,7 +449,7 @@ extern "C" void lands_menu() {
 
         try {
 
-            AnimalTerrain* at = animal_terrains.at(index);
+            AnimalTerrain* at = animal_terrains.at(index - 1);
 
             // Acceso a pequeño menú
 

@@ -51,7 +51,7 @@ class DBManager {
 
         // Granja
 
-        static void insertAnimal(Animal& a, string birth_date);
+        static void insertAnimal(Animal& a, string birth_date, int animal_terrain_id);
         static void removeAnimal(int id);
         static int getAnimalAge(int id);
         static map<int, string> getAvailableTypes(TypeTable table);

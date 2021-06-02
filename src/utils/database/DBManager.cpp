@@ -373,7 +373,7 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
 
     vector<Animal> animals;
     sqlite3_stmt* stmt;
-    string sql = "SELECT id, name, weight, type WHERE terrain=?";
+    string sql = "SELECT id, name, weight FROM animal WHERE terrain=?";
     int code = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
     sqlite3_bind_int(stmt, 1, terrain_id);
     if (code != SQLITE_OK) {
@@ -397,19 +397,20 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
     return animals;
 }
 
-void DBManager::insertAnimal(Animal& a, string birth_date) {
+void DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id) {
 
     open_logger(log_file_txt);
 
     sqlite3_stmt* stmt;
 
-    string sql = "INSERT INTO animal(name, weight, birth_date) VALUES (?, ?, DATE(?))";
+    string sql = "INSERT INTO animal(name, weight, birth_date, terrain) VALUES (?, ?, DATE(?), ?)";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
     sqlite3_bind_text(stmt, 1, a.getName().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_double(stmt, 2, a.getWeight());
     sqlite3_bind_text(stmt, 3, birth_date.c_str(),-1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, animal_terrain_id);
 
     int code = sqlite3_step(stmt);
 
