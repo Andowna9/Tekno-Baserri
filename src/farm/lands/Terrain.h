@@ -57,6 +57,8 @@ class AnimalTerrain: public Terrain {
         int getAnimalTypeID() const;
 
         void addAnimal(Animal a);
+        vector<Animal> getAnimals();
+        bool isEmpty();
 
         void readFromConsole();
         bool saveInDB();

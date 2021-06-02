@@ -4,10 +4,10 @@ extern "C" {
 #include <console_config.h>
 #include <std_utils.h>
 #include "management.h"
-#include "animals/animals_menu.h"
 }
 
 #include <DBManager.h>
+#include <QDate>
 #include <cpp_utils.h>
 #include "Terrain.h"
 
@@ -17,7 +17,7 @@ static void clear_and_title(const char* title) {
     print_title_center(title, 24, LIGHT_CYAN_TXT, '-');
 }
 
-// Métodos para visualizar los distintos tipos de terreno
+// Funciones para visualizar los distintos tipos de terreno
 
 static void show_terrains(const vector<Terrain*> &terrains) {
 
@@ -63,6 +63,94 @@ static void show_animal_terrains(const vector<AnimalTerrain*> &animal_terrains) 
 
 }
 
+// Menú para la gestión de un corral dado
+
+static void animal_terrain_management(AnimalTerrain* at) {
+
+    char i_buffer [DEFAULT_BUFFER_SIZE];
+
+    while (1) {
+
+        clear_screen();
+        print_title_center("GESTIÓN DE CORRAL", 30,  LIGHT_CYAN_TXT, '-');
+
+        printf("1. Añadir animal.\n");
+        printf("2. Listar detalles de animales.\n");
+
+        printf("\nIntroduce 'v' para volver.\n\n");
+
+        printf("Input: ");
+        scan_str(i_buffer, sizeof(i_buffer));
+
+        putchar('\n');
+
+        if (strcmp(i_buffer, "v") == 0 || strcmp(i_buffer, "V") == 0) {
+
+            break;
+        }
+
+        // Añadir animal
+
+        else if (strcmp(i_buffer, "1") == 0) {
+
+            Animal a;
+            cin >> a;
+
+            unsigned int y;
+            unsigned int m;
+            unsigned int d;
+
+            int n;
+
+            do {
+                cout << "Fecha de nacimiento (Formato aaaa-mm-dd): ";
+                n = read_format("%4u-%2u-%2u", &y, &m, &d);
+
+            } while(n != 3);
+
+            QDate date(y, m, d);
+            string birth_date = date.toString(Qt::ISODate).toStdString();
+
+            DBManager::insertAnimal(a, birth_date);
+
+            at->addAnimal(a);
+
+        }
+
+        // Listar animales con detalle
+
+        else if (strcmp(i_buffer, "2") == 0) {
+
+
+            if (at->isEmpty()) {
+
+                cout << "Lista de animales vacía!" << endl;
+            }
+
+            else {
+
+                for (const Animal &a: at->getAnimals()) {
+
+                    cout << a;
+                    cout<< "Edad " << DBManager::getAnimalAge(a.getID()) << endl;
+
+                }
+
+            }
+
+
+        }
+
+        else { printf("La opción introducida no existe!\n"); }
+
+        putchar('\n');
+        press_to_continue();
+
+    }
+
+
+}
+
 
 extern "C" void lands_menu() {
 
@@ -95,8 +183,6 @@ extern "C" void lands_menu() {
     printf("\n--Terrenos de animales\n");
     printf("\n6. Listar corrales.\n");
     printf("7. Gestionar corral.\n");
-
-    //printf("\n4. [Animales] Gestionar animales.\n");
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -249,9 +335,27 @@ extern "C" void lands_menu() {
         show_crop_terrains(crop_terrains);
     }
 
-    // TODO Registrar cosechas
+    // Registrar cosechas
 
     else if (strcmp(input_buffer, "5") == 0) {
+
+        // Los productos cosechados pueden venderse o añadirse como mida para animales
+
+        show_crop_terrains(crop_terrains);
+
+        int index = read_int("Número de cultivo: ");
+
+        try {
+
+            CropTerrain* ct = crop_terrains.at(index);
+
+            // TODO Guardar cantidad
+        }
+
+        catch(out_of_range &oor) {
+
+            printf_c(LIGHT_RED_TXT, "El número de cultivo no existe!\n");
+        }
 
     }
 
@@ -263,7 +367,32 @@ extern "C" void lands_menu() {
 
     }
 
-    // TODO Métodos para corrales adicionales
+    // Gestionar corral
+
+    else if (strcmp(input_buffer, "7") == 0) {
+
+        show_animal_terrains(animal_terrains);
+
+        int index = read_int("Número de corral: ");
+
+        try {
+
+            AnimalTerrain* at = animal_terrains.at(index);
+
+            // Acceso a pequeño menú
+
+            animal_terrain_management(at);
+
+            continue; // Empieza el bucle de nuevo para evitar la espera de "press to continue"
+        }
+
+        catch (out_of_range &oor) {
+
+            printf_c(LIGHT_RED_TXT, "El número de corral no es válido!\n");
+        }
+
+
+    }
 
 
     else { printf("Opción incorrecta!\n"); }

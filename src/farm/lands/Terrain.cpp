@@ -105,7 +105,17 @@ void AnimalTerrain::print() {
 
 void AnimalTerrain::addAnimal(Animal a) {
 
-    animals.push_back(a);
+    this->animals.push_back(a);
+}
+
+vector<Animal> AnimalTerrain::getAnimals() {
+
+    return this->animals;
+}
+
+bool AnimalTerrain::isEmpty() {
+
+    return this->animals.size() == 0;
 }
 
 

@@ -25,7 +25,6 @@ SOURCES += src/main.cpp \
            src/utils/database/DBManager.cpp \
            src/parking/parking_menu.cpp \
            src/farm/lands/animals/Animal.cpp \
-           src/farm/lands/animals/animals_menu.cpp \
            src/farm/lands/Terrain.cpp \
            src/farm/lands/lands_menu.cpp
 
