@@ -4,6 +4,7 @@ extern "C" {
 #include <console_config.h>
 #include <std_utils.h>
 #include "management.h"
+#include "animals/food/food_menu.h"
 }
 
 #include <DBManager.h>
@@ -22,7 +23,6 @@ static void clear_and_title(const char* title) {
 static void show_terrains(const vector<Terrain*> &terrains) {
 
 
-
      clear_and_title("TERRENOS");
 
      // Mostrar terrenos
@@ -35,13 +35,10 @@ static void show_terrains(const vector<Terrain*> &terrains) {
           cout << endl;
       }
 
-
-
 }
 
 
 static void show_crop_terrains(const vector<CropTerrain*> &crop_terrains) {
-
 
 
      clear_and_title("CULTIVOS");
@@ -53,8 +50,6 @@ static void show_crop_terrains(const vector<CropTerrain*> &crop_terrains) {
             crop_terrains[i]->printContent();
             cout << endl;
       }
-
-
 
 
 }
@@ -148,7 +143,7 @@ static void animal_terrain_management(AnimalTerrain* at) {
 
         }
 
-        // Retirar animal
+        // TODO Retirar animal
 
         else if (strcmp(i_buffer, "2") == 0) {
 
@@ -249,6 +244,10 @@ extern "C" void lands_menu() {
 
     }
 
+    // Menú de comida de animales
+
+    printf_c(LIGHT_CYAN_TXT, "\n[8. Comida de Animales]\n");
+
 
     printf("\nIntroduce 'v' para volver.\n\n");
 
@@ -304,7 +303,7 @@ extern "C" void lands_menu() {
             // Añadir terreno a vector en memoria
             terrains.push_back(t);
 
-            if (typeid(t).hash_code() == typeid(CropTerrain).hash_code()) {
+            if (typeid(*t).hash_code() == typeid(CropTerrain).hash_code()) {
 
                 crop_terrains.push_back((CropTerrain*) t);
             }
@@ -348,13 +347,12 @@ extern "C" void lands_menu() {
 
             if (success) {
 
-                delete t; //Liberación de memoria
-                terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
 
                 // Borrado de lista auxiliar
+
                 // Como se trata de punteros son iguales si apuntan a la misma dirección de memoria
 
-                if (typeid (t).hash_code() == typeid(CropTerrain).hash_code()) {
+                if (typeid(*t).hash_code() == typeid(CropTerrain).hash_code()) {
 
                     removeVectorElement(crop_terrains, (CropTerrain*)t);
                 }
@@ -363,6 +361,12 @@ extern "C" void lands_menu() {
 
                     removeVectorElement(animal_terrains, (AnimalTerrain*)t);
                 }
+
+
+                // Borrado de lista principal
+
+                delete t; //Liberación de memoria dinámica
+                terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
 
                 register_profit(price);
 
@@ -415,12 +419,18 @@ extern "C" void lands_menu() {
         show_crop_terrains(crop_terrains);
 
         int index = read_int("Número de cultivo: ");
+        putchar('\n');
 
         try {
 
             CropTerrain* ct = crop_terrains.at(index - 1);
 
-            // TODO Guardar cantidad
+            printf_c(LIGHT_CYAN_TXT, "Cosechando %ss ...\n\n", ct->getCropType().c_str());
+
+            float amount = read_int("Cantidad (kg): ");
+
+            // TODO Dos opciones: Vender o añadir a lista de comidas en food.c
+
         }
 
         catch(out_of_range &oor) {
@@ -454,7 +464,6 @@ extern "C" void lands_menu() {
             // Acceso a pequeño menú
 
             animal_terrain_management(at);
-
             continue; // Empieza el bucle de nuevo para evitar la espera de "press to continue"
         }
 
@@ -464,6 +473,12 @@ extern "C" void lands_menu() {
         }
 
 
+    }
+
+    else if (strcmp(input_buffer, "8") == 0) {
+
+        animal_food_menu();
+        continue;
     }
 
 

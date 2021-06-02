@@ -136,8 +136,13 @@ void CropTerrain::loadTypes(map<int, string> map) {
     crop_types = map;
 }
 
-int CropTerrain::getCropTypeID() {
+int CropTerrain::getCropTypeID() const {
     return crop_type_id;
+}
+
+string CropTerrain::getCropType() const {
+
+    return crop_types[crop_type_id];
 }
 
 CropTerrain::CropTerrain(float area, float cost): Terrain(area, cost) {}

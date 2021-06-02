@@ -85,7 +85,8 @@ class CropTerrain: public Terrain {
 
         static void loadTypes(map<int, string> types_map);
 
-        int getCropTypeID();
+        int getCropTypeID() const;
+        string getCropType() const;
 
         void readFromConsole();
         bool saveInDB();
