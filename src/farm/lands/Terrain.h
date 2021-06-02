@@ -32,6 +32,7 @@ class Terrain {
 
         virtual void readFromConsole();
         virtual bool saveInDB() = 0;
+
         virtual void print();
 };
 
@@ -55,8 +56,12 @@ class AnimalTerrain: public Terrain {
 
         int getAnimalTypeID() const;
 
+        void addAnimal(Animal a);
+
         void readFromConsole();
         bool saveInDB();
+
+        void printContent();
         void print();
 
 };
@@ -80,6 +85,8 @@ class CropTerrain: public Terrain {
 
         void readFromConsole();
         bool saveInDB();
+
+        void printContent();
         void print();
 
 };

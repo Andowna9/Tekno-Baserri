@@ -12,14 +12,16 @@ extern "C" {
 #include "Terrain.h"
 
 
-static void clear_and_title() {
+static void clear_and_title(const char* title) {
     clear_screen(); // Limpiamos pantalla
-    print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
+    print_title_center(title, 24, LIGHT_CYAN_TXT, '-');
 }
 
-static void clear_and_redraw(vector<Terrain*> terrains) {
+// Métodos para visualizar los distintos tipos de terreno
 
-    clear_and_title();
+static void show_terrains(const vector<Terrain*> &terrains) {
+
+    clear_and_title("TERRENOS");
 
     // Mostrar terrenos
 
@@ -30,6 +32,35 @@ static void clear_and_redraw(vector<Terrain*> terrains) {
         terr->print();
         cout << endl;
     }
+}
+
+
+static void show_crop_terrains(const vector<CropTerrain*> &crop_terrains) {
+
+    clear_and_title("CULTIVOS");
+
+    for (unsigned int i = 0; i < crop_terrains.size(); i++) {
+
+        cout << "Cultivo " << i + 1 << endl;
+        cout << "-------------------" << endl;
+        crop_terrains[i]->printContent();
+        cout << endl;
+    }
+
+}
+
+static void show_animal_terrains(const vector<AnimalTerrain*> &animal_terrains) {
+
+    clear_and_title("CORRALES");
+
+    for (unsigned int i = 0; i < animal_terrains.size(); i++) {
+
+        cout << "Corral " << i + 1 << endl;
+        cout << "-------------------" << endl;
+        animal_terrains[i]->printContent();
+        cout << endl;
+    }
+
 }
 
 
@@ -59,10 +90,11 @@ extern "C" void lands_menu() {
 
     printf("\n--Terrenos de cultivo\n");
     printf("\n4. Listar cultivos.\n");
-    printf("\n5. Registrar cosechs.\n");
+    printf("5. Registrar cosechas.\n");
 
     printf("\n--Terrenos de animales\n");
     printf("\n6. Listar corrales.\n");
+    printf("7. Gestionar corral.\n");
 
     //printf("\n4. [Animales] Gestionar animales.\n");
 
@@ -146,7 +178,8 @@ extern "C" void lands_menu() {
 
       // Limpiamos
         if (terrains.size() > 0) {
-            clear_and_redraw(terrains);
+
+            show_terrains(terrains);
 
             // Preguntamos
             int i;
@@ -201,7 +234,7 @@ extern "C" void lands_menu() {
     } else if(strcmp(input_buffer,"3") == 0){
         if (terrains.size() > 0) {
 
-            clear_and_redraw(terrains);
+           show_terrains(terrains);
 
         } else {
             printf_c(LIGHT_RED_TXT, "No hay terrenos registrados.\n");
@@ -213,13 +246,7 @@ extern "C" void lands_menu() {
 
     else if(strcmp(input_buffer, "4") == 0) {
 
-        for (unsigned int i = 0; i < crop_terrains.size(); i++) {
-
-            cout << i + 1 << ". ";
-            crop_terrains[i]->print();
-            cout << endl;
-        }
-
+        show_crop_terrains(crop_terrains);
     }
 
     // TODO Registrar cosechas
@@ -232,13 +259,7 @@ extern "C" void lands_menu() {
 
     else if (strcmp(input_buffer, "6") == 0) {
 
-        for (unsigned int i = 0; i < animal_terrains.size(); i++) {
-
-            cout << i + 1 << ". ";
-            animal_terrains[i]->print();
-            cout << endl;
-        }
-
+        show_animal_terrains(animal_terrains);
 
     }
 

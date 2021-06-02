@@ -39,8 +39,8 @@ void Terrain::readFromConsole() {
 
 void Terrain::print() {
 
-    cout << "Área: " << area << endl;
-    cout << "Coste de compra: " << cost << endl;
+    cout << "Área: " << area << " hectáreas" << endl;
+    cout << "Coste de compra: " << cost << " €" << endl;
 
 }
 
@@ -89,14 +89,23 @@ bool AnimalTerrain::saveInDB() {
     return false;
 }
 
+void AnimalTerrain::printContent() {
+
+    cout << "Especie: " << animal_types.at(animal_type_id) << endl;
+    cout << "Número de animales: " << animals.size() << endl;
+}
+
 void AnimalTerrain::print() {
 
-
     cout << "TERRENO DE ANIMALES" << endl;
-    cout << "-------------------" << endl;
+    cout << "----------------------" << endl;
     Terrain::print();
-    cout << "Animal: " << animal_types.at(animal_type_id) << endl;
 
+}
+
+void AnimalTerrain::addAnimal(Animal a) {
+
+    animals.push_back(a);
 }
 
 
@@ -144,12 +153,17 @@ bool CropTerrain::saveInDB() {
     return false;
 }
 
+void CropTerrain::printContent() {
+
+    cout << "Producto: " << crop_types.at(crop_type_id) << endl;
+
+}
+
 void CropTerrain::print() {
 
     cout << "TERRENO DE CULTIVO" << endl;
     cout << "----------------------" << endl;
     Terrain::print();
-    cout << "Cultivo: " << crop_types.at(crop_type_id) << endl;
 }
 
 
