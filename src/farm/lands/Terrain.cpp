@@ -30,11 +30,9 @@ float Terrain::getCost() const {
 
 void Terrain::readFromConsole() {
 
-    cout << "Área (hectáreas): ";
-    readVar(cin, this->area);
+    readVar(cin, this->area, "Área (hectáreas): ");
 
-    cout << "Precio Pagado (euros): ";
-    readVar(cin, this->cost);
+    readVar(cin, this->cost, "Precio Pagado (euros): ");
 }
 
 void Terrain::print() {

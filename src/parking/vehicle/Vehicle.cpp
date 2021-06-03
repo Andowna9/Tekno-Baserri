@@ -89,17 +89,13 @@ istream & operator >> (istream &in, Vehicle &v) {
     //cout << "------------------" << endl << endl;
     print_title_center("", 33, RESET_COLOR, '-');
 
-    cout << "Matrícula del vehículo: ";
-    readVar(in, v.l_plate);
+    readVar(in, v.l_plate, "Matrícula del vehículo: ");
 
-    cout << "Color del vehículo: ";
-    readVar(in, v.color);
+    readVar(in, v.color, "Color del vehículo: ");
 
-    cout << "Marca del vehículo: ";
-    readVar(in,  v.brand);
+    readVar(in,  v.brand, "Marca del vehículo: ");
 
-    cout << "Altura del vehículo: ";
-    readVar(in, v.height);
+    readVar(in, v.height, "Altura del vehículo: ");
 
     return in;
 }

@@ -10,11 +10,32 @@ using namespace std;
 // Recibe un stream de entrada y una referencia a un tipo genérico donde almacenar la lectura y posteriormente limpiar el buffer
 
 template<class T>
-void readVar(istream& in, T& var) {
+void readVar(istream& in, T& var, const char* message) {
 
-    in >> var;
-    in.clear(); // Reinicia el estado del stream para que no siga buscando match
-    in.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora todos los caracteres hasta el '\n'
+    while (true) {
+
+        cout << message;
+
+        // Formato correcto
+
+        if (in >> var) {
+
+            break;
+        }
+
+        // Formato incorrecto
+
+        else {
+
+
+            in.clear(); // Reinicia el estado del stream a uno correcto
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora todos los caracteres hasta el '\n'
+
+        }
+
+    }
+
+    in.ignore(numeric_limits<streamsize>::max(), '\n'); // Se eliman caracteres residuales tras input correcto
 }
 
 template<class K, class V>
@@ -35,8 +56,7 @@ K scanMapKey(map<K,V> m) {
 
     while(!success) {
 
-        cout << "Input: ";
-        readVar(cin, key);
+        readVar(cin, key, "Input: ");
 
         if (m.find(key) == m.end()) {
 

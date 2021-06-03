@@ -51,11 +51,10 @@ ostream & operator << (ostream &out, const Animal &a) {
 
 istream & operator >> (istream &in, Animal &a) {
 
-    cout << "Nombre propio: ";
-    readVar(in, a.name);
 
-    cout << "Peso: ";
-    readVar(in, a.weight);
+    readVar(in, a.name, "Nombre propio: ");
+
+    readVar(in, a.weight, "Peso: ");
 
     return in;
 
