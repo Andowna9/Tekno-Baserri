@@ -12,8 +12,6 @@ void print_food_with_clear() {
 
 void animal_food_menu() {
 
-  read_food_types();
-
   char input_buffer [DEFAULT_BUFFER_SIZE]; // Buffer de lectura por defecto
 
   while (1) {
@@ -45,8 +43,6 @@ void animal_food_menu() {
 
     if (strcmp(input_buffer, "v") == 0) {
 
-      free_animal_food_memory();
-
       break;
 
     }
@@ -57,11 +53,16 @@ void animal_food_menu() {
 
          print_food_with_clear(); // Limpiamos pantalla
 
-         Animal_Food food;
          printf_c(LIGHT_MAGENTA_TXT, "\n--- NUEVO ALIMENTO\n\n");
-         food.name = read_str("Nombre: ");
-         food.price = read_float("\nPrecio(€/kg): ");
-         register_animal_food(food);
+
+         char name [DEFAULT_BUFFER_SIZE];
+         printf("Nombre: ");
+         scan_str(name, sizeof(name));
+
+         float price = read_float("\nPrecio(€/kg): ");
+
+         register_animal_food(name, price, 0);
+
          printf_c(LIGHT_GREEN_TXT, "\nComida registrada correctamente\n");
 
     }
@@ -127,7 +128,9 @@ void animal_food_menu() {
       int not_empty = get_food_count();
       if (not_empty) {
 
-          print_food_with_clear();
+          clear_screen();
+          printf_c(LIGHT_CYAN_TXT, "------- ALIMENTOS DE TERCEROS -------\n\n");
+          check_third_party_food();
           printf_c(LIGHT_YELLOW_TXT, "[ ID: 0 - Cancelar operación. ]\n\n");
           int id = read_int("ID: ");
 
@@ -137,13 +140,14 @@ void animal_food_menu() {
           } else { // Operación no cancelada
               Animal_Food* ptr = get_food_by_id(id);
 
-              if (ptr == NULL) {
-                  printf_c(LIGHT_RED_TXT, "\nNo existe el id proporcionado!\n");
+              // Comprobamos si es un alimento que no existe o uno que no tiene precio (no se puede comprar)
+              if (ptr == NULL || ptr->price == 0) {
+                  printf_c(LIGHT_RED_TXT, "\nEl id proporcionado es incorrecto!\n");
               }
 
               else {
                   float amount = read_float("\nCantidad(kg): ");
-                  buy_animal_food(id, amount);
+                  add_animal_food(id, amount);
                   printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
 
               }

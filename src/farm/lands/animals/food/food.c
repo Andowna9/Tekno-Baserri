@@ -83,7 +83,17 @@ Animal_Food* copy_arr() {
 void print_food(Animal_Food food, int index) {
 
     printf_c(BOLD,"[ ID: %d - %s ]\n", index + 1, food.name);
-    printf("Precio: %.2f €/kg\n", food.price);
+
+    if (food.price > 0) {
+
+        printf("Precio: %.2f €/kg\n", food.price);
+
+    }
+
+    else {
+
+        printf_c(LIGHT_CYAN_TXT, "~Producto propio~\n");
+    }
 
     if (food.amount > 0) {
 
@@ -93,6 +103,7 @@ void print_food(Animal_Food food, int index) {
     putchar('\n');
 
 }
+
 
 // Se obtiene el alimento por id (identificación)
 
@@ -133,13 +144,14 @@ int get_food_count() {
 
 // Registra comida para animales
 
-void register_animal_food(Animal_Food food) {
-
-    food.amount = 0;
+void register_animal_food(const char* name, float price, float init_amount) {
 
     Animal_Food* food_ptr = (Animal_Food*) malloc(sizeof(Animal_Food));
 
-    *food_ptr = food;
+    food_ptr->amount = init_amount;
+    food_ptr->price = price;
+    food_ptr->name = (char*) malloc(sizeof(char) * (strlen(name) + 1));
+    strcpy(food_ptr->name, name);
 
     // Guardado en memoria y fichero
 
@@ -189,9 +201,28 @@ Animal_Food* get_food_by_id(int id) {
     return get_elem(food_arr, id - 1);
 }
 
+// Devuelve el id de la comida con el nombre dado
+
+int find_food_id_by_name(const char* name) {
+
+    int i;
+
+    for (i = 0; i < food_arr.size; i++) {
+
+        Animal_Food* food = get_food(i);
+
+        if (strcmp(food->name, name) == 0) {
+
+            return i + 1;
+        }
+    }
+
+    return -1;
+}
+
 // Compra de comida, proporcionando cantidad en kg
 
-void buy_animal_food(int id, float amount) {
+void add_animal_food(int id, float amount) {
 
    Animal_Food* ptr = get_food_by_id(id);
 
@@ -201,7 +232,10 @@ void buy_animal_food(int id, float amount) {
 
    write_food_types();
 
-   register_expense(amount * ptr->price);
+   if (ptr->price > 0) {
+
+       register_expense(amount * ptr->price);
+   }
 
 }
 
@@ -215,6 +249,23 @@ void check_animal_food() {
 
         print_food(food, i);
     }
+}
+
+void check_third_party_food() {
+
+    int i;
+
+    for (i = 0; i < food_arr.size; i++) {
+
+        Animal_Food food = *get_food(i);
+
+        if (food.price > 0) {
+
+            print_food(food, i);
+
+        }
+    }
+
 }
 
 

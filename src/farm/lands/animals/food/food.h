@@ -19,12 +19,15 @@ int order_by_name(const void* pa, const void* pb);
 
 void check_ordered_food(int (*order_criterion)(const void* a, const void* b), bool ascending_order);
 
-void register_animal_food(Animal_Food food);
+int find_food_id_by_name(const char* name);
+
+void register_animal_food(const char* name, float price, float init_amount);
 void delete_animal_food(int id);
 void check_animal_food();
+void check_third_party_food();
 int get_food_count();
 Animal_Food* get_food_by_id(int id);
-void buy_animal_food(int id, float amount);
+void add_animal_food(int id, float amount);
 
 void read_food_types();
 

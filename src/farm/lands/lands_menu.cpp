@@ -4,6 +4,7 @@ extern "C" {
 #include <console_config.h>
 #include <std_utils.h>
 #include "management.h"
+#include "animals/food/food.h"
 #include "animals/food/food_menu.h"
 }
 
@@ -185,6 +186,12 @@ static void animal_terrain_management(AnimalTerrain* at) {
 
 
 extern "C" void lands_menu() {
+
+  // Carga de comidas de animales de fichero
+
+  read_food_types();
+
+  // Carga de terrenos en BD
 
   DBManager::connect();
 
@@ -427,9 +434,37 @@ extern "C" void lands_menu() {
 
             printf_c(LIGHT_CYAN_TXT, "Cosechando %ss ...\n\n", ct->getCropType().c_str());
 
-            float amount = read_int("Cantidad (kg): ");
+            float amount = read_float("Cantidad (kg): ");
 
-            // TODO Dos opciones: Vender o añadir a lista de comidas en food.c
+            // TODO Opción 1: Vender
+
+            // Opción 2: Añadir producto como comida de animales
+
+            int id = find_food_id_by_name(ct->getCropType().c_str());
+
+            // Todavía no existe
+
+            if (id == - 1) {
+
+                printf_c(LIGHT_CYAN_TXT, "Detectado nuevo alimento: %s\n", ct->getCropType().c_str());
+
+                register_animal_food(ct->getCropType().c_str(), 0, amount);
+
+            }
+
+            // Si ya existe, se añade la cantidad correspondiente
+
+            else {
+
+
+                add_animal_food(id, amount);
+
+            }
+
+
+            printf_c(LIGHT_GREEN_TXT, "Añadida cantidad a comida de animales\n");
+
+
 
         }
 
@@ -490,4 +525,6 @@ extern "C" void lands_menu() {
   }
 
   DBManager::disconnect();
+
+  free_animal_food_memory(); // Liberación de memoria en lista dinámica de comida de animales
 }

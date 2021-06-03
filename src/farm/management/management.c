@@ -11,7 +11,7 @@ void read_from_ledger() {
   FILE* balance_file = fopen("balance.dat", "rb");
 
   if (balance_file == NULL) {
-      printf_c(LIGHT_RED_TXT, "No existen datos aún para leer.\n");
+      // printf_c(LIGHT_RED_TXT, "No existen datos aún para leer.\n");
       return;
   }
 
@@ -25,7 +25,7 @@ void write_to_ledger() {
   FILE* balance_file = fopen("balance.dat", "wb");
 
   if (balance_file == NULL) {
-    printf_c(LIGHT_RED_TXT, "Fichero no encontrado, creando nuevo.\n");
+    // printf_c(LIGHT_RED_TXT, "Fichero no encontrado, creando nuevo.\n");
     return;
   }
 
