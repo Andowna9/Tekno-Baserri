@@ -133,6 +133,46 @@ Animal AnimalTerrain::getAnimal(int index) {
     return a;
 }
 
+void AnimalTerrain::calculateWeightStatistics() {
+
+    if (animals.size() == 0) {
+
+        cout << "Sin estadísticas" << endl;
+    }
+
+    else {
+
+
+        float max = animals[0].getWeight();
+        float min = animals[0].getWeight();
+        float sum = animals[0].getWeight();
+
+        for (unsigned int i = 1; i < animals.size(); i++) {
+
+            Animal a = animals[i];
+
+            sum += a.getWeight();
+
+            if (a.getWeight() > max) {
+
+                max = a.getWeight();
+            }
+
+            if (a.getWeight() < min) {
+
+                min = a.getWeight();
+            }
+        }
+
+        cout << "// Peso //" << endl << endl;
+
+        cout << "Máximo: " << max << endl;
+        cout << "Mínimo: " << min << endl;
+        cout << "Media: " << sum / animals.size() << endl;
+
+    }
+}
+
 void AnimalTerrain::removeAnimal(int index) {
 
   animals.erase(animals.begin() + index);

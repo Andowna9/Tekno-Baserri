@@ -92,7 +92,7 @@ void print_food(Animal_Food food, int index) {
 
     else {
 
-        printf_c(LIGHT_CYAN_TXT, "~Producto propio~\n");
+        printf_c(LIGHT_CYAN_TXT, "~ Producto propio ~\n");
     }
 
     if (food.amount > 0) {
@@ -239,6 +239,15 @@ void add_animal_food(int id, float amount) {
 
 }
 
+void consume_animal_food(int id, float amount) {
+
+    Animal_Food* ptr = get_food_by_id(id);
+
+    ptr->amount -= amount;
+
+    write_food_types();
+}
+
 void check_animal_food() {
 
     int i;
@@ -266,6 +275,21 @@ void check_third_party_food() {
         }
     }
 
+}
+
+void check_available_food() {
+
+    int i;
+
+    for (i = 0; i < food_arr.size; i++) {
+
+        Animal_Food food = *get_food(i);
+
+        if (food.amount > 0) {
+
+            print_food(food, i);
+        }
+    }
 }
 
 

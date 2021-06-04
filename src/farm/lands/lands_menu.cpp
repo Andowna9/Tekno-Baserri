@@ -124,6 +124,8 @@ static void animal_terrain_management(AnimalTerrain* at) {
         printf("\n1. Añadir animal.\n");
         printf("2. Retirar animal\n");
         printf("3. Listar detalles de animales.\n");
+        printf("4. Alimentar animales.\n");
+        printf("5. Estadísticas.\n");
 
 
         printf("\nIntroduce 'v' para volver.\n\n");
@@ -222,6 +224,84 @@ static void animal_terrain_management(AnimalTerrain* at) {
             show_animals(at);
         }
 
+        // Alimentar animales
+
+        else if (strcmp(i_buffer, "4") == 0) {
+
+            if (at->getNumAnimals() > 0) {
+
+                    while (true) {
+
+                        clear_screen();
+
+                        printf_c(LIGHT_CYAN_TXT, "Alimentos disponibles: \n\n");
+
+                        check_available_food();
+
+                        printf_c(LIGHT_YELLOW_TXT, "[ ID: 0 - Cancelar operación. ]\n\n");
+
+                        int id = read_int("ID: ");
+                        putchar('\n');
+
+                        if (id == 0) {
+
+                            printf_c(LIGHT_RED_TXT, "Operación cancelada!\n");
+
+                            break;
+                        }
+
+                        Animal_Food* food = get_food_by_id(id);
+
+                        // Out Of Bounds Check
+
+                        if (food == NULL || food->amount == 0) {
+
+                            printf_c(LIGHT_RED_TXT, "ID incorrecto!\n");
+                        }
+
+                        else {
+
+                            float max_avg = food->amount / at->getNumAnimals();
+
+                            printf("Máxima cantidad por animal: %.2f kg\n", max_avg);
+
+                            float avg_amount = read_float("Cantidad para alimentar: ");
+                            putchar('\n');
+
+                            if (avg_amount > max_avg) {
+
+                                printf_c(LIGHT_RED_TXT, "No hay tanta cantidad de alimento disponible!\n");
+                            }
+
+                            else {
+
+                                consume_animal_food(id, avg_amount * at->getNumAnimals());
+
+                                printf_c(LIGHT_GREEN_TXT, "Animales alimentados.\n");
+
+                                break;
+                            }
+
+                        }
+
+                        putchar('\n');
+
+                        press_to_continue();
+                    }
+
+            }
+
+            else {
+
+                printf_c(LIGHT_RED_TXT, "No hay animales que alimentar!\n");
+            }
+        }
+
+        else if (strcmp(i_buffer, "5") == 0) {
+
+            at->calculateWeightStatistics();
+        }
+
         else { printf("La opción introducida no existe!\n"); }
 
         putchar('\n');
@@ -290,7 +370,6 @@ extern "C" void lands_menu() {
 
         printf("6. Listar corrales.\n");
         printf("7. Gestionar corral.\n");
-        printf("8. Alimentar corral.\n");
 
     }
 
@@ -302,7 +381,7 @@ extern "C" void lands_menu() {
 
     // Menú de comida de animales
 
-    printf_c(LIGHT_CYAN_TXT, "\n[9. Comida de Animales]\n");
+    printf_c(LIGHT_CYAN_TXT, "\n[8. Comida de Animales]\n");
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -350,7 +429,7 @@ extern "C" void lands_menu() {
         if (saved) {
 
             cout << endl;
-            printf_c(LIGHT_GREEN_TXT, "Terreno guardado correctamente");
+            printf_c(LIGHT_GREEN_TXT, "Terreno guardado correctamente.");
             cout << endl;
 
             // Registrar gasto
@@ -608,13 +687,7 @@ extern "C" void lands_menu() {
 
     }
 
-    // TODO Alimentar corral
-
-    else if (strcmp(input_buffer, "8") == 0 && animal_terrains.size() > 0) {
-
-    }
-
-    else if (strcmp(input_buffer, "9") == 0) {
+    else if (strcmp(input_buffer, "8") == 0) {
 
         animal_food_menu();
         continue;

@@ -68,6 +68,8 @@ class AnimalTerrain: public Terrain {
         void readFromConsole();
         bool saveInDB();
 
+        void calculateWeightStatistics();
+
         void printContent();
         void print();
 
