@@ -46,8 +46,7 @@ static void show_crop_terrains(const vector<CropTerrain*> &crop_terrains) {
 
      for (unsigned int i = 0; i < crop_terrains.size(); i++) {
 
-            cout << "Cultivo " << i + 1 << endl;
-            cout << "-------------------" << endl;
+            cout << "-- Cultivo " << i + 1 << " --" << endl;
             crop_terrains[i]->printContent();
             cout << endl;
       }
@@ -62,8 +61,7 @@ static void show_animal_terrains(const vector<AnimalTerrain*> &animal_terrains) 
 
      for (unsigned int i = 0; i < animal_terrains.size(); i++) {
 
-          cout << "Corral " << i + 1 << endl;
-          cout << "-------------------" << endl;
+          cout << "-- Corral " << i + 1 << " --" << endl;
           animal_terrains[i]->printContent();
           cout << endl;
      }
@@ -436,33 +434,52 @@ extern "C" void lands_menu() {
 
             float amount = read_float("Cantidad (kg): ");
 
-            // TODO Opción 1: Vender
+            putchar('\n');
+
+            int opt = choose_option("¿Qué desea hacer?\n\na)Vender.\nb)Guardar como comida de animales.\n\nRespuesta: ", 2, "a", "b");
+
+            // Opción 1: Vender
+
+            if (opt == 1) {
+
+                float price = read_float("Precio por kilogramo (€/kg): ");
+                putchar('\n');
+
+                register_profit(price * amount);
+
+                printf_c(LIGHT_GREEN_TXT, "Venta realizada correctamente.\n");
+
+            }
 
             // Opción 2: Añadir producto como comida de animales
 
-            int id = find_food_id_by_name(ct->getCropType().c_str());
+            else if (opt == 2) {
 
-            // Todavía no existe
+                int id = find_food_id_by_name(ct->getCropType().c_str());
 
-            if (id == - 1) {
+                // Todavía no existe
 
-                printf_c(LIGHT_CYAN_TXT, "Detectado nuevo alimento: %s\n", ct->getCropType().c_str());
+                if (id == - 1) {
 
-                register_animal_food(ct->getCropType().c_str(), 0, amount);
+                    printf_c(LIGHT_CYAN_TXT, "Detectado nuevo alimento: %s\n", ct->getCropType().c_str());
 
-            }
+                    register_animal_food(ct->getCropType().c_str(), 0, amount);
 
-            // Si ya existe, se añade la cantidad correspondiente
+                }
 
-            else {
+                // Si ya existe, se añade la cantidad correspondiente
 
-
-                add_animal_food(id, amount);
-
-            }
+                else {
 
 
-            printf_c(LIGHT_GREEN_TXT, "Añadida cantidad a comida de animales\n");
+                    add_animal_food(id, amount);
+
+                }
+
+
+                printf_c(LIGHT_GREEN_TXT, "Añadida cantidad a comida de animales.\n");
+
+           }
 
 
 

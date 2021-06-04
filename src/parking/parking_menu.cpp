@@ -516,7 +516,7 @@ void parking_menu() {
         printf(" 5. Añadir filas.\n");
         printf(" 6. Añadir columnas.\n");
         printf(" 7. Crear nueva configuración.\n");
-        printf(" 8. [ADMIN] Gestionar acceso al parking\n");
+        printf(" 8. [ADMIN] Gestionar acceso al parking.\n");
         putchar('\n');
 
         printf("\nIntroduce 's' para guardar los cambios.\n");
