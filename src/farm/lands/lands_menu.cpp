@@ -68,6 +68,30 @@ static void show_animal_terrains(const vector<AnimalTerrain*> &animal_terrains) 
 
 }
 
+static void show_animals(AnimalTerrain* at) {
+
+    if (at->isEmpty()) {
+
+        cout << "Lista de animales vacía!" << endl;
+    }
+
+    else {
+
+        vector<Animal> animals = at->getAnimals();
+
+        for (unsigned int i = 0; i < animals.size(); i++) {
+
+            cout << "-- Cerdo " << i + 1 << " --" << endl;
+            cout << animals[i];
+            cout<< "Edad " << DBManager::getAnimalAge(animals[i].getID()) << endl << endl;
+
+        }
+
+    }
+
+
+}
+
 // Menú para la gestión de un corral dado
 
 static void animal_terrain_management(AnimalTerrain* at) {
@@ -136,15 +160,57 @@ static void animal_terrain_management(AnimalTerrain* at) {
             QDate date(y, m, d);
             string birth_date = date.toString(Qt::ISODate).toStdString();
 
-            DBManager::insertAnimal(a, birth_date, at->getID());
+            putchar('\n');
 
-            at->addAnimal(a);
+            // Registro en BD y memoria
+
+            if (DBManager::insertAnimal(a, birth_date, at->getID())) {
+
+                at->addAnimal(a);
+
+                printf_c(LIGHT_GREEN_TXT, "Animal registrado correctamente.\n");
+
+            }
+
+            else {
+
+                printf_c(LIGHT_RED_TXT, "Problema al registrar animal!\n");
+
+            }
 
         }
 
-        // TODO Retirar animal
+        // Retirar animal
 
         else if (strcmp(i_buffer, "2") == 0) {
+
+            show_animals(at);
+
+            int num = read_int("Número de animal: ");
+            int index = num - 1;
+            putchar('\n');
+
+            try {
+
+                Animal a = at->getAnimal(index);
+                if (DBManager::removeAnimal(a.getID())) {
+
+                        printf_c(LIGHT_GREEN_TXT, "Animal retirado.\n");
+                        at->removeAnimal(index);
+                }
+
+               else {
+
+                    printf_c(LIGHT_RED_TXT, "Error al retirar animal!.\n");
+
+                }
+
+            }
+
+            catch (const out_of_range &oor) {
+
+                printf_c(LIGHT_RED_TXT, "Número incorrecto!\n");
+            }
 
         }
 
@@ -153,23 +219,7 @@ static void animal_terrain_management(AnimalTerrain* at) {
         else if (strcmp(i_buffer, "3") == 0) {
 
 
-            if (at->isEmpty()) {
-
-                cout << "Lista de animales vacía!" << endl;
-            }
-
-            else {
-
-                for (const Animal &a: at->getAnimals()) {
-
-                    cout << a;
-                    cout<< "Edad " << DBManager::getAnimalAge(a.getID()) << endl;
-
-                }
-
-            }
-
-
+            show_animals(at);
         }
 
         else { printf("La opción introducida no existe!\n"); }

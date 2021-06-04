@@ -51,8 +51,8 @@ class DBManager {
 
         // Granja
 
-        static void insertAnimal(Animal& a, string birth_date, int animal_terrain_id);
-        static void removeAnimal(int id);
+        static bool insertAnimal(Animal& a, string birth_date, int animal_terrain_id);
+        static bool removeAnimal(int id);
         static int getAnimalAge(int id);
         static map<int, string> getAvailableTypes(TypeTable table);
         static vector<Terrain*> retrieveTerrains(vector<CropTerrain*> &crop_terrains, vector<AnimalTerrain*> &animal_terrains);

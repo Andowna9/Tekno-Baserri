@@ -21,7 +21,7 @@ class Terrain {
     public:
 
         Terrain() {}
-        Terrain(float area, float cost);
+        Terrain(int id, float area, float cost);
         virtual ~Terrain() {}
 
         void setID(int id);
@@ -49,8 +49,8 @@ class AnimalTerrain: public Terrain {
     public:
 
         AnimalTerrain() {}
-        AnimalTerrain(float area, float cost);
-        AnimalTerrain(float area, vector<Animal> animals, float cost, int type_id);
+        AnimalTerrain(int id, float area, float cost);
+        AnimalTerrain(int id, float area, vector<Animal> animals, float cost, int type_id);
 
         static void loadTypes(map<int, string> types_map);
 
@@ -58,6 +58,8 @@ class AnimalTerrain: public Terrain {
         string getAnimalType() const;
 
         void addAnimal(Animal a);
+        void removeAnimal(int index);
+        Animal getAnimal(int index);
         vector<Animal> getAnimals() const;
         int getNumAnimals() const;
         bool isEmpty() const;
@@ -80,8 +82,8 @@ class CropTerrain: public Terrain {
     public:
 
         CropTerrain() {}
-        CropTerrain(float area, float cost);
-        CropTerrain(float area, int crop_id, float cost);
+        CropTerrain(int id, float area, float cost);
+        CropTerrain(int id, float area, int crop_id, float cost);
 
         static void loadTypes(map<int, string> types_map);
 

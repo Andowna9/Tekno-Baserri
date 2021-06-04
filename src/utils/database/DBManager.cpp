@@ -397,9 +397,11 @@ vector<Animal> DBManager::retriveAnimals(int terrain_id) {
     return animals;
 }
 
-void DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id) {
+bool DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id) {
 
     open_logger(log_file_txt);
+
+    bool success = true;
 
     sqlite3_stmt* stmt;
 
@@ -417,7 +419,9 @@ void DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id
     sqlite3_finalize(stmt);
 
     if (code != SQLITE_DONE) {
+
         add_to_log("Error al introducir animal. Código: %i", code);
+        success = false;
     }
 
     else {
@@ -433,7 +437,9 @@ void DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id
         }
 
         else {
+
             add_to_log("Error al obtener el id del animal nuevo. Código: %i", code);
+            success = false;
 
         }
 
@@ -442,6 +448,8 @@ void DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id
     }
 
     close_logger();
+
+    return success;
 
 }
 
@@ -479,9 +487,11 @@ int DBManager::getAnimalAge(int id) {
 
 }
 
-void DBManager::removeAnimal(int id) {
+bool DBManager::removeAnimal(int id) {
 
     open_logger(log_file_txt);
+
+    bool success = true;
 
     sqlite3_stmt* stmt;
 
@@ -494,12 +504,16 @@ void DBManager::removeAnimal(int id) {
     int code = sqlite3_step(stmt);
 
     if (code != SQLITE_DONE) {
+
         add_to_log("Error al borrar animal. Código: %i", code);
+        success = false;
     }
 
     sqlite3_finalize(stmt);
 
     close_logger();
+
+    return success;
 }
 
 map<int, string> DBManager::getAvailableTypes(TypeTable type_table) {
@@ -592,7 +606,7 @@ vector<Terrain*> DBManager::retrieveTerrains(vector<CropTerrain*> &crop_terrains
         if (sqlite3_column_type(stmt, 3) != SQLITE_NULL) {
 
             int cropType = sqlite3_column_int(stmt, 3);
-            t = new CropTerrain(area, cropType, cost);
+            t = new CropTerrain(terrain_id, area, cropType, cost);
 
             crop_terrains.push_back((CropTerrain*) t);
 
@@ -601,7 +615,7 @@ vector<Terrain*> DBManager::retrieveTerrains(vector<CropTerrain*> &crop_terrains
             int animalType = sqlite3_column_int(stmt, 4);
             vector<Animal> animals = retriveAnimals(terrain_id);
 
-            t = new AnimalTerrain(area, animals, cost, animalType);
+            t = new AnimalTerrain(terrain_id, area, animals, cost, animalType);
 
             animal_terrains.push_back((AnimalTerrain*) t);
 

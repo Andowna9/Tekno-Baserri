@@ -40,7 +40,6 @@ void Animal::setID(int id) {
 
 ostream & operator << (ostream &out, const Animal &a) {
 
-    out << "ID: " << a.id << endl;
     out << "Nombre propio: " << a.name << endl;
     out << "Peso: " << a.weight << " kg" << endl;
 

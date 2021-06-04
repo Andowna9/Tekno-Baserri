@@ -4,9 +4,9 @@
 #include <DBManager.h>
 using namespace std;
 
-Terrain::Terrain(float area, float cost) {
+Terrain::Terrain(int id, float area, float cost) {
 
-    this->id = -1;
+    this->id = id;
     this->area = area;
     this->cost = cost;
 }
@@ -42,12 +42,12 @@ void Terrain::print() {
 
 }
 
-AnimalTerrain::AnimalTerrain(float area, float cost): Terrain(area, cost) {}
+AnimalTerrain::AnimalTerrain(int id, float area, float cost): Terrain(id, area, cost) {}
 
 
 map<int, string> AnimalTerrain::animal_types;
 
-AnimalTerrain::AnimalTerrain(float area, vector<Animal> animals, float cost, int type_id): Terrain(area, cost) {
+AnimalTerrain::AnimalTerrain(int id, float area, vector<Animal> animals, float cost, int type_id): Terrain(id, area, cost) {
 
     this->animal_type_id = type_id;
     this->animals = animals;
@@ -126,6 +126,19 @@ string AnimalTerrain::getAnimalType() const {
     return this->animal_types[animal_type_id];
 }
 
+Animal AnimalTerrain::getAnimal(int index) {
+
+    Animal a = animals.at(index);
+
+    return a;
+}
+
+void AnimalTerrain::removeAnimal(int index) {
+
+  animals.erase(animals.begin() + index);
+
+}
+
 
 map<int, string> CropTerrain::crop_types;
 
@@ -143,9 +156,9 @@ string CropTerrain::getCropType() const {
     return crop_types[crop_type_id];
 }
 
-CropTerrain::CropTerrain(float area, float cost): Terrain(area, cost) {}
+CropTerrain::CropTerrain(int id, float area, float cost): Terrain(id, area, cost) {}
 
-CropTerrain::CropTerrain(float area, int crop_id, float cost): Terrain(area, cost) {
+CropTerrain::CropTerrain(int id, float area, int crop_id, float cost): Terrain(id, area, cost) {
 
     this->crop_type_id = crop_id;
 }
