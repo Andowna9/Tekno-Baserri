@@ -248,7 +248,7 @@ void consume_animal_food(int id, float amount) {
     write_food_types();
 }
 
-void check_animal_food() {
+void check_all_food() {
 
     int i;
 
@@ -275,6 +275,11 @@ void check_third_party_food() {
         }
     }
 
+    if (i == 0) {
+
+        printf_c(LIGHT_YELLOW_TXT, "No hay alimentos de terceros.\n\n");
+    }
+
 }
 
 void check_available_food() {
@@ -289,6 +294,11 @@ void check_available_food() {
 
             print_food(food, i);
         }
+    }
+
+    if (i == 0) {
+
+        printf_c(LIGHT_YELLOW_TXT, "No hay alimentos para dar de comer.\n\n");
     }
 }
 

@@ -7,7 +7,7 @@
 void print_food_with_clear() {
     clear_screen();
     printf_c(LIGHT_CYAN_TXT, "------- ALIMENTOS -------\n\n");
-    check_animal_food();
+    check_all_food();
 }
 
 void animal_food_menu() {
@@ -125,9 +125,6 @@ void animal_food_menu() {
 
     else if (strcmp(input_buffer, "3") == 0) {
 
-      int not_empty = get_food_count();
-      if (not_empty) {
-
           clear_screen();
           printf_c(LIGHT_CYAN_TXT, "------- ALIMENTOS DE TERCEROS -------\n\n");
           check_third_party_food();
@@ -153,18 +150,23 @@ void animal_food_menu() {
               }
           }
 
-      } else {
-            printf_c(LIGHT_RED_TXT, "No hay comida registrada.\n");
-      }
-
-
     }
 
     // Comprobar tipos de comida
 
     else if (strcmp(input_buffer, "4") == 0) {
 
-        print_food_with_clear();
+        int not_empty = get_food_count();
+        if (not_empty) {
+
+            print_food_with_clear();
+
+        }
+
+        else {
+
+            printf_c(LIGHT_RED_TXT, "No hay comida registrada.\n");
+        }
     }
 
     // Listado ordenado por precio
