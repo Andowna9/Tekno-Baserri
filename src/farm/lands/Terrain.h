@@ -34,6 +34,7 @@ class Terrain {
         virtual bool saveInDB() = 0;
 
         virtual void print();
+        virtual void printContent() = 0;
 };
 
 // Clases hijas: tipos concretos de terreno

@@ -290,6 +290,7 @@ extern "C" void lands_menu() {
 
         printf("6. Listar corrales.\n");
         printf("7. Gestionar corral.\n");
+        printf("8. Alimentar corral.\n");
 
     }
 
@@ -301,7 +302,7 @@ extern "C" void lands_menu() {
 
     // Menú de comida de animales
 
-    printf_c(LIGHT_CYAN_TXT, "\n[8. Comida de Animales]\n");
+    printf_c(LIGHT_CYAN_TXT, "\n[9. Comida de Animales]\n");
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -393,46 +394,76 @@ extern "C" void lands_menu() {
             } while(i <= 0 || i > (int) terrains.size());
 
             i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
+
+            cout << endl;
+            printf_c(LIGHT_CYAN_TXT, "Se va a vender el siguiente terreno:\n\n");
+
+            Terrain* t = terrains.at(i);
+
+            t->print();
+            cout << endl;
+            cout << "[ CONTENIDO ]" << endl;
+            t->printContent();
+            cout << endl;
+
+
             float price = read_float("Precio de venta: ");
+            putchar('\n');
+
+            if (typeid(*t).hash_code() == typeid(AnimalTerrain).hash_code()) {
+
+                AnimalTerrain* at = (AnimalTerrain*) t;
+
+                if (at->getNumAnimals() > 0) {
+
+                    printf_c(LIGHT_RED_TXT, "AVISO: Se retirarán %d animales asociados!\n\n", at->getNumAnimals());
+                }
+
+             }
+
+            int sell = confirm_action("¿Confirmar venta?");
 
             // Borrar terreno de BD y memoria
 
-            Terrain* t = terrains.at(i);
-            bool success = DBManager::removeTerrain(t->getID());
+            if (sell) {
 
-            if (success) {
+                bool success = DBManager::removeTerrain(t->getID());
+
+                if (success) {
 
 
-                // Borrado de lista auxiliar
+                    // Borrado de lista auxiliar
 
-                // Como se trata de punteros son iguales si apuntan a la misma dirección de memoria
+                    // Como se trata de punteros son iguales si apuntan a la misma dirección de memoria
 
-                if (typeid(*t).hash_code() == typeid(CropTerrain).hash_code()) {
+                    if (typeid(*t).hash_code() == typeid(CropTerrain).hash_code()) {
 
-                    removeVectorElement(crop_terrains, (CropTerrain*)t);
+                        removeVectorElement(crop_terrains, (CropTerrain*)t);
+                    }
+
+                    else {
+
+                        removeVectorElement(animal_terrains, (AnimalTerrain*)t);
+                    }
+
+
+                    // Borrado de lista principal
+
+                    delete t; //Liberación de memoria dinámica
+                    terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
+
+                    register_profit(price);
+
+                    cout << endl;
+                    printf_c(LIGHT_GREEN_TXT, "Venta realizada.");
+                    cout << endl;
                 }
 
                 else {
 
-                    removeVectorElement(animal_terrains, (AnimalTerrain*)t);
+                    printf_c(LIGHT_RED_TXT, "Error al realizar venta!");
                 }
 
-
-                // Borrado de lista principal
-
-                delete t; //Liberación de memoria dinámica
-                terrains.erase(terrains.begin() + i); //Borrado de puntero en el vector
-
-                register_profit(price);
-
-                cout << endl;
-                printf_c(LIGHT_GREEN_TXT, "Venta realizada");
-                cout << endl;
-            }
-
-            else {
-
-                printf_c(LIGHT_RED_TXT, "Error al realizar venta!");
             }
 
 
@@ -577,7 +608,13 @@ extern "C" void lands_menu() {
 
     }
 
-    else if (strcmp(input_buffer, "8") == 0) {
+    // TODO Alimentar corral
+
+    else if (strcmp(input_buffer, "8") == 0 && animal_terrains.size() > 0) {
+
+    }
+
+    else if (strcmp(input_buffer, "9") == 0) {
 
         animal_food_menu();
         continue;
