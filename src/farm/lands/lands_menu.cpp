@@ -370,6 +370,7 @@ extern "C" void lands_menu() {
 
         printf("6. Listar corrales.\n");
         printf("7. Gestionar corral.\n");
+        printf("9. Estadísticas animales\n");
 
     }
 
@@ -534,7 +535,7 @@ extern "C" void lands_menu() {
                     register_profit(price);
 
                     cout << endl;
-                    printf_c(LIGHT_GREEN_TXT, "Venta realizada.\n");
+                    printf_c(LIGHT_GREEN_TXT, "Venta realizada.");
                     cout << endl;
                 }
 
@@ -699,6 +700,9 @@ extern "C" void lands_menu() {
         continue;
     }
 
+    else if (strcmp(input_buffer, "9") == 0) {
+        DBManager::printAnimalTerrainCount();
+    }
 
     else { printf("Opción incorrecta!\n"); }
 

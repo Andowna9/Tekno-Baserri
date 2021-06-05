@@ -823,12 +823,43 @@ float DBManager::getTerrainArea(int id) {
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
         area = sqlite3_column_double(stmt, 1);
-        add_to_log("Error al obtener el área del terreno.");
 
+    } else {
+        add_to_log("Error al obtener el área del terreno.");
     }
 
     sqlite3_finalize(stmt);
 
     close_logger();
     return area;
+}
+
+void DBManager::printAnimalTerrainCount() {
+    open_logger(log_file_txt);
+
+    string sql = "SELECT count(*), name FROM animal_terrain a, animal_type at  WHERE type = at.id GROUP BY type ORDER BY count(*) DESC";
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        cout << "Terreno(s) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
+    }
+
+    close_logger();
+}
+
+void DBManager::printCropTerrainCount() {
+    open_logger(log_file_txt);
+
+    string sql = "SELECT count(*), name FROM crop_terrain c, crop_type ct  WHERE type = ct.id GROUP BY type ORDER BY count(*) DESC";
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        cout << "Terreno(s) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
+    }
+
+    close_logger();
 }

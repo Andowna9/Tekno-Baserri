@@ -64,6 +64,10 @@ class DBManager {
         static float getTerrainCost(int id);
         static float getTerrainArea(int id);
 
+        // Granja - estadísticas
+        static void printCropTerrainCount();
+        static void printAnimalTerrainCount();
+
         friend void initDB();
 };
 
