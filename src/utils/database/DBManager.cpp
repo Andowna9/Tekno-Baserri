@@ -185,6 +185,21 @@ void DBManager::connect() {
         add_to_log("Error al abrir la base de datos. Código: %i", code);
     }
 
+    else {
+
+        // Habilitar soporte para claves externas con cada sesión (conexión)
+
+        string sql = "PRAGMA foreign_keys = ON";
+
+        code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
+
+        if (code != SQLITE_OK) {
+
+            add_to_log("Error al habilitar claves externas. Código: %i", code);
+        }
+
+    }
+
     close_logger();
 }
 
@@ -843,7 +858,7 @@ void DBManager::printAnimalTerrainCount() {
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
 
-        cout << "Terreno(s) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
+        cout << "Corral(es) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
     }
 
     close_logger();
@@ -858,7 +873,7 @@ void DBManager::printCropTerrainCount() {
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
 
-        cout << "Terreno(s) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
+        cout << "Cultivo(s) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
     }
 
     close_logger();

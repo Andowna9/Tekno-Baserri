@@ -354,6 +354,7 @@ extern "C" void lands_menu() {
 
         printf("4. Listar cultivos.\n");
         printf("5. Recoger cosechas.\n");
+        printf("6. Estadísticas.\n");
 
     }
 
@@ -368,9 +369,9 @@ extern "C" void lands_menu() {
 
     if (animal_terrains.size() > 0) {
 
-        printf("6. Listar corrales.\n");
-        printf("7. Gestionar corral.\n");
-        printf("9. Estadísticas animales\n");
+        printf("7. Listar corrales.\n");
+        printf("8. Gestionar corral.\n");
+        printf("9. Estadísticas.\n");
 
     }
 
@@ -382,7 +383,7 @@ extern "C" void lands_menu() {
 
     // Menú de comida de animales
 
-    printf_c(LIGHT_CYAN_TXT, "\n[8. Comida de Animales]\n");
+    printf_c(LIGHT_CYAN_TXT, "\n[10. Comida de Animales]\n");
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -659,9 +660,15 @@ extern "C" void lands_menu() {
 
     }
 
+    // Estadísticas de cultivos
+
+    else if (strcmp(input_buffer, "6") == 0) {
+        DBManager::printCropTerrainCount();
+    }
+
     // Listar corrales
 
-    else if (strcmp(input_buffer, "6") == 0 && animal_terrains.size() > 0) {
+    else if (strcmp(input_buffer, "7") == 0 && animal_terrains.size() > 0) {
 
 
          show_animal_terrains(animal_terrains);
@@ -670,7 +677,7 @@ extern "C" void lands_menu() {
 
     // Gestionar corral
 
-    else if (strcmp(input_buffer, "7") == 0 && animal_terrains.size() > 0) {
+    else if (strcmp(input_buffer, "8") == 0 && animal_terrains.size() > 0) {
 
         show_animal_terrains(animal_terrains);
 
@@ -694,14 +701,19 @@ extern "C" void lands_menu() {
 
     }
 
-    else if (strcmp(input_buffer, "8") == 0) {
-
-        animal_food_menu();
-        continue;
-    }
+    // Estadísticas de corrales
 
     else if (strcmp(input_buffer, "9") == 0) {
         DBManager::printAnimalTerrainCount();
+    }
+
+
+    // Acceso a menú de alimentos de animales
+
+    else if (strcmp(input_buffer, "10") == 0) {
+
+        animal_food_menu();
+        continue;
     }
 
     else { printf("Opción incorrecta!\n"); }
