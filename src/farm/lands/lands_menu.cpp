@@ -81,7 +81,7 @@ static void show_animals(AnimalTerrain* at) {
 
         for (unsigned int i = 0; i < animals.size(); i++) {
 
-            cout << "-- Cerdo " << i + 1 << " --" << endl;
+            cout << "-- " << at->getAnimalType() << " " << i + 1 << " --" << endl;
             cout << animals[i];
             cout<< "Edad " << DBManager::getAnimalAge(animals[i].getID()) << endl << endl;
 
@@ -341,7 +341,7 @@ extern "C" void lands_menu() {
     print_title_center("TERRENOS", 24, LIGHT_CYAN_TXT, '-');
 
     // Terrenos genérico
-
+    printf("--General\n\n");
     printf("1. Comprar terreno.\n");
     printf("2. Vender terreno.\n");
     printf("3. Listar terrenos.\n");
@@ -353,13 +353,13 @@ extern "C" void lands_menu() {
     if (crop_terrains.size() > 0) {
 
         printf("4. Listar cultivos.\n");
-        printf("5. Registrar cosechas.\n");
+        printf("5. Recoger cosechas.\n");
 
     }
 
     else {
 
-        printf_c(LIGHT_CYAN_TXT, "De momento no hay ningún cultivo.\n");
+        printf_c(LIGHT_YELLOW_TXT, "De momento no hay ningún cultivo.\n");
     }
 
     // Terreno de animales
@@ -375,7 +375,7 @@ extern "C" void lands_menu() {
 
     else {
 
-        printf_c(LIGHT_CYAN_TXT, "De momento no hay ningún corral.\n");
+        printf_c(LIGHT_YELLOW_TXT, "De momento no hay ningún corral.\n");
 
     }
 
@@ -474,7 +474,7 @@ extern "C" void lands_menu() {
 
             i--; // El índice interno empieza en cero, la lista que ve el usuario en 1
 
-            cout << endl;
+            clear_screen();
             printf_c(LIGHT_CYAN_TXT, "Se va a vender el siguiente terreno:\n\n");
 
             Terrain* t = terrains.at(i);
@@ -534,14 +534,17 @@ extern "C" void lands_menu() {
                     register_profit(price);
 
                     cout << endl;
-                    printf_c(LIGHT_GREEN_TXT, "Venta realizada.");
+                    printf_c(LIGHT_GREEN_TXT, "Venta realizada.\n");
                     cout << endl;
                 }
 
                 else {
 
-                    printf_c(LIGHT_RED_TXT, "Error al realizar venta!");
+                    printf_c(LIGHT_RED_TXT, "Error al realizar venta!\n");
                 }
+
+            } else {
+                printf_c(LIGHT_RED_TXT, "\nVenta cancelada.\n");
 
             }
 
@@ -590,7 +593,10 @@ extern "C" void lands_menu() {
 
             CropTerrain* ct = crop_terrains.at(index - 1);
 
+            clear_and_title("CULTIVOS");
             printf_c(LIGHT_CYAN_TXT, "Cosechando %ss ...\n\n", ct->getCropType().c_str());
+
+            crop_terrains[index-1]->printContent();
 
             float amount = read_float("Cantidad (kg): ");
 
@@ -636,7 +642,7 @@ extern "C" void lands_menu() {
 
                 }
 
-
+                cout << endl;
                 printf_c(LIGHT_GREEN_TXT, "Añadida cantidad a comida de animales.\n");
 
            }
