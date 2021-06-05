@@ -26,7 +26,8 @@ SOURCES += src/main.cpp \
            src/parking/parking_menu.cpp \
            src/farm/lands/animals/Animal.cpp \
            src/farm/lands/Terrain.cpp \
-           src/farm/lands/lands_menu.cpp
+           src/farm/lands/lands_menu.cpp \
+           src/farm/lands/WeatherForecast.cpp
 
 
 HEADERS += src/farm/lands/Terrain.h \
@@ -37,7 +38,8 @@ HEADERS += src/farm/lands/Terrain.h \
            src/farm/management/management_menu.h \
            src/parking/parking.h \
            src/parking/parking_menu.h \
-           src/parking/vehicle/Vehicle.h
+           src/parking/vehicle/Vehicle.h \
+           src/farm/lands/WeatherForecast.h
 
 INCLUDEPATH += include/
 
@@ -46,6 +48,15 @@ INCLUDEPATH += include/
 SOURCES += 3rdparty/sqlite3/src/sqlite3.c
 HEADERS += 3rdparty/sqlite3/include/sqlite3.h
 INCLUDEPATH += 3rdparty/sqlite3/include/
+
+# libcurl
+
+win32 {
+
+    INCLUDEPATH += C:\dev\libcurl\include
+    # LIBS += C:\dev\libcurl\lib\libcurl.dll.a
+    LIBS += C:\dev\libcurl\bin\libcurl-x64.dll
+}
 
 # Database 4 Unix
 

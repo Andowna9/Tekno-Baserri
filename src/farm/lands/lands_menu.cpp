@@ -10,6 +10,7 @@ extern "C" {
 
 #include <DBManager.h>
 #include <QDate>
+#include "WeatherForecast.h"
 #include <cpp_utils.h>
 #include "Terrain.h"
 
@@ -385,6 +386,8 @@ extern "C" void lands_menu() {
 
     printf_c(LIGHT_CYAN_TXT, "\n[10. Comida de Animales]\n");
 
+    printf_c(LIGHT_MAGENTA_TXT, "\n* Pronóstico de tiempo\n");
+
 
     printf("\nIntroduce 'v' para volver.\n\n");
 
@@ -714,6 +717,13 @@ extern "C" void lands_menu() {
 
         animal_food_menu();
         continue;
+    }
+
+    else if (strcmp(input_buffer, "*") == 0) {
+
+        WeatherForecast w;
+
+        w.update();
     }
 
     else { printf("Opción incorrecta!\n"); }
