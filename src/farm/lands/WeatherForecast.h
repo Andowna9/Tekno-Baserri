@@ -6,6 +6,7 @@ class WeatherForecast
 public:
     WeatherForecast();
     void update();
+    void showData();
 };
 
 #endif // WEATHERFORECAST_H

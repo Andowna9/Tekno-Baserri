@@ -724,6 +724,8 @@ extern "C" void lands_menu() {
         WeatherForecast w;
 
         w.update();
+
+        w.showData();
     }
 
     else { printf("Opción incorrecta!\n"); }

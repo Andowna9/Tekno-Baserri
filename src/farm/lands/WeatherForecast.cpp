@@ -3,7 +3,12 @@ extern "C" {
 }
 
 #include "WeatherForecast.h"
+#include <iostream>
+using namespace std;
 #include <curl/curl.h>
+#include <QtXml>
+#include <QXmlStreamReader>
+#include <QFile>
 
 
 WeatherForecast::WeatherForecast() {
@@ -34,7 +39,7 @@ void WeatherForecast::update() {
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp); // Puntero a fichero donde se ecriben los datos -> fwrite como callback por defecto
 
 
-        res = curl_easy_perform(curl); //
+        res = curl_easy_perform(curl); //  Realiza el proceso de transferencia
 
         if(res != CURLE_OK) {
 
@@ -54,5 +59,79 @@ void WeatherForecast::update() {
 
 
     }
+
+}
+
+void WeatherForecast::showData() {
+
+    // Carga en memoria de contenido del xml
+
+    QDomDocument doc;
+
+    QFile f("weather.xml");
+
+    if (!f.open(QIODevice::ReadOnly)) {
+
+        cerr << "Error leyendo fichero de tiempo!" << endl;
+
+        return;
+    }
+
+    QString error_msg;
+
+    if (!doc.setContent(&f, false, &error_msg)) {
+
+        cerr << "Error cargando contenido de xml" << endl;
+
+        cerr << error_msg.toStdString() << endl;
+
+        f.close();
+    }
+
+    f.close();
+
+    // Lectura del xml
+
+    QDomElement root = doc.documentElement();
+
+    QString name = root.tagName();
+
+    QString version = root.attribute("version", "None");
+
+    cout << "Tag name: " << name.toStdString() << endl;
+
+    cout << "Version: " << version.toStdString() << endl; */
+
+    QFile f("weather.xml");
+
+    if (!f.open(QIODevice::ReadOnly)) {
+
+        cerr << "Error leyendo fichero de tiempo!" << endl;
+
+        return;
+    }
+
+    /*
+
+    QString rawXML =
+"<root>"
+"	<a>11111</a>"
+"	<a><b>test 123</b></a>"
+"</root>";
+
+
+    QXmlStreamReader reader(rawXML);
+    QStringView s;
+
+    reader.readNextStartElement();
+        s = reader.name();
+        if (s!="root") {
+            return;
+        }
+
+    cout << reader.attributes().length() << endl;
+
+    */
+
 
 }

@@ -3,6 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 
 QT = core
+QT += xml
 
 # SOURCES C
 
