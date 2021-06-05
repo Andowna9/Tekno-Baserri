@@ -33,7 +33,9 @@ void WeatherForecast::update() {
 
         // Opciones de transferencia
 
-        curl_easy_setopt(curl, CURLOPT_URL, "http://www.aemet.es/xml/municipios/localidad_01006.xml"); // URL de descarga (imprescindible)
+        // http://www.aemet.es/xml/municipios/localidad_01006.xml
+        // https://api.tutiempo.net/xml/?lan=es&apid=qCDaqXzqaazvx90&lid=8050
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.tutiempo.net/xml/?lan=es&apid=qCDaqXzqaazvx90&lid=8050"); // URL de descarga (imprescindible)
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // Deshabilitamos certificados de conexión segura
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // Redirección habilitada
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp); // Puntero a fichero donde se ecriben los datos -> fwrite como callback por defecto
