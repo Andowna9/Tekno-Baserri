@@ -11,17 +11,20 @@ class WeatherForecast {
        std::string apiURL = "https://api.tutiempo.net/xml/?lan=es&apid=qCDaqXzqaazvx90&lid=";
        QFile weatherFile;
 
-       std::map<std::string, int> locations {{"Vitoria-Gasteiz", 8043}, {"Bilbao", 8050 }, {"Donostia-San Sebastián", 4917}};
-       int code;
+       std::map<std::string, int> locations;
+       int forecastCode;
+
+       bool performRequest();
 
     public:
 
         WeatherForecast();
         ~WeatherForecast();
 
-        void chooseLocation();
-        void update();
-        void showData();
+        void addLocation(std::string name, int id);
+
+        bool chooseLocation();
+        void displayForecast();
 };
 
 #endif // WEATHERFORECAST_H

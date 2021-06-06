@@ -7,7 +7,6 @@ extern "C" {
 #include <curl/curl.h>
 #include <QtXml>
 #include <iostream>
-#include <cpp_utils.h>
 #include <vector>
 
 
@@ -24,11 +23,19 @@ WeatherForecast::~WeatherForecast() {
     }
 }
 
-void WeatherForecast::chooseLocation() {
+void WeatherForecast::addLocation(std::string name, int id) {
+
+    // Inserta una pareja al mapa
+    // Si la clave ya existe, no produce ningún cambio
+
+    locations.insert({name, id});
+}
+
+bool WeatherForecast::chooseLocation() {
 
     std::cout << "Localidades disponibles:" << std::endl << std::endl;
 
-    std::vector<string> locationKeys;
+    std::vector<std::string> locationKeys;
 
     unsigned int i = 1;
 
@@ -54,25 +61,30 @@ void WeatherForecast::chooseLocation() {
 
             std::string key = locationKeys.at(i - 1);
 
-            code = locations[key];
+            forecastCode = locations[key];
+
+            return true;
 
 
         }
 
      catch (std::out_of_range &oor) {
 
-        printf_c(LIGHT_RED_TXT, "Número incorrecto. Prueba de nuevo!\n");
+        printf_c(LIGHT_RED_TXT, "Valor incorrecto. Prueba de nuevo!\n");
+
+        return false;
      }
 
 
 
 }
 
-void WeatherForecast::update() {
+bool WeatherForecast::performRequest() {
 
     CURL *curl;
     FILE* fp;
     CURLcode res;
+    bool success = false;
 
     // Iniciamos la interfaz síncrona de curl
 
@@ -84,7 +96,7 @@ void WeatherForecast::update() {
 
         // Opciones de transferencia
 
-        std::string locationURL = apiURL + std::to_string(code);
+        std::string locationURL = apiURL + std::to_string(forecastCode);
 
         curl_easy_setopt(curl, CURLOPT_URL, locationURL.c_str()); // URL de descarga (imprescindible)
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // Deshabilitamos certificados de conexión segura
@@ -103,6 +115,7 @@ void WeatherForecast::update() {
         else {
 
             printf_c(LIGHT_GREEN_TXT, "Pronóstico de tiempo recuperado correctamente!\n\n");
+            success = true;
         }
 
 
@@ -110,12 +123,17 @@ void WeatherForecast::update() {
 
         fclose(fp);
 
-
     }
+
+      return success;
 
 }
 
-void WeatherForecast::showData() {
+void WeatherForecast::displayForecast() {
+
+    bool received = performRequest(); // Obtiene la información del tiempo
+
+    if (!received) return;
 
     // Carga en memoria de contenido del xml
 
@@ -123,8 +141,7 @@ void WeatherForecast::showData() {
 
     if (!weatherFile.open(QIODevice::ReadOnly)) {
 
-        std::cerr << "Error leyendo fichero de tiempo!" << std::endl;
-
+        printf_c(LIGHT_RED_TXT, "Error leyendo fichero de tiempo!\n");
         return;
     }
 
@@ -132,11 +149,13 @@ void WeatherForecast::showData() {
 
     if (!doc.setContent(&weatherFile, false, &error_msg)) {
 
-        std::cerr << "Error cargando contenido de xml" << std::endl;
+        printf_c(LIGHT_RED_TXT, "Error cargando contenido de xml\n");
 
         std::cerr << error_msg.toStdString() << std::endl;
 
         weatherFile.close();
+
+        return;
     }
 
     weatherFile.close();
@@ -147,10 +166,10 @@ void WeatherForecast::showData() {
 
     // Measurements
 
-    string tempM;
-    string humidityM;
-    string windM;
-    string pressureM;
+    std::string tempM;
+    std::string humidityM;
+    std::string windM;
+    std::string pressureM;
 
     QDomElement root = doc.documentElement(); // Elemento raiz del documento
     QDomNode n = root.firstChild();
@@ -172,7 +191,7 @@ void WeatherForecast::showData() {
                for (int i = 0; i < infoNodes.length(); i++) {
 
                    QDomElement infoElement = infoNodes.at(i).toElement();
-                   string mUnit = infoElement.firstChild().toText().data().toStdString();
+                   std::string mUnit = infoElement.firstChild().toText().data().toStdString();
 
                    if (infoElement.tagName() == "temperature") {
 
@@ -264,9 +283,9 @@ void WeatherForecast::showData() {
 
            else if (e.tagName() == "hour_hour") {
 
-               // Comprobamos que la hora se corresponde con la actual
-
                std::cout << std::endl << "--Datos de la hora--" << std::endl << std::endl;
+
+               // Consultamos el primer nodo, que se trata de la hora actual
 
                QDomNodeList hourNodes = e.firstChild().childNodes();
 

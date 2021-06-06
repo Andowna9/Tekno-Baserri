@@ -386,7 +386,7 @@ extern "C" void lands_menu() {
 
     printf_c(LIGHT_CYAN_TXT, "\n[10. Comida de Animales]\n");
 
-    printf_c(LIGHT_MAGENTA_TXT, "\n* Pronóstico de tiempo\n");
+    printf_c(LIGHT_MAGENTA_TXT, "\n* Pronóstico de tiempo.\n");
 
 
     printf("\nIntroduce 'v' para volver.\n\n");
@@ -721,13 +721,16 @@ extern "C" void lands_menu() {
 
     else if (strcmp(input_buffer, "*") == 0) {
 
-        WeatherForecast w;
+        WeatherForecast wf;
+        wf.addLocation("Vitoria-Gasteiz", 8043);
+        wf.addLocation("Bilbao", 8050);
+        wf.addLocation("Donostia-San Sebastián", 4917);
 
-        w.chooseLocation();
+        if (wf.chooseLocation()) {
 
-        w.update();
+            wf.displayForecast();
+        }
 
-        w.showData();
     }
 
     else { printf("Opción incorrecta!\n"); }
