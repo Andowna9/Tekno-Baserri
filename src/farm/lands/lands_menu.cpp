@@ -666,6 +666,7 @@ extern "C" void lands_menu() {
     // Estadísticas de cultivos
 
     else if (strcmp(input_buffer, "6") == 0 && crop_terrains.size() > 0) {
+        clear_and_title("ESTADÍSTICAS");
         DBManager::printCropTerrainCount();
     }
 
@@ -707,6 +708,7 @@ extern "C" void lands_menu() {
     // Estadísticas de corrales
 
     else if (strcmp(input_buffer, "9") == 0 && animal_terrains.size() > 0) {
+        clear_and_title("ESTADÍSTICAS");
         DBManager::printAnimalTerrainCount();
     }
 

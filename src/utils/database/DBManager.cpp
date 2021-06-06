@@ -1,5 +1,6 @@
 extern "C" {
     #include <logger.h>
+    #include <console_config.h>
 }
 
 #include <DBManager.h>
@@ -856,9 +857,42 @@ void DBManager::printAnimalTerrainCount() {
     sqlite3_stmt* stmt;
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
+    printf_c(LIGHT_GREEN_TXT, "CUENTA TERRENOS\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
 
-        cout << "Corral(es) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
+        cout << "Corral(es) de " << sqlite3_column_text(stmt, 1) << "(s): " << sqlite3_column_int(stmt, 0) << endl;
+    }
+
+    // INFO ÁREA DE LOS TERRENOS
+    cout << endl;
+    printf_c(LIGHT_CYAN_TXT, "ÁREA DE LOS TERRENOS\n");
+    sql = "SELECT sum(area), avg(area), max(area), min(area) FROM terrain t, animal_terrain at WHERE t.id = at.id";
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        cout << "Total hectáreas: " << sqlite3_column_double(stmt, 0) << endl;
+        cout << "Media hectáreas: " << sqlite3_column_double(stmt, 1) << endl;
+        cout << "Max hectáreas: " << sqlite3_column_double(stmt, 2) << endl;
+        cout << "Min hectáreas: " << sqlite3_column_double(stmt, 3) << endl;
+
+    } else {
+        add_to_log("Error al obtener los datos de terrenos de animales.");
+    }
+
+    // INFO COSTE DE LOS TERRENOS
+    cout << endl;
+    printf_c(LIGHT_MAGENTA_TXT, "COSTE DE LOS TERRENOS\n");
+    sql = "SELECT sum(cost), avg(cost), max(cost), min(cost) FROM terrain t, animal_terrain at WHERE t.id = at.id";
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        cout << "Coste total: " << sqlite3_column_double(stmt, 0) << endl;
+        cout << "Coste medio: " << sqlite3_column_double(stmt, 1) << endl;
+        cout << "Coste más alto: " << sqlite3_column_double(stmt, 2) << endl;
+        cout << "Coste más bajo: " << sqlite3_column_double(stmt, 3) << endl;
+
+    } else {
+        add_to_log("Error al obtener los datos de terrenos de animales.");
     }
 
     close_logger();
@@ -866,15 +900,50 @@ void DBManager::printAnimalTerrainCount() {
 
 void DBManager::printCropTerrainCount() {
     open_logger(log_file_txt);
+    string sql; sqlite3_stmt* stmt;
 
-    string sql = "SELECT count(*), name FROM crop_terrain c, crop_type ct  WHERE type = ct.id GROUP BY type ORDER BY count(*) DESC";
-    sqlite3_stmt* stmt;
+    // CANTIDAD DE CULTIVOS DE CADA TIPO
+    sql = "SELECT count(*), name FROM crop_terrain c, crop_type ct  WHERE type = ct.id GROUP BY type ORDER BY count(*) DESC";
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
+    printf_c(LIGHT_GREEN_TXT, "CUENTA TERRENOS\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
 
-        cout << "Cultivo(s) de " << sqlite3_column_text(stmt, 1) << ": " << sqlite3_column_int(stmt, 0) << endl;
+        cout << "Cultivo(s) de " << sqlite3_column_text(stmt, 1) << "(s): " << sqlite3_column_int(stmt, 0) << endl;
     }
+
+    // INFO ÁREA DE LOS TERRENOS
+    cout << endl;
+    printf_c(LIGHT_CYAN_TXT, "ÁREA DE LOS TERRENOS\n");
+    sql = "SELECT sum(area), avg(area), max(area), min(area) FROM terrain t, crop_terrain ct WHERE t.id = ct.id";
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        cout << "Total hectáreas: " << sqlite3_column_double(stmt, 0) << endl;
+        cout << "Media hectáreas: " << sqlite3_column_double(stmt, 1) << endl;
+        cout << "Max hectáreas: " << sqlite3_column_double(stmt, 2) << endl;
+        cout << "Min hectáreas: " << sqlite3_column_double(stmt, 3) << endl;
+
+    } else {
+        add_to_log("Error al obtener los datos de terrenos de cultivos.");
+    }
+
+    // INFO COSTE DE LOS TERRENOS
+    cout << endl;
+    printf_c(LIGHT_MAGENTA_TXT, "COSTE DE LOS TERRENOS\n");
+    sql = "SELECT sum(cost), avg(cost), max(cost), min(cost) FROM terrain t, crop_terrain ct WHERE t.id = ct.id";
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        cout << "Coste total: " << sqlite3_column_double(stmt, 0) << endl;
+        cout << "Coste medio: " << sqlite3_column_double(stmt, 1) << endl;
+        cout << "Coste más alto: " << sqlite3_column_double(stmt, 2) << endl;
+        cout << "Coste más bajo: " << sqlite3_column_double(stmt, 3) << endl;
+
+    } else {
+        add_to_log("Error al obtener los datos de terrenos de cultivos.");
+    }
+
 
     close_logger();
 }
