@@ -96,44 +96,52 @@ void WeatherForecast::showData() {
 
     QDomElement root = doc.documentElement();
 
-    QString name = root.tagName();
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
 
-    QString version = root.attribute("version", "None");
+    bool keepSearching = true;
+    while(!n.isNull() && keepSearching) {
+        QDomElement e = n.toElement(); // try to convert the node to an element.
 
-    cout << "Tag name: " << name.toStdString() << endl;
-
-    cout << "Version: " << version.toStdString() << endl; */
-
-    QFile f("weather.xml");
-
-    if (!f.open(QIODevice::ReadOnly)) {
-
-        cerr << "Error leyendo fichero de tiempo!" << endl;
-
-        return;
-    }
-
-    /*
-
-    QString rawXML =
-"<root>"
-"	<a>11111</a>"
-"	<a><b>test 123</b></a>"
-"</root>";
+        if(!e.isNull()) {
+            //cout << qPrintable(e.tagName()) << Qt::endl; // the node really is an element.
+            if (e.tagName() == "locality") {
+                QDomNode localityNode = e.firstChild();
+                QString locality = localityNode.firstChild().toText().data();
+                cout << "Localidad: " << locality.toStdString() << endl;
 
 
-    QXmlStreamReader reader(rawXML);
-    QStringView s;
+            } else if (e.tagName() == "day1") {
+                cout << "Day 1 localizado" << endl;
 
-    reader.readNextStartElement();
-        s = reader.name();
-        if (s!="root") {
-            return;
+                QDomElement dayInfo = e.firstChildElement();
+                cout << dayInfo.firstChild().toText().data().toStdString() << endl;
+
+                while(!dayInfo.isNull()) {
+                    dayInfo = dayInfo.nextSiblingElement();
+
+                    if (dayInfo.tagName() == "date") {
+                        cout << "Fecha: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+
+                    } else if (dayInfo.tagName() == "temperature_max") {
+                        cout << "Máxima: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+
+                    } else if (dayInfo.tagName() == "temperature_min") {
+                        cout << "Mínima: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+
+                    } else if (dayInfo.tagName() == "text") {
+                        cout << "Descripción: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+
+                    } else if (dayInfo.tagName() == "humidity") {
+                        cout << "Humedad: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+
+                    }
+                }
+
+                keepSearching = false;
+            }
         }
 
-    cout << reader.attributes().length() << endl;
-
-    */
-
-
+        n = n.nextSibling();
+    }
 }
