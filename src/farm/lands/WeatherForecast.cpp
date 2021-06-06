@@ -104,7 +104,7 @@ void WeatherForecast::showData() {
         QDomElement e = n.toElement(); // try to convert the node to an element.
 
         if(!e.isNull()) {
-            //cout << qPrintable(e.tagName()) << Qt::endl; // the node really is an element.
+            cout << "Tiempo metereológico ofrecido por: www.tutiempo.net" << endl;
             if (e.tagName() == "locality") {
                 QDomNode localityNode = e.firstChild();
                 QString locality = localityNode.firstChild().toText().data();
