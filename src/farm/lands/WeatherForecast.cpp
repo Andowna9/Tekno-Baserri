@@ -1,21 +1,72 @@
 extern "C" {
 #include <console_config.h>
+#include <std_utils.h>
 }
 
 #include "WeatherForecast.h"
-#include <iostream>
-using namespace std;
 #include <curl/curl.h>
 #include <QtXml>
-#include <QXmlStreamReader>
-#include <QFile>
+#include <iostream>
+#include <cpp_utils.h>
+#include <vector>
 
 
 WeatherForecast::WeatherForecast() {
 
+    weatherFile.setFileName("weather.xml");
 }
 
-// TODO Configurar código postal para cambiar de localidad cuando se necesite
+WeatherForecast::~WeatherForecast() {
+
+    if (weatherFile.exists()) {
+
+        weatherFile.remove();
+    }
+}
+
+void WeatherForecast::chooseLocation() {
+
+    std::cout << "Localidades disponibles:" << std::endl << std::endl;
+
+    std::vector<string> locationKeys;
+
+    unsigned int i = 1;
+
+    for (const auto &pair: locations) {
+
+        std::cout <<  i << ". " << pair.first << "." << std::endl;
+
+        locationKeys.push_back(pair.first);
+
+        i++;
+    }
+
+    std::cout << std::endl;
+
+    try {
+
+            int i = -1;
+
+            std::cout << "Número: ";
+            read_format("%d", &i);
+
+            std::cout << std::endl;
+
+            std::string key = locationKeys.at(i - 1);
+
+            code = locations[key];
+
+
+        }
+
+     catch (std::out_of_range &oor) {
+
+        printf_c(LIGHT_RED_TXT, "Número incorrecto. Prueba de nuevo!\n");
+     }
+
+
+
+}
 
 void WeatherForecast::update() {
 
@@ -29,13 +80,13 @@ void WeatherForecast::update() {
 
     if(curl) {
 
-        fp = fopen("weather.xml", "w");
+        fp = fopen(weatherFile.fileName().toStdString().c_str(), "w");
 
         // Opciones de transferencia
 
-        // http://www.aemet.es/xml/municipios/localidad_01006.xml
-        // https://api.tutiempo.net/xml/?lan=es&apid=qCDaqXzqaazvx90&lid=8050
-        curl_easy_setopt(curl, CURLOPT_URL, "https://api.tutiempo.net/xml/?lan=es&apid=qCDaqXzqaazvx90&lid=8050"); // URL de descarga (imprescindible)
+        std::string locationURL = apiURL + std::to_string(code);
+
+        curl_easy_setopt(curl, CURLOPT_URL, locationURL.c_str()); // URL de descarga (imprescindible)
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // Deshabilitamos certificados de conexión segura
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // Redirección habilitada
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp); // Puntero a fichero donde se ecriben los datos -> fwrite como callback por defecto
@@ -51,7 +102,7 @@ void WeatherForecast::update() {
 
         else {
 
-            printf_c(LIGHT_GREEN_TXT, "Pronóstico de tiempo actualizado correctamente!\n");
+            printf_c(LIGHT_GREEN_TXT, "Pronóstico de tiempo recuperado correctamente!\n\n");
         }
 
 
@@ -70,78 +121,225 @@ void WeatherForecast::showData() {
 
     QDomDocument doc;
 
-    QFile f("weather.xml");
+    if (!weatherFile.open(QIODevice::ReadOnly)) {
 
-    if (!f.open(QIODevice::ReadOnly)) {
-
-        cerr << "Error leyendo fichero de tiempo!" << endl;
+        std::cerr << "Error leyendo fichero de tiempo!" << std::endl;
 
         return;
     }
 
     QString error_msg;
 
-    if (!doc.setContent(&f, false, &error_msg)) {
+    if (!doc.setContent(&weatherFile, false, &error_msg)) {
 
-        cerr << "Error cargando contenido de xml" << endl;
+        std::cerr << "Error cargando contenido de xml" << std::endl;
 
-        cerr << error_msg.toStdString() << endl;
+        std::cerr << error_msg.toStdString() << std::endl;
 
-        f.close();
+        weatherFile.close();
     }
 
-    f.close();
+    weatherFile.close();
 
     // Lectura del xml
 
-    QDomElement root = doc.documentElement();
+    // Meta-info
 
-    QDomElement docElem = doc.documentElement();
-    QDomNode n = docElem.firstChild();
+    // Measurements
+
+    string tempM;
+    string humidityM;
+    string windM;
+    string pressureM;
+
+    QDomElement root = doc.documentElement(); // Elemento raiz del documento
+    QDomNode n = root.firstChild();
 
     bool keepSearching = true;
+
     while(!n.isNull() && keepSearching) {
+
         QDomElement e = n.toElement(); // try to convert the node to an element.
 
         if(!e.isNull()) {
-            cout << "Tiempo metereológico ofrecido por: www.tutiempo.net" << endl;
-            if (e.tagName() == "locality") {
+
+            // Uidades de medida
+
+           if (e.tagName() == "information") {
+
+               QDomNodeList infoNodes = e.childNodes();
+
+               for (int i = 0; i < infoNodes.length(); i++) {
+
+                   QDomElement infoElement = infoNodes.at(i).toElement();
+                   string mUnit = infoElement.firstChild().toText().data().toStdString();
+
+                   if (infoElement.tagName() == "temperature") {
+
+                       tempM = mUnit;
+
+                   }
+
+                   else if (infoElement.tagName() == "humidity") {
+
+                       humidityM = mUnit;
+                   }
+
+                   else if (infoElement.tagName() == "wind") {
+
+                        windM = mUnit;
+                   }
+
+                   else if (infoElement.tagName() == "pressure") {
+
+                       pressureM = mUnit;
+                   }
+
+                }
+
+           }
+
+            // Datos de localidad
+
+           else if (e.tagName() == "locality") {
+
                 QDomNode localityNode = e.firstChild();
                 QString locality = localityNode.firstChild().toText().data();
-                cout << "Localidad: " << locality.toStdString() << endl;
 
+                std::cout << "Localidad: " << locality.toStdString() << std::endl << std::endl;
 
-            } else if (e.tagName() == "day1") {
-                cout << "Day 1 localizado" << endl;
+           }
 
-                QDomElement dayInfo = e.firstChildElement();
-                cout << dayInfo.firstChild().toText().data().toStdString() << endl;
+           // Pronóstico global del día actual
 
-                while(!dayInfo.isNull()) {
-                    dayInfo = dayInfo.nextSiblingElement();
+           else if (e.tagName() == "day1") {
 
-                    if (dayInfo.tagName() == "date") {
-                        cout << "Fecha: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+               std::cout << "--Datos del día--" << std::endl << std::endl;
 
-                    } else if (dayInfo.tagName() == "temperature_max") {
-                        cout << "Máxima: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+                QDomNodeList dayNodes = e.childNodes();
 
-                    } else if (dayInfo.tagName() == "temperature_min") {
-                        cout << "Mínima: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+                for (int i = 0; i < dayNodes.length(); i++) {
 
-                    } else if (dayInfo.tagName() == "text") {
-                        cout << "Descripción: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+                    QDomElement dayElement = dayNodes.at(i).toElement();
 
-                    } else if (dayInfo.tagName() == "humidity") {
-                        cout << "Humedad: " << dayInfo.firstChild().toText().data().toStdString() << endl;
+                    if (dayElement.tagName() == "date") {
+
+                        QString currentDate = dayElement.firstChild().toText().data();
+                        std::cout << "Fecha: " << currentDate.toStdString() << std::endl;
+
+                    }
+
+                    else if (dayElement.tagName() == "temperature_max") {
+
+                        int maxTemp = dayElement.firstChild().toText().data().toInt();
+                        std::cout << "Máxima temperatura: " << maxTemp << " " << tempM << std::endl;
+
+                    }
+
+                    else if (dayElement.tagName() == "temperature_min") {
+
+                        int minTemp = dayElement.firstChild().toText().data().toInt();
+                        std::cout << "Mínima temperatura: " <<  minTemp << " " << tempM << std::endl;
+
+                    }
+
+                    else if (dayElement.tagName() == "text") {
+
+                        QString desc = dayElement.firstChild().toText().data();
+                        std::cout << "Descripción: " << desc.toStdString() << std::endl;
+
+                    }
+
+                    else if (dayElement.tagName() == "humidity") {
+
+                        int humidity = dayElement.firstChild().toText().data().toInt();
+                        std::cout << "Humedad: " << humidity << " " << humidityM << std::endl;
 
                     }
                 }
 
-                keepSearching = false;
             }
+
+           // Pronóstico en la hora actual
+
+           else if (e.tagName() == "hour_hour") {
+
+               // Comprobamos que la hora se corresponde con la actual
+
+               std::cout << std::endl << "--Datos de la hora--" << std::endl << std::endl;
+
+               QDomNodeList hourNodes = e.firstChild().childNodes();
+
+               for (int i = 0; i < hourNodes.length(); i++) {
+
+                   QDomElement hourElement = hourNodes.at(i).toElement();
+
+                   if (hourElement.tagName() == "hour_data") {
+
+                      QString format = "hh:mm";
+
+                      QTime currentHour = QTime::fromString(hourElement.firstChild().toText().data(), format);
+                      QTime nextHour = currentHour.addSecs(3600); // 1 h = 3600 s
+
+                      std::cout << "Intervalo: " << currentHour.toString(format).toStdString() << " - ";
+                      std::cout << nextHour.toString(format).toStdString() << std::endl;
+                   }
+
+                   else if (hourElement.tagName() == "temperature") {
+
+                       int temp = hourElement.firstChild().toText().data().toInt();
+                       std::cout << "Temperatura: " << temp << " " << tempM << std::endl;
+                   }
+
+                   else if (hourElement.tagName() == "humidity") {
+
+                       int humidity = hourElement.firstChild().toText().data().toInt();
+                       std::cout << "Humedad: " << humidity << " " << humidityM << std::endl;
+                   }
+
+                   else if (hourElement.tagName() == "wind") {
+
+                       int wind = hourElement.firstChild().toText().data().toInt();
+                       std::cout << "Viento: " << wind << " " << windM;
+
+                       // Si el siguiente nodo contiene información de su dirección, la incluimos
+
+                       QDomElement sibling = hourElement.nextSiblingElement();
+
+                       if (!sibling.isNull() && sibling.tagName() == "wind_direction") {
+
+                           QString windDirection =  sibling.firstChild().toText().data();
+                           std::cout << " " << windDirection.toStdString();
+
+                       }
+
+                       std::cout << std::endl;
+
+                   }
+
+                   else if (hourElement.tagName() == "pressure") {
+
+                       int pressure = hourElement.firstChild().toText().data().toInt();
+                       std::cout << "Presión atmosférica: " << pressure << " " << pressureM << std::endl;
+
+                   }
+
+               }
+
+
+               // No nos interesa buscar en más nodos del árbol
+
+               keepSearching = false;
+
+           }
+
+
         }
 
         n = n.nextSibling();
     }
+
+   printf_c(LIGHT_MAGENTA_TXT, "\nTiempo metereológico ofrecido por: www.tutiempo.net\n");
+
+
 }

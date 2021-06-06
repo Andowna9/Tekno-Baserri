@@ -723,6 +723,8 @@ extern "C" void lands_menu() {
 
         WeatherForecast w;
 
+        w.chooseLocation();
+
         w.update();
 
         w.showData();
