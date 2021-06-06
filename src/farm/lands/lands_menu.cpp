@@ -728,6 +728,7 @@ extern "C" void lands_menu() {
 
         if (wf.chooseLocation()) {
 
+            clear_and_title("PRONÓSTICO DEL TIEMPO");
             wf.displayForecast();
         }
 
