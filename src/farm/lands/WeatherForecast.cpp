@@ -295,7 +295,7 @@ void WeatherForecast::displayForecast() {
 
                    if (hourElement.tagName() == "hour_data") {
 
-                      QString format = "hh:mm";
+                      QString format = "h:mm";
 
                       QTime currentHour = QTime::fromString(hourElement.firstChild().toText().data(), format);
                       QTime nextHour = currentHour.addSecs(3600); // 1 h = 3600 s
