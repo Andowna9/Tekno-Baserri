@@ -414,6 +414,7 @@ extern "C" void lands_menu() {
     else if (strcmp(input_buffer, "1") == 0) {
 
         print_banner('-', 33, LIGHT_CYAN_TXT);
+        clear_and_title("COMPRA TERRENO");
 
         Terrain* t;
 
