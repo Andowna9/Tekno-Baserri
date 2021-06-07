@@ -29,6 +29,7 @@ void check_third_party_food();
 int get_food_count();
 Animal_Food* get_food_by_id(int id);
 void add_animal_food(int id, float amount);
+void buy_animal_food(int id, float amount);
 void consume_animal_food(int id, float amount);
 
 void read_food_types();

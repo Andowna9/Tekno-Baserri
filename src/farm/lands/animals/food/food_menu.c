@@ -63,7 +63,8 @@ void animal_food_menu() {
 
          register_animal_food(name, price, 0);
 
-         printf_c(LIGHT_GREEN_TXT, "\nComida registrada correctamente\n");
+         printf_c(LIGHT_GREEN_TXT, "\nComida registrada correctamente.\n");
+
 
     }
 
@@ -107,7 +108,7 @@ void animal_food_menu() {
               else {
 
                  delete_animal_food(id);
-                 printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente\n");
+                 printf_c(LIGHT_GREEN_TXT, "\nComida borrada correctamente.\n");
 
               }
           }
@@ -144,8 +145,8 @@ void animal_food_menu() {
 
               else {
                   float amount = read_float("\nCantidad(kg): ");
-                  add_animal_food(id, amount);
-                  printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente\n");
+                  buy_animal_food(id, amount);
+                  printf_c(LIGHT_GREEN_TXT, "\nAlimento comprado correctamente.\n");
 
               }
           }
@@ -177,7 +178,7 @@ void animal_food_menu() {
 
         check_ordered_food(order_by_price, opt == 1);
 
-        printf_c(LIGHT_GREEN_TXT, "Lista ordenada por precio\n");
+        printf_c(LIGHT_GREEN_TXT, "Lista ordenada por precio.\n");
 
     }
 
@@ -189,7 +190,7 @@ void animal_food_menu() {
 
         check_ordered_food(order_by_amount, opt == 1);
 
-        printf_c(LIGHT_GREEN_TXT, "Lista ordenada por cantidad\n");
+        printf_c(LIGHT_GREEN_TXT, "Lista ordenada por cantidad.\n");
     }
 
     // Listado ordenado alfabeticamente por nombre
@@ -198,7 +199,7 @@ void animal_food_menu() {
 
         check_ordered_food(order_by_amount, true);
 
-        printf_c(LIGHT_GREEN_TXT, "Lista ordenada por nombre\n");
+        printf_c(LIGHT_GREEN_TXT, "Lista ordenada por nombre.\n");
 
     }
 

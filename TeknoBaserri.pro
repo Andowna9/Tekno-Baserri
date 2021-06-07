@@ -55,9 +55,10 @@ INCLUDEPATH += 3rdparty/sqlite3/include/
 win32 {
 
     INCLUDEPATH += C:\dev\libcurl\include
-    # LIBS += C:\dev\libcurl\lib\libcurl.dll.a
     LIBS += C:\dev\libcurl\bin\libcurl-x64.dll
 }
+
+# SOON - Linux support
 
 # Database 4 Unix
 

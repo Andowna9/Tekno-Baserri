@@ -171,6 +171,8 @@ void DBManager::initDB() {
 
     DBManager::connect();
 
+    cout << "Inicializando Base de Datos..." << endl;
+
     DBManager::prepareParkingDB();
     DBManager::prepareFarmDB();
 

@@ -222,20 +222,30 @@ int find_food_id_by_name(const char* name) {
 
 // Compra de comida, proporcionando cantidad en kg
 
+void buy_animal_food(int id, float amount) {
+
+    Animal_Food* ptr = get_food_by_id(id);
+
+    ptr->amount += amount;
+
+    // Registrar gasto
+
+    register_expense(amount * ptr->price);
+
+    write_food_types();
+
+
+}
+
+// Añade una cantidad a un producto sin registrar compra
+
 void add_animal_food(int id, float amount) {
 
    Animal_Food* ptr = get_food_by_id(id);
 
    ptr->amount += amount;
 
-   // Registrar gasto
-
    write_food_types();
-
-   if (ptr->price > 0) {
-
-       register_expense(amount * ptr->price);
-   }
 
 }
 
