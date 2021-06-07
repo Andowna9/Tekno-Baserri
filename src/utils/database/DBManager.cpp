@@ -26,7 +26,8 @@ void DBManager::prepareParkingDB() {
     sql = "CREATE TABLE IF NOT EXISTS vehicle("
                  "license_plate TEXT PRIMARY KEY,"
                  "brand TEXT,"
-                 "color TEXT)";
+                 "color TEXT,"
+                 "height REAL)";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
@@ -260,8 +261,9 @@ Vehicle vehicleFromRow(sqlite3_stmt* stmt) {
     string license((const char*) sqlite3_column_text(stmt, 0));
     string brand((const char*) sqlite3_column_text(stmt, 1));
     string color((const char*) sqlite3_column_text(stmt, 2));
+    float height = sqlite3_column_double(stmt, 3);
 
-    return Vehicle(license, brand, color);
+    return Vehicle(license, brand, color, height);
 }
 
 Vehicle DBManager::retrieveVehicle(const char* l_plate) {
@@ -293,12 +295,13 @@ bool DBManager::insertVehicle(Vehicle& v) {
     sqlite3_stmt* stmt;
     bool success;
 
-    string sql = "INSERT INTO vehicle(license_plate, brand, color) VALUES (?, ?, ?)";
+    string sql = "INSERT INTO vehicle(license_plate, brand, color, height) VALUES (?, ?, ?, ?)";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, v.getLicensePlate().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, v.getBrand().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 3, v.getColor().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 4, v.getHeight());
 
     int code = sqlite3_step(stmt);
     if (code != SQLITE_DONE) {

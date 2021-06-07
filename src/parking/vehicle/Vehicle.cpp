@@ -11,13 +11,15 @@ Vehicle::Vehicle(){
     l_plate = "";
     color = "";
     brand = "";
+    height = 0;
 }
 
-Vehicle::Vehicle(string l_plate, string color, string brand) {
+Vehicle::Vehicle(string l_plate, string color, string brand, float height) {
 
       this->l_plate = l_plate;
       this->color = color;
       this->brand = brand;
+      this->height = height;
 }
 
 Vehicle::Vehicle(char* l_plate) {
