@@ -415,10 +415,10 @@ void manage_parking_access() {
 
             } else {
                 if (DBManager::insertVehicle(v)) {
-                    printf_c(LIGHT_GREEN_TXT, "Finalizado sin errores\n");
+                    printf_c(LIGHT_GREEN_TXT, "Finalizado sin errores.\n");
 
                 } else {
-                    printf_c(LIGHT_RED_TXT, "Error al insertar el vehículo\n");
+                    printf_c(LIGHT_RED_TXT, "Error al insertar el vehículo.\n");
                 }
 
             }
