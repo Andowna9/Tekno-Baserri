@@ -301,6 +301,8 @@ static void animal_terrain_management(AnimalTerrain* at) {
         else if (strcmp(i_buffer, "5") == 0) {
 
             at->calculateWeightStatistics();
+
+            DBManager::printTerrainAgeStatistics(at->getID());
         }
 
         else { printf("La opción introducida no existe!\n"); }

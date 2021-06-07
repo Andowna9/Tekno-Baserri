@@ -64,7 +64,9 @@ void DBManager::prepareFarmDB() {
     "(1, 'Lechuga'),"
     "(2, 'Pepino'),"
     "(3, 'Zanahoria'),"
-    "(4, 'Tomate');";
+    "(4, 'Tomate'),"
+    "(5, 'Patata'),"
+    "(6, 'Trigo');";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
@@ -114,7 +116,10 @@ void DBManager::prepareFarmDB() {
           "INSERT OR IGNORE INTO animal_type(id, name, life_expectancy) VALUES"
           "(1, 'Cerdo', 20),"
           "(2, 'Gallina', 15),"
-          "(3, 'Oveja', 22);";
+          "(3, 'Oveja', 22),"
+          "(4, 'Caballo', 30),"
+          "(5, 'Vaca', 20),"
+          "(6, 'Cabra', 18);";
 
     code = sqlite3_exec(DB, sql.c_str(), NULL, 0, NULL);
 
@@ -500,6 +505,70 @@ int DBManager::getAnimalAge(int id) {
     close_logger();
 
     return age;
+
+}
+
+void DBManager::printTerrainAgeStatistics(int terrain_id) {
+
+    cout << endl << "// Edad //" << endl << endl;
+
+    open_logger(log_file_txt);
+
+    sqlite3_stmt* stmt;
+    string sql;
+    int code;
+
+    sql = "SELECT MAX((julianday('now') - julianday(birth_date)) / 365),"
+          "MIN((julianday('now') - julianday(birth_date)) / 365),"
+          "AVG((julianday('now') - julianday(birth_date)) / 365)"
+          "FROM animal WHERE terrain=?";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+
+    sqlite3_bind_int(stmt, 1, terrain_id);
+
+    code = sqlite3_step(stmt);
+
+    if (code == SQLITE_ROW) {
+
+        int max = sqlite3_column_int(stmt, 0);
+        int min = sqlite3_column_int(stmt, 1);
+        float avg = (float) sqlite3_column_double(stmt, 2);
+
+        cout << "Máxima: " << max << endl;
+        cout << "Mínima: " << min << endl;
+        cout << "Media: " << avg << endl;
+
+    }
+
+    else {
+
+        add_to_log("Error al obtener estadísticas de edad. %s", sqlite3_errmsg(DB));
+
+    }
+
+    sql = "SELECT life_expectancy FROM animal_terrain at, animal_type t WHERE at.id = ? AND at.type = t.id";
+
+    sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+    sqlite3_bind_int(stmt, 1, terrain_id);
+
+    code = sqlite3_step(stmt);
+
+    if (code == SQLITE_ROW) {
+
+        int life_span = sqlite3_column_int(stmt, 0);
+
+        cout << endl << "Esperanza de vida: " << life_span << endl;
+    }
+
+    else {
+
+        add_to_log("Error al obtener esperanza de vida de tipo de animal en el corral.");
+    }
+
+    sqlite3_finalize(stmt);
+
+    close_logger();
 
 }
 
