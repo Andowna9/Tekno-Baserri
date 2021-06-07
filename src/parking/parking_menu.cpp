@@ -390,9 +390,9 @@ void manage_parking_access() {
 
         clear_screen();
         printf_c(LIGHT_MAGENTA_TXT, "-- PARKING  /  ACCESO --\n\n");
-        printf(" 1. Permitir acceso a nuevos vehículos\n");
-        printf(" 2. Retirar acceso al parking a vehículos ya registrados\n");
-		printf(" 3. Mostrar todos los vehículos con acceso al parking\n");
+        printf(" 1. Permitir acceso a nuevos vehículos.\n");
+        printf(" 2. Retirar acceso al parking a vehículos ya registrados.\n");
+        printf(" 3. Mostrar todos los vehículos con acceso al parking.\n");
 		
         printf("\nIntroduce 'v' para volver.\n");
 
@@ -408,7 +408,7 @@ void manage_parking_access() {
             putchar('\n');
 
             cin >> v;
-            cout << v << endl;
+            cout << endl;
 
             if (DBManager::isVehicleRegistered(i_buffer)) {
                 printf_c(LIGHT_RED_TXT, "El vehículo ya está registrado.\n");
@@ -428,8 +428,12 @@ void manage_parking_access() {
 
         } else if (strcmp(i_buffer, "2") == 0) {
 
+            cout << "------------------" << endl;
+            DBManager::retrieveAllVehicles();
+
             cout << "Matrícula: ";
             scan_str(i_buffer, sizeof(i_buffer));
+            cout << endl;
 
             // Checamos primero que el vehículo no esté ya registrado
             if (DBManager::isVehicleRegistered(i_buffer)) {
@@ -459,11 +463,11 @@ void manage_parking_access() {
 
         }
 
+        cout << endl;
         press_to_continue();
 
     }
 
-    cout << "\nRegresando al menú principal." << endl;
     close_logger();
 
 }
@@ -581,7 +585,7 @@ void parking_menu() {
 
         else if (strcmp(i_buffer, "7") == 0) confirm_new_config(); //Crear nueva configuración
 
-        else if (strcmp(i_buffer, "8") == 0) manage_parking_access(); // Acceso al parking (ADMIN)
+        else if (strcmp(i_buffer, "8") == 0) {manage_parking_access(); continue;} // Acceso al parking (ADMIN)
 
         else printf("Opción no válida!\n"); // Opción incorrecta
 
