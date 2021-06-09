@@ -246,7 +246,7 @@ bool DBManager::isVehicleRegistered(const char* l_plate) {
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
-    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
 
     int code = sqlite3_step(stmt);
 
@@ -276,7 +276,7 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
-    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
 
     int code = sqlite3_step(stmt);
 
@@ -331,7 +331,7 @@ bool DBManager::deleteVehicle(const char* l_plate) {
     string sql = "DELETE FROM vehicle WHERE license_plate=?";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
 
     int code = sqlite3_step(stmt);
     if (code != SQLITE_DONE) {
@@ -374,7 +374,7 @@ string DBManager::retrievePassword(const char* username) {
     string sql = "SELECT pswdSHA1 FROM user WHERE username=?";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
 
     int code = sqlite3_step(stmt);
 
