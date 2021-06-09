@@ -349,13 +349,15 @@ void manage_parking_access() {
     // Recuperación de la contraseña de la BDD
     string passwordSha1 = DBManager::retrievePassword(user.c_str());
     if (passwordSha1 == "") {
-        printf_c(LIGHT_RED_TXT, "\nNo se localizó el usuario.\n");
+        printf_c(LIGHT_RED_TXT, "\nNo se localizó el usuario.\n\n");
         close_logger();
+        press_to_continue();
         return;
 
     } else if (user != "admin") {
-        printf_c(LIGHT_RED_TXT, "\nEl usuario no cuenta con los privilegios adecuados.\n");
+        printf_c(LIGHT_RED_TXT, "\nEl usuario no cuenta con los privilegios adecuados.\n\n");
         close_logger();
+        press_to_continue();
         return;
     }
 
@@ -375,8 +377,9 @@ void manage_parking_access() {
     if (inputSha1.compare(passwordSha1) != 0) {
 
         add_to_log("Intento de acceso a la BDD. Contraseña incorrecta. Usuario: admin.");
-        printf_c(LIGHT_RED_TXT, "\nContraseña incorrecta. Volviendo al menú principal.\n");
+        printf_c(LIGHT_RED_TXT, "\nContraseña incorrecta. Volviendo al menú principal.\n\n");
         close_logger();
+        press_to_continue();
         return;
     }
 

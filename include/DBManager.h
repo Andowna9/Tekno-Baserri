@@ -42,7 +42,7 @@ class DBManager {
         // Parking
 
         static Vehicle retrieveVehicle(const char* l_plate);
-        static bool insertVehicle(Vehicle& v);
+        static bool insertVehicle(const Vehicle& v);
         static bool deleteVehicle(const char* l_plate);
         static bool isVehicleRegistered(const char* l_plate);
         static void retrieveAllVehicles();

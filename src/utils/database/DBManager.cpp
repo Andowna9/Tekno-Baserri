@@ -246,7 +246,7 @@ bool DBManager::isVehicleRegistered(const char* l_plate) {
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
-    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_TRANSIENT);
 
     int code = sqlite3_step(stmt);
 
@@ -276,7 +276,7 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
-    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_TRANSIENT);
 
     int code = sqlite3_step(stmt);
 
@@ -290,19 +290,19 @@ Vehicle DBManager::retrieveVehicle(const char* l_plate) {
     return Vehicle();
 }
 
-bool DBManager::insertVehicle(Vehicle& v) {
+bool DBManager::insertVehicle(const Vehicle& v) {
 
     open_logger(log_file_txt);
 
     sqlite3_stmt* stmt;
     bool success;
 
-    string sql = "INSERT INTO vehicle(license_plate, brand, color, height) VALUES (?, ?, ?, ?)";
+    string sql = "INSERT INTO vehicle(license_plate, brand, color, height) VALUES(?, ?, ?, ?)";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, v.getLicensePlate().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, v.getBrand().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, v.getColor().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, v.getLicensePlate().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, v.getBrand().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, v.getColor().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_double(stmt, 4, v.getHeight());
 
     int code = sqlite3_step(stmt);
@@ -331,7 +331,7 @@ bool DBManager::deleteVehicle(const char* l_plate) {
     string sql = "DELETE FROM vehicle WHERE license_plate=?";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, l_plate, -1, SQLITE_TRANSIENT);
 
     int code = sqlite3_step(stmt);
     if (code != SQLITE_DONE) {
@@ -374,7 +374,7 @@ string DBManager::retrievePassword(const char* username) {
     string sql = "SELECT pswdSHA1 FROM user WHERE username=?";
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_TRANSIENT);
 
     int code = sqlite3_step(stmt);
 
@@ -435,9 +435,9 @@ bool DBManager::insertAnimal(Animal& a, string birth_date, int animal_terrain_id
 
     sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
 
-    sqlite3_bind_text(stmt, 1, a.getName().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, a.getName().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_double(stmt, 2, a.getWeight());
-    sqlite3_bind_text(stmt, 3, birth_date.c_str(),-1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, birth_date.c_str(),-1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, 4, animal_terrain_id);
 
     int code = sqlite3_step(stmt);
