@@ -11,6 +11,7 @@ Tekno Baserri is a **command-line interface software** simulates the management 
 ![C](https://img.shields.io/badge/-C-gray?logo=c)
 ![C++](https://img.shields.io/badge/-C++-blue?logo=cplusplus)
 ![Qt](https://img.shields.io/badge/IDE-Qt%20Creator-darkgreen)
+![SQLite](https://img.shields.io/badge/SQlite-003B57?style=flat&logo=SQLite&logoColor=white)
 
 
 ## Contributors
